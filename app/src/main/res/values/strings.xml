@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">ToeicTraining</string>
+    <string name="navigation_drawer_open">Open</string>
+    <string name="navigation_drawer_close">Close</string>
+    <string name="test_toeic">Thi thử Toeic</string>
+    <string name="learn_words">Học từ vựng</string>
 </resources>
