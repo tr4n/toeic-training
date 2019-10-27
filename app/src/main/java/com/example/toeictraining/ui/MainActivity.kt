@@ -1,6 +1,8 @@
 package com.example.toeictraining.ui
 
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.view.GravityCompat
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseActivity
 import com.example.toeictraining.ui.fragments.learn_word.LearnWordFragment
@@ -17,6 +19,7 @@ class MainActivity : BaseActivity() {
     override fun initComponent() {
         setToolbar()
         setNavigationView()
+        openFragment(R.id.content, TestFragment(), false)
     }
 
     override fun initData() {}
@@ -33,14 +36,16 @@ class MainActivity : BaseActivity() {
 
         toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp)
 
-        txtTest.setOnClickListener {
+        textTest.setOnClickListener {
+            Toast.makeText(this, "Vào", Toast.LENGTH_SHORT).show()
             openFragment(
                 R.id.content,
                 TestFragment(), true
             )
+            drawer_layout.closeDrawer(GravityCompat.START)
         }
 
-        txtLearnWord.setOnClickListener {
+        textLearnWord.setOnClickListener {
             openFragment(
                 R.id.content,
                 LearnWordFragment(), true
@@ -59,4 +64,5 @@ class MainActivity : BaseActivity() {
         }
         toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp)
     }
+
 }

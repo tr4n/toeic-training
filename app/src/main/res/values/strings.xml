@@ -4,4 +4,12 @@
     <string name="navigation_drawer_close">Close</string>
     <string name="test_toeic">Thi thử Toeic</string>
     <string name="learn_words">Học từ vựng</string>
+    <string name="part_1">Part 1</string>
+    <string name="full_7_part">Full 7 Part</string>
+    <string name="part_7">Part 7</string>
+    <string name="part_6">Part 6</string>
+    <string name="part_5">Part 5</string>
+    <string name="part_4">Part 4</string>
+    <string name="part_3">Part 3</string>
+    <string name="part_2">Part 2</string>
 </resources>
