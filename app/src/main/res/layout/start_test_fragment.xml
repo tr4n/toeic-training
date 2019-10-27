@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.fragments.test.start_test.StartTestFragment">
+
+    <TextView
+        android:id="@+id/text_part"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_90"
+        android:gravity="center_horizontal"
+        android:text="@string/part_6"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/text_32"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_17"
+        android:gravity="center_horizontal"
+        android:text="@string/start_test_time"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/text_32"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_part" />
+
+    <Button
+        android:id="@+id/button_start"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_60"
+        android:layout_marginStart="@dimen/space_15"
+        android:layout_marginEnd="@dimen/space_15"
+        android:layout_marginTop="@dimen/space_37"
+        android:background="@drawable/color_primarycolor_corner_10"
+        android:text="@string/start"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_32"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_time" />
+</androidx.constraintlayout.widget.ConstraintLayout>

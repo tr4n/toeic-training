@@ -21,14 +21,12 @@ class TestFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Toast.makeText(activity, "Test", Toast.LENGTH_SHORT).show()
         return inflater.inflate(R.layout.test_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(TestViewModel::class.java)
-
         initViews()
     }
 

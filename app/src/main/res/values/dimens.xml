@@ -12,4 +12,10 @@
     <dimen name="space_64">64dp</dimen>
     <dimen name="space_30">30dp</dimen>
     <dimen name="space_10">10dp</dimen>
+    <dimen name="text_32">32sp</dimen>
+    <dimen name="space_90">90dp</dimen>
+    <dimen name="space_17">17dp</dimen>
+    <dimen name="space_15">15dp</dimen>
+    <dimen name="space_60">60dp</dimen>
+    <dimen name="space_37">37dp</dimen>
 </resources>

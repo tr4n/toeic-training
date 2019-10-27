@@ -1,9 +1,13 @@
 <resources>
     <string name="app_name">ToeicTraining</string>
+
+    <!--    Navigation view-->
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
     <string name="test_toeic">Thi thử Toeic</string>
     <string name="learn_words">Học từ vựng</string>
+
+    <!--    Test main scree-->
     <string name="part_1">Part 1</string>
     <string name="full_7_part">Full 7 Part</string>
     <string name="part_7">Part 7</string>
@@ -12,4 +16,6 @@
     <string name="part_4">Part 4</string>
     <string name="part_3">Part 3</string>
     <string name="part_2">Part 2</string>
+    <string name="start_test_time">Thời gian: 30:00</string>
+    <string name="start">Bắt đầu</string>
 </resources>

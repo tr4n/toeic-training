@@ -19,7 +19,6 @@ class MainActivity : BaseActivity() {
     override fun initComponent() {
         setToolbar()
         setNavigationView()
-        openFragment(R.id.content, TestFragment(), false)
     }
 
     override fun initData() {}
@@ -51,6 +50,7 @@ class MainActivity : BaseActivity() {
                 LearnWordFragment(), true
             )
         }
+        drawer_layout.closeDrawer(GravityCompat.START)
 
     }
 
