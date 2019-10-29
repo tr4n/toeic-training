@@ -1,15 +1,16 @@
 package com.example.toeictraining.ui
 
-import android.widget.Toast
+import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseActivity
 import com.example.toeictraining.ui.fragments.learn_word.LearnWordFragment
-import com.example.toeictraining.ui.fragments.test.TestFragment
+import com.example.toeictraining.ui.fragments.test.home.TestFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.navigation_view_menu.*
 import kotlinx.android.synthetic.main.toolbar.*
+import kotlinx.android.synthetic.main.toolbar.view.*
 
 class MainActivity : BaseActivity() {
 
@@ -19,6 +20,7 @@ class MainActivity : BaseActivity() {
     override fun initComponent() {
         setToolbar()
         setNavigationView()
+        setRightButtonText("")
     }
 
     override fun initData() {}
@@ -35,8 +37,11 @@ class MainActivity : BaseActivity() {
 
         toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp)
 
+        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+            drawer_layout.closeDrawer(GravityCompat.START)
+        }
+
         textTest.setOnClickListener {
-            Toast.makeText(this, "Vào", Toast.LENGTH_SHORT).show()
             openFragment(
                 R.id.content,
                 TestFragment(), true
@@ -63,6 +68,31 @@ class MainActivity : BaseActivity() {
             it.setDisplayShowTitleEnabled(false)
         }
         toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp)
+    }
+
+    fun getDrawerToggle(): ActionBarDrawerToggle {
+        return drawerToggle
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+            drawer_layout.closeDrawer(GravityCompat.START)
+        }
+        drawerToggle.isDrawerIndicatorEnabled = true
+        toolbar.setNavigationIcon(R.drawable.menu_white_24dp)
+    }
+
+    fun setTitle(title: String) {
+        toolbar.toolbar_title.text = title
+    }
+
+    fun setRightButtonText(content: String) {
+        toolbar.toolbar_button_right.text = content
+    }
+
+    fun setOnClickToolbarRightButton(onClickListener: View.OnClickListener) {
+        toolbar_button_right.setOnClickListener(onClickListener)
     }
 
 }

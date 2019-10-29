@@ -10,7 +10,7 @@
         android:id="@+id/text_part"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_90"
+        android:layout_marginTop="170dp"
         android:gravity="center_horizontal"
         android:text="@string/part_6"
         android:textColor="@android:color/black"

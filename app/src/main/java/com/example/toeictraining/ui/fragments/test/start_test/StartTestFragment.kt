@@ -1,13 +1,16 @@
 package com.example.toeictraining.ui.fragments.test.start_test
 
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import com.example.toeictraining.R
+import com.example.toeictraining.ui.MainActivity
+import com.example.toeictraining.ui.fragments.test.home.TestFragment
+import kotlinx.android.synthetic.main.start_test_fragment.*
 
 class StartTestFragment : Fragment() {
 
@@ -27,6 +30,43 @@ class StartTestFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(StartTestViewModel::class.java)
+
+        initViews()
     }
 
+    private fun initViews() {
+        (activity as MainActivity).setTitle("")
+        (activity as MainActivity).setRightButtonText(getString(R.string.history))
+        (activity as MainActivity).setOnClickToolbarRightButton(View.OnClickListener {
+            Toast.makeText(
+                context,
+                "Vào",
+                Toast.LENGTH_SHORT
+            ).show()
+        })
+        setTextContent()
+        configNavigationIcon()
+    }
+
+    private fun setTextContent() {
+        val partID = arguments?.getInt(TestFragment.PART_ID)
+        if (partID == 8) {
+            text_part.text = getString(R.string.test_full)
+        } else {
+            text_part.text =
+                getString(R.string.part).plus(" ").plus(partID)
+        }
+        text_time.text =
+            getString(R.string.time).plus(" ").plus(arguments?.getString(TestFragment.TIME))
+    }
+
+    private fun configNavigationIcon() {
+        val actionBar = (activity as MainActivity).supportActionBar
+        val actionBarDrawerToggle = (activity as MainActivity).getDrawerToggle()
+        actionBarDrawerToggle.isDrawerIndicatorEnabled = false
+        actionBar?.setHomeAsUpIndicator(R.drawable.back_white_24dp)
+        actionBarDrawerToggle.setToolbarNavigationClickListener {
+            (activity as MainActivity).onBackPressed()
+        }
+    }
 }
