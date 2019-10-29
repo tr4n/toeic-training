@@ -73,4 +73,9 @@ dependencies {
     // Glide
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
+
+    // Koin for Kotlin apps
+    implementation 'org.koin:koin-core:2.0.1'
+    // Testing
+    testImplementation 'org.koin:koin-test:2.0.1'
 }

@@ -8,6 +8,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.example.toeictraining.R
+
+import com.example.toeictraining.ui.fragments.test.do_test.DoTestFragment
+
 import com.example.toeictraining.ui.fragments.test.home.TestFragment
 import com.example.toeictraining.ui.main.MainActivity
 import kotlinx.android.synthetic.main.start_test_fragment.*
@@ -48,6 +51,9 @@ class StartTestFragment : Fragment() {
         }
         setTextContent()
         configNavigationIcon()
+        button_start.setOnClickListener {
+            (activity as MainActivity).openFragment(R.id.content, DoTestFragment(), true)
+        }
     }
 
     private fun setTextContent() {

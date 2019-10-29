@@ -5,6 +5,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseActivity
+import com.example.toeictraining.ui.fragments.test.do_test.DoTestFragment
 import com.example.toeictraining.ui.fragments.test.home.TestFragment
 import com.example.toeictraining.ui.fragments.vocabulary.VocabularyFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -21,6 +22,8 @@ class MainActivity : BaseActivity() {
         setToolbar()
         setNavigationView()
         setRightButtonText("")
+
+        openFragment(R.id.content, DoTestFragment(), false)
     }
 
     override fun initData() {}
@@ -78,8 +81,6 @@ class MainActivity : BaseActivity() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
         }
-        drawerToggle.isDrawerIndicatorEnabled = true
-        toolbar.setNavigationIcon(R.drawable.menu_white_24dp)
     }
 
     fun setTitle(title: String) {
@@ -93,5 +94,4 @@ class MainActivity : BaseActivity() {
     fun setOnClickToolbarRightButton(onClickListener: View.OnClickListener) {
         toolbar_button_right.setOnClickListener(onClickListener)
     }
-
 }
