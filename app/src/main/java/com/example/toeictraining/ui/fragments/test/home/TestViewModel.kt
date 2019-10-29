@@ -1,4 +1,4 @@
-package com.example.toeictraining.ui.fragments.test
+package com.example.toeictraining.ui.fragments.test.home
 
 import androidx.lifecycle.ViewModel
 

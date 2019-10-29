@@ -5,14 +5,12 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/txtTest"
+        android:id="@+id/textTest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_18"
         android:layout_marginEnd="@dimen/space_16"
-        android:layout_marginRight="@dimen/space_16"
         android:drawableStart="@drawable/test_24"
-        android:drawableLeft="@drawable/test_24"
         android:drawablePadding="@dimen/space_20"
         android:gravity="center_vertical"
         android:text="@string/test_toeic"
@@ -20,14 +18,12 @@
         android:textSize="@dimen/text_19" />
 
     <TextView
-        android:id="@+id/txtLearnWord"
+        android:id="@+id/textLearnWord"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_18"
         android:layout_marginEnd="@dimen/space_16"
-        android:layout_marginRight="@dimen/space_16"
         android:drawableStart="@drawable/word_24"
-        android:drawableLeft="@drawable/word_24"
         android:drawablePadding="@dimen/space_20"
         android:gravity="center_vertical"
         android:text="@string/learn_words"

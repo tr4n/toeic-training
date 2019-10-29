@@ -20,7 +20,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     protected abstract fun initData()
 
-    protected fun openFragment(id: Int, fragment: Fragment, addToBackStack: Boolean) =
+    fun openFragment(id: Int, fragment: Fragment, addToBackStack: Boolean) =
         supportFragmentManager.beginTransaction().replace(id, fragment).apply {
             if (addToBackStack) addToBackStack(null)
         }.commit()
