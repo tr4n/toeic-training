@@ -1,6 +1,5 @@
 package com.example.toeictraining.ui.fragments.vocabulary
 
-import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.example.toeictraining.R
@@ -30,9 +29,6 @@ class VocabularyFragment : BaseFragment<VocabularyViewModel>() {
 
         categories.observe(lifecycleOwner, Observer {
             categoryAdapter.updateData(it)
-            Log.d("VocabularyFragment", "categories = $it")
         })
     }
-
 }
-
