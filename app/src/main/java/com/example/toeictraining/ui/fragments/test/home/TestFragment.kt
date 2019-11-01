@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.toeictraining.R
-import com.example.toeictraining.ui.MainActivity
 import com.example.toeictraining.ui.fragments.test.start_test.StartTestFragment
+import com.example.toeictraining.ui.main.MainActivity
 import kotlinx.android.synthetic.main.test_fragment.*
 
 class TestFragment : Fragment() {

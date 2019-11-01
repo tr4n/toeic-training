@@ -1,12 +1,12 @@
-package com.example.toeictraining.ui
+package com.example.toeictraining.ui.main
 
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseActivity
-import com.example.toeictraining.ui.fragments.learn_word.LearnWordFragment
 import com.example.toeictraining.ui.fragments.test.home.TestFragment
+import com.example.toeictraining.ui.fragments.vocabulary.VocabularyFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.navigation_view_menu.*
 import kotlinx.android.synthetic.main.toolbar.*
@@ -50,10 +50,8 @@ class MainActivity : BaseActivity() {
         }
 
         textLearnWord.setOnClickListener {
-            openFragment(
-                R.id.content,
-                LearnWordFragment(), true
-            )
+            // handle open vocabulary
+            openFragment(R.id.content, VocabularyFragment(), true)
         }
         drawer_layout.closeDrawer(GravityCompat.START)
 
@@ -61,11 +59,11 @@ class MainActivity : BaseActivity() {
 
     private fun setToolbar() {
         setSupportActionBar(toolbar)
-        supportActionBar?.let {
-            it.setDisplayHomeAsUpEnabled(true)
-            it.setDisplayShowHomeEnabled(true)
-            it.setHomeButtonEnabled(true)
-            it.setDisplayShowTitleEnabled(false)
+        supportActionBar?.run {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+            setHomeButtonEnabled(true)
+            setDisplayShowTitleEnabled(false)
         }
         toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp)
     }
