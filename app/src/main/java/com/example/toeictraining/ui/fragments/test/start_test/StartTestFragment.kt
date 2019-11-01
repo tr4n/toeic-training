@@ -5,11 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProviders
 import com.example.toeictraining.R
-import com.example.toeictraining.ui.MainActivity
 import com.example.toeictraining.ui.fragments.test.home.TestFragment
+import com.example.toeictraining.ui.main.MainActivity
 import kotlinx.android.synthetic.main.start_test_fragment.*
 
 class StartTestFragment : Fragment() {
@@ -35,15 +37,17 @@ class StartTestFragment : Fragment() {
     }
 
     private fun initViews() {
-        (activity as MainActivity).setTitle("")
-        (activity as MainActivity).setRightButtonText(getString(R.string.history))
-        (activity as MainActivity).setOnClickToolbarRightButton(View.OnClickListener {
-            Toast.makeText(
-                context,
-                "Vào",
-                Toast.LENGTH_SHORT
-            ).show()
-        })
+        (activity as MainActivity).apply {
+            setTitle("")
+            setRightButtonText(getString(R.string.history))
+            setOnClickToolbarRightButton(View.OnClickListener {
+                Toast.makeText(
+                    context,
+                    "Vào",
+                    Toast.LENGTH_SHORT
+                ).show()
+            })
+        }
         setTextContent()
         configNavigationIcon()
     }

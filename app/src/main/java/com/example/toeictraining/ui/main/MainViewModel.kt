@@ -1,4 +1,4 @@
-package com.example.toeictraining.ui
+package com.example.toeictraining.ui.main
 
 import androidx.lifecycle.ViewModel
 

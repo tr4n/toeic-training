@@ -19,4 +19,11 @@
     <dimen name="space_60">60dp</dimen>
     <dimen name="space_37">37dp</dimen>
     <dimen name="space_47">47dp</dimen>
+    <dimen name="space_300">300dp</dimen>
+    <dimen name="space_8">8dp</dimen>
+    <dimen name="space_3">3dp</dimen>
+    <dimen name="space_100">100dp</dimen>
+    <dimen name="space_5">5dp</dimen>
+    <dimen name="space_4">4dp</dimen>
+    <dimen name="space_2">2dp</dimen>
 </resources>
