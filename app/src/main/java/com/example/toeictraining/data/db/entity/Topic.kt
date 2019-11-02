@@ -12,11 +12,11 @@ import kotlinx.android.parcel.Parcelize
 data class Topic(
     @PrimaryKey
     @NonNull
-    @ColumnInfo(name = FIELD_ID) val id: Int,
-    @ColumnInfo(name = FIELD_NAME) val name: String,
-    @ColumnInfo(name = FIELD_NO) val no: Int,
-    @ColumnInfo(name = FIELD_IMAGE_URL) val imageUrl: String,
-    @ColumnInfo(name = FIELD_CATEGORY) val category: String,
+    @ColumnInfo(name = FIELD_ID) val id: Int = 0,
+    @ColumnInfo(name = FIELD_NAME) val name: String = "",
+    @ColumnInfo(name = FIELD_NO) val no: Int = 0,
+    @ColumnInfo(name = FIELD_IMAGE_URL) val imageUrl: String = "",
+    @ColumnInfo(name = FIELD_CATEGORY) val category: String = "",
     @ColumnInfo(name = FIELD_COLOR) val color: String? = null,
     @ColumnInfo(name = FIELD_LAST_TIME) val lastTime: String? = null
 ) : Parcelable {

@@ -22,4 +22,12 @@
     <string name="part">Part</string>
     <string name="test_full">Test Full</string>
     <string name="history">Lịch sử</string>
+    <string name="title_show_word_detail">Tap to show detail</string>
+    <string name="title_pronoun">pronun</string>
+    <string name="title_level">Level</string>
+    <string name="title_knew_word">I knew this word</string>
+    <string name="title_didnt_know_word">I didn\'t know this word</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

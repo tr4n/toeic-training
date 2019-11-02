@@ -13,12 +13,12 @@ import kotlinx.android.synthetic.main.item_category.view.*
 
 class CategoryAdapter : BaseRecyclerAdapter<Category, CategoryAdapter.CategoryViewHolder>() {
 
+    var onTopicClick: (Topic) -> Unit = {}
+
     private val onItemClick = { position: Int, category: Category ->
         category.isExpanded = !category.isExpanded
         notifyItemChanged(position)
     }
-
-    private var onTopicClick: (Topic) -> Unit = {}
 
     override fun getItemLayoutResource(viewType: Int): Int = R.layout.item_category
 

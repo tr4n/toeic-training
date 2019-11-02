@@ -5,4 +5,5 @@ object ScopeNames {
     const val WORD_REPOSITORY = "name_word_repository"
     const val CATEGORY_ADAPTER = "name_vocabulary_adapter"
     const val CATEGORY_REPOSITORY = "name_category_repository"
+    const val EMPTY_TOPIC = "name_empty_topic"
 }

@@ -5,6 +5,8 @@
     android:id="@+id/recyclerCategories"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true"
     android:orientation="vertical"
     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
     tools:context=".ui.fragments.vocabulary.VocabularyFragment" />
