@@ -44,4 +44,18 @@ abstract class BaseFragment<VM : BaseViewModel> : Fragment(), LifecycleOwner {
             }
         })
     }
+
+    protected fun replaceFragment(id: Int, fragment: Fragment, addToBackStack: Boolean) =
+        activity?.supportFragmentManager?.beginTransaction()?.replace(id, fragment)?.apply {
+            if (addToBackStack) addToBackStack(null)
+        }?.commit()
+
+    protected fun addFragment(id: Int, fragment: Fragment, addToBackStack: Boolean) =
+        activity?.supportFragmentManager?.beginTransaction()?.add(id, fragment)?.apply {
+            if (addToBackStack) addToBackStack(null)
+        }?.commit()
+
+    private fun toast(message: String) = context?.let {
+        Toast.makeText(it, message, Toast.LENGTH_SHORT).show()
+    }
 }

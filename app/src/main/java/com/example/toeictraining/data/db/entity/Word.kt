@@ -23,7 +23,7 @@ data class Word(
     @PrimaryKey(autoGenerate = true)
     @NonNull
     @ColumnInfo(name = FIELD_ID) val id: Int,
-    @ColumnInfo(name = FIELD_ORIGIN) val name: String,
+    @ColumnInfo(name = FIELD_ORIGIN) val origin: String,
     @ColumnInfo(name = FIELD_EXPLANATION) val explanation: String,
     @ColumnInfo(name = FIELD_TYPE) val type: String,
     @ColumnInfo(name = FIELD_PRONUNCIATION) val pronunciation: String? = null,

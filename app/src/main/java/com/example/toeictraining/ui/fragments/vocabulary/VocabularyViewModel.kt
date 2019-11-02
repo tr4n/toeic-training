@@ -6,8 +6,6 @@ import com.example.toeictraining.base.BaseViewModel
 import com.example.toeictraining.data.model.Category
 import com.example.toeictraining.data.repository.CategoryRepository
 
-private const val TAG = "VocabularyViewModel"
-
 class VocabularyViewModel(
     private val categoryRepository: CategoryRepository
 ) : BaseViewModel() {

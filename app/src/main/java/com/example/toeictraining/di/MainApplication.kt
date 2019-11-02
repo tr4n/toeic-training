@@ -1,6 +1,7 @@
 package com.example.toeictraining.di
 
 import android.app.Application
+import com.example.toeictraining.ui.fragments.study.studyModule
 import com.example.toeictraining.ui.fragments.vocabulary.vocabularyModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -19,7 +20,8 @@ class MainApplication : Application() {
                     appModule,
                     repositoryModule,
                     viewModelModule,
-                    vocabularyModule
+                    vocabularyModule,
+                    studyModule
                 )
             )
         }

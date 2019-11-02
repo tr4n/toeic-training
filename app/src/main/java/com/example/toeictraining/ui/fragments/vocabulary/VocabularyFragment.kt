@@ -5,6 +5,7 @@ import androidx.lifecycle.Observer
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseFragment
 import com.example.toeictraining.di.ScopeNames
+import com.example.toeictraining.ui.fragments.study.StudyFragment
 import kotlinx.android.synthetic.main.fragment_vocabulary.*
 import org.koin.android.ext.android.get
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -18,7 +19,17 @@ class VocabularyFragment : BaseFragment<VocabularyViewModel>() {
 
     override val lifecycleOwner: LifecycleOwner = this@VocabularyFragment
 
-    private val categoryAdapter: CategoryAdapter = get(named(ScopeNames.CATEGORY_ADAPTER))
+    private val categoryAdapter: CategoryAdapter by lazy {
+        get<CategoryAdapter>(named(ScopeNames.CATEGORY_ADAPTER)).apply {
+            onTopicClick = { topic ->
+                addFragment(
+                    id = R.id.content,
+                    fragment = StudyFragment.newInstance(topic),
+                    addToBackStack = false
+                )
+            }
+        }
+    }
 
     override fun initComponents() {
         recyclerCategories?.adapter = categoryAdapter
