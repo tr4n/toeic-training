@@ -1,12 +1,14 @@
 package com.example.toeictraining.data.repository
 
-import com.example.toeictraining.data.db.AppDatabase
+import com.example.toeictraining.data.db.dao.WordDao
 import com.example.toeictraining.data.db.entity.Word
 
-class WordRepositoryImpl(private val appDatabase: AppDatabase) : WordRepository {
+class WordRepositoryImpl(private val wordDao: WordDao) : WordRepository {
 
-    override suspend fun getWords(): List<Word> = appDatabase.wordDao().getWords()
+    override suspend fun getWords(): List<Word> = wordDao.getWords()
 
     override suspend fun getWordsByTopic(topicId: Int): List<Word> =
-        appDatabase.wordDao().getWordsByTopic(topicId)
+        wordDao.getWordsByTopic(topicId)
+
+    override suspend fun updateWord(word: Word) = wordDao.updateWord(word)
 }

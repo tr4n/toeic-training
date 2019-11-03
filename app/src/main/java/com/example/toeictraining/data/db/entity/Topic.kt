@@ -12,23 +12,26 @@ import kotlinx.android.parcel.Parcelize
 data class Topic(
     @PrimaryKey
     @NonNull
-    @ColumnInfo(name = FIELD_ID) val id: Int = 0,
-    @ColumnInfo(name = FIELD_NAME) val name: String = "",
-    @ColumnInfo(name = FIELD_NO) val no: Int = 0,
-    @ColumnInfo(name = FIELD_IMAGE_URL) val imageUrl: String = "",
-    @ColumnInfo(name = FIELD_CATEGORY) val category: String = "",
-    @ColumnInfo(name = FIELD_COLOR) val color: String? = null,
-    @ColumnInfo(name = FIELD_LAST_TIME) val lastTime: String? = null
+    @ColumnInfo(name = FIELD_ID) var id: Int = 0,
+    @ColumnInfo(name = FIELD_NAME) var name: String = "",
+    @ColumnInfo(name = FIELD_IMAGE_URL) var imageUrl: String = "",
+    @ColumnInfo(name = FIELD_CATEGORY) var category: String = "",
+    @ColumnInfo(name = FIELD_COLOR) var color: String? = null,
+    @ColumnInfo(name = FIELD_LAST_TIME) var lastTime: String? = null,
+    @ColumnInfo(name = FIELD_TOTAL) var total: Int? = null,
+    @ColumnInfo(name = FIELD_MASTER) var master: Int? = null
 ) : Parcelable {
 
     companion object {
         const val TABLE_NAME = "tbl_topic"
         const val FIELD_ID = "id"
         const val FIELD_NAME = "name"
-        const val FIELD_NO = "no"
         const val FIELD_IMAGE_URL = "image_url"
         const val FIELD_CATEGORY = "category"
         const val FIELD_COLOR = "color"
         const val FIELD_LAST_TIME = "last_time"
+        const val FIELD_TOTAL = "total"
+        const val FIELD_MASTER = "master"
+        const val FIELD_NEW_WORD = "new_word"
     }
 }

@@ -27,7 +27,8 @@
     <string name="title_level">Level</string>
     <string name="title_knew_word">I knew this word</string>
     <string name="title_didnt_know_word">I didn\'t know this word</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_never">Never</string>
+    <string name="title_reviewing">Reviewing</string>
+    <string name="title_master">Master</string>
+    <string name="title_vocabulary">Vocabulary</string>
 </resources>

@@ -1,17 +1,16 @@
 package com.example.toeictraining.data.repository
 
-import com.example.toeictraining.data.db.AppDatabase
+import com.example.toeictraining.data.db.dao.TopicDao
+import com.example.toeictraining.data.db.entity.Topic
 import com.example.toeictraining.data.model.Category
 import com.example.toeictraining.utils.Constants
 
-class CategoryRepositoryImpl(
-    private val appDatabase: AppDatabase
-) : CategoryRepository {
+class TopicRepositoryImpl(private val topicDao: TopicDao) : TopicRepository {
 
     override suspend fun getCategories(): List<Category> {
 
-        val categoryNames = appDatabase.topicDao().getCategoryNames()
-        val topics = appDatabase.topicDao().getTopics()
+        val categoryNames = topicDao.getCategoryNames()
+        val topics = topicDao.getTopics()
         return categoryNames.map { name ->
             val subTopics = topics.filter { it.category == name }
             Category(
@@ -21,4 +20,6 @@ class CategoryRepositoryImpl(
             )
         }
     }
+
+    override suspend fun updateTopic(topic: Topic) = topicDao.updateTopic(topic)
 }

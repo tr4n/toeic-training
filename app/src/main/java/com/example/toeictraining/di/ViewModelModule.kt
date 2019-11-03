@@ -8,10 +8,13 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModel {
-        VocabularyViewModel(categoryRepository = get(named(ScopeNames.CATEGORY_REPOSITORY)))
+        VocabularyViewModel(topicRepository = get(named(ScopeNames.TOPIC_REPOSITORY)))
     }
 
     viewModel {
-        StudyViewModel(wordRepository = get(named(ScopeNames.WORD_REPOSITORY)))
+        StudyViewModel(
+            wordRepository = get(named(ScopeNames.WORD_REPOSITORY)),
+            topicRepository = get(named(ScopeNames.TOPIC_REPOSITORY))
+        )
     }
 }
