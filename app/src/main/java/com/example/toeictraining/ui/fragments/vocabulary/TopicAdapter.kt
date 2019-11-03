@@ -28,9 +28,14 @@ class TopicAdapter : BaseRecyclerAdapter<Topic, TopicAdapter.TopicViewHolder>() 
         override fun onBindData(topic: Topic) = with(itemView) {
             super.onBindData(topic)
 
+            progressTopic.apply {
+                max = topic.total ?: 12
+                progress = topic.master ?: 0
+                secondaryProgress = max - progress
+            }
+
             textNameTopic?.text = topic.name
             textLastTime?.text = topic.lastTime ?: Constants.DEFAULT_LAST_TIME
-            progressTopic?.progress = 50
         }
 
         override fun onItemClickListener(itemData: Topic) = onItemClick(itemData)

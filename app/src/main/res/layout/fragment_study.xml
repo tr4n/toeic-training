@@ -9,7 +9,30 @@
     android:focusable="true"
     tools:context=".ui.fragments.study.StudyFragment">
 
+    <ImageView
+        android:id="@+id/imageStudyBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/space_16"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/back_white_24dp"
+        android:contentDescription="@string/app_name" />
+
+    <TextView
+        android:id="@+id/textTopicName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:padding="@dimen/space_16"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_18"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.cardview.widget.CardView
+        android:id="@+id/flashCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/space_16"
@@ -74,7 +97,7 @@
             <ImageView
                 android:id="@+id/imageWord"
                 android:layout_width="0dp"
-                android:layout_height="150dp"
+                android:layout_height="@dimen/space_150"
                 android:layout_marginStart="@dimen/space_16"
                 android:layout_marginTop="@dimen/space_16"
                 android:layout_marginEnd="@dimen/space_16"

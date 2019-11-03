@@ -50,8 +50,9 @@ class MainActivity : BaseActivity() {
         }
 
         textLearnWord.setOnClickListener {
-            // handle open vocabulary
+            toolbar?.toolbar_title?.text = getString(R.string.title_vocabulary)
             openFragment(R.id.content, VocabularyFragment(), true)
+            drawer_layout.closeDrawer(GravityCompat.START)
         }
         drawer_layout.closeDrawer(GravityCompat.START)
 

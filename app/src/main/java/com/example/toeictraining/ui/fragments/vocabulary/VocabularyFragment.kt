@@ -22,10 +22,10 @@ class VocabularyFragment : BaseFragment<VocabularyViewModel>() {
     private val categoryAdapter: CategoryAdapter by lazy {
         get<CategoryAdapter>(named(ScopeNames.CATEGORY_ADAPTER)).apply {
             onTopicClick = { topic ->
-                addFragment(
+                replaceFragment(
                     id = R.id.content,
                     fragment = StudyFragment.newInstance(topic),
-                    addToBackStack = false
+                    addToBackStack = true
                 )
             }
         }
