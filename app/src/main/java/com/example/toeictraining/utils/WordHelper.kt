@@ -22,7 +22,7 @@ object WordHelper {
     }
 
     fun getNewLevel(level: Int, isKnown: Boolean?): Int {
-        if (isKnown == null) return level
+        isKnown ?: return level
         val delta = if (isKnown) 1 else -1
         val newLevel = level + delta
         return when {
