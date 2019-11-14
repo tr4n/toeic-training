@@ -13,6 +13,7 @@ import com.example.toeictraining.R
 import com.example.toeictraining.ui.fragments.test.start_test.StartTestFragment
 import com.example.toeictraining.ui.main.MainActivity
 import kotlinx.android.synthetic.main.test_fragment.*
+import kotlinx.android.synthetic.main.toolbar.*
 
 class TestFragment : Fragment() {
 
@@ -52,6 +53,9 @@ class TestFragment : Fragment() {
         (activity as MainActivity).setTitle(resources.getString(R.string.test_toeic))
         (activity as MainActivity).setRightButtonText("")
         setRecyclerViewListPart()
+
+//        drawerToggle.isDrawerIndicatorEnabled = true
+//        toolbar.setNavigationIcon(R.drawable.menu_white_24dp)
     }
 
     private fun setRecyclerViewListPart() {
@@ -66,19 +70,21 @@ class TestFragment : Fragment() {
             R.drawable.full_7_part
         )
         recyclerViewPart.layoutManager = GridLayoutManager(context, 2, RecyclerView.VERTICAL, false)
-        val decoratorVertical = DividerItemDecoration(context!!, DividerItemDecoration.VERTICAL)
-        val decoratorHorizontal = DividerItemDecoration(context!!, DividerItemDecoration.HORIZONTAL)
-        context?.getDrawable(R.drawable.divider_recyclerview_vertical)
-            ?.let {
-                decoratorVertical.setDrawable(it)
-            }
-        context?.getDrawable(R.drawable.divider_recyclerview_horizontal)
-            ?.let {
-                decoratorHorizontal.setDrawable(it)
-            }
         with(recyclerViewPart) {
-            addItemDecoration(decoratorVertical)
-            addItemDecoration(decoratorHorizontal)
+            addItemDecoration(
+                DividerItemDecoration(
+                    context!!,
+                    DividerItemDecoration.VERTICAL
+                ).apply {
+                    setDrawable(context?.getDrawable(R.drawable.divider_recyclerview_vertical)!!)
+                })
+            addItemDecoration(
+                DividerItemDecoration(
+                    context!!,
+                    DividerItemDecoration.HORIZONTAL
+                ).apply {
+                    setDrawable(context?.getDrawable(R.drawable.divider_recyclerview_horizontal_10)!!)
+                })
             adapter = ListPartAdapter(
                 context!!,
                 resourcesImage,

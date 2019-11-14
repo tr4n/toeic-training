@@ -19,6 +19,11 @@
     <dimen name="space_60">60dp</dimen>
     <dimen name="space_37">37dp</dimen>
     <dimen name="space_47">47dp</dimen>
+    <dimen name="text_26">26sp</dimen>
+    <dimen name="space_36">36dp</dimen>
+    <dimen name="space_1">1dp</dimen>
+    <dimen name="space_9">9dp</dimen>
+    <dimen name="space_22">22dp</dimen>
     <dimen name="space_300">300dp</dimen>
     <dimen name="space_8">8dp</dimen>
     <dimen name="space_3">3dp</dimen>
