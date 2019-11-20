@@ -6,7 +6,7 @@ import androidx.core.view.GravityCompat
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseActivity
 import com.example.toeictraining.ui.fragments.test.do_test.DoTestFragment
-import com.example.toeictraining.ui.fragments.test.home.TestFragment
+import com.example.toeictraining.ui.fragments.test.home.HomeTestFragment
 import com.example.toeictraining.ui.fragments.vocabulary.VocabularyFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.navigation_view_menu.*
@@ -23,7 +23,7 @@ class MainActivity : BaseActivity() {
         setNavigationView()
         setRightButtonText("")
 
-        openFragment(R.id.content, DoTestFragment(), false)
+        openFragment(R.id.content, HomeTestFragment(), false)
     }
 
     override fun initData() {}
@@ -47,7 +47,7 @@ class MainActivity : BaseActivity() {
         textTest.setOnClickListener {
             openFragment(
                 R.id.content,
-                TestFragment(), true
+                HomeTestFragment(), true
             )
             drawer_layout.closeDrawer(GravityCompat.START)
         }

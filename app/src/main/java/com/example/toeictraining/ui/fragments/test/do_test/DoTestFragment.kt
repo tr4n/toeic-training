@@ -1,18 +1,30 @@
 package com.example.toeictraining.ui.fragments.test.do_test
 
+import android.app.AlertDialog
 import android.content.res.Resources
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.media.MediaPlayer
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.*
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.toeictraining.R
+import com.example.toeictraining.ui.fragments.test.score.ScoreTestFragment
 import com.example.toeictraining.ui.main.MainActivity
+import kotlinx.android.synthetic.main.dialog_submit_test.*
 import kotlinx.android.synthetic.main.do_test_fragment.*
+import kotlinx.android.synthetic.main.toolbar.*
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.abs
 
 
@@ -24,6 +36,7 @@ class DoTestFragment : Fragment() {
     }
 
     private lateinit var viewModel: DoTestViewModel
+    lateinit var mediaPlayer: MediaPlayer
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,11 +54,77 @@ class DoTestFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(DoTestViewModel::class.java)
 
         initViews()
+
+        (activity as MainActivity).toolbar_button_right.setOnClickListener {
+            val alertDialog = AlertDialog.Builder(context)
+                .setView(R.layout.dialog_submit_test)
+                .setCancelable(false)
+                .create()
+            alertDialog?.let {
+                it.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                it.show()
+                it.button_submit.setOnClickListener {
+                    (activity as MainActivity).openFragment(
+                        R.id.content,
+                        ScoreTestFragment(),
+                        false
+                    )
+                    alertDialog.cancel()
+                }
+                it.button_not_submit.setOnClickListener {
+                    alertDialog.cancel()
+                }
+            }
+        }
+
+        button_play_sound.setOnClickListener {
+            mediaPlayer = MediaPlayer.create(context, R.raw.q1_p1).apply {
+                start()
+            }
+            it.background =
+                resources.getDrawable(R.drawable.pause_24, null)
+
+            mediaPlayer.setOnCompletionListener { mp ->
+                observer?.stop()
+                progressBar_sound.progress = mp.currentPosition
+                mediaPlayer.stop()
+                mediaPlayer.reset()
+            }
+            mediaPlayer.setOnBufferingUpdateListener { mp, percent ->
+                Log.d(" UpdateListener", " vào")
+                progressBar_sound.progress =
+                    (mediaPlayer.currentPosition.toDouble() / mediaPlayer.duration.toDouble() * 100).toInt()
+            }
+//        mediaPlayer.setOnPreparedListener { btn_play_stop.setEnabled(true) }
+            observer = MediaObserver()
+            Thread(observer).start()
+        }
+    }
+
+    private var observer: MediaObserver? = null
+
+    private inner class MediaObserver : Runnable {
+        private val stop = AtomicBoolean(false)
+        fun stop() {
+            stop.set(true)
+        }
+
+        override fun run() {
+            while (!stop.get()) {
+                progressBar_sound.progress =
+                    (mediaPlayer.currentPosition.toDouble() / mediaPlayer.duration.toDouble() * 100).toInt()
+                try {
+                    Thread.sleep(200)
+                } catch (ex: Exception) {
+                    Log.e(TAG, ex.toString())
+                }
+            }
+        }
     }
 
     private fun initViews() {
         (activity as MainActivity).setTitle("56:00")
-        (activity as MainActivity).setRightButtonText(getString(R.string.submit_test))
+        (activity as MainActivity).setRightButtonText(getString(com.example.toeictraining.R.string.submit_test))
 
         configNavigationIcon()
 
@@ -82,7 +161,7 @@ class DoTestFragment : Fragment() {
                     context,
                     DividerItemDecoration.HORIZONTAL
                 ).apply {
-                    setDrawable(context?.getDrawable(R.drawable.divider_recyclerview_horizontal_9)!!)
+                    setDrawable(context?.getDrawable(com.example.toeictraining.R.drawable.divider_recyclerview_horizontal_9)!!)
                 }
             )
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -141,9 +220,14 @@ class DoTestFragment : Fragment() {
         val actionBar = (activity as MainActivity).supportActionBar
         val actionBarDrawerToggle = (activity as MainActivity).getDrawerToggle()
         actionBarDrawerToggle.isDrawerIndicatorEnabled = false
-        actionBar?.setHomeAsUpIndicator(R.drawable.back_white_24dp)
+        actionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white_24dp)
         actionBarDrawerToggle.setToolbarNavigationClickListener {
             (activity as MainActivity).onBackPressed()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+//        mediaPlayer.stop()
     }
 }
