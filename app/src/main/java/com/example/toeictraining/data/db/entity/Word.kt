@@ -30,7 +30,7 @@ data class Word(
     @ColumnInfo(name = FIELD_IMAGE_URL) val imageUrl: String,
     @ColumnInfo(name = FIELD_EXAMPLE) val example: String,
     @ColumnInfo(name = FIELD_EXAMPLE_TRANSLATION) val exampleTranslate: String? = null,
-    @ColumnInfo(name = FIELD_TOPIC_ID) val topicId: Int,
+    @ColumnInfo(name = FIELD_TOPIC_ID, index = true) val topicId: Int,
     @ColumnInfo(name = FIELD_LEVEL) var level: Int = 0,
     @ColumnInfo(name = FIELD_SOUND) val sound: String? = null
 ) : Parcelable {

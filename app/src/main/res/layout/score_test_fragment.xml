@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".ui.fragments.test.score.ScoreTestFragment">
+
+        <TextView
+            android:id="@+id/text_total_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_30"
+            android:text="@string/test_time_total"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_40"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_read_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_5"
+            android:text="@string/read_score"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_30"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_total_time" />
+
+        <TextView
+            android:id="@+id/text_listen_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_5"
+            android:text="@string/listen_score"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_30"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@id/text_read_score"
+            app:layout_constraintTop_toBottomOf="@id/text_read_score" />
+
+        <TextView
+            android:id="@+id/title_total_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_15"
+            android:text="@string/total_score"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_50"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_listen_score" />
+
+        <TextView
+            android:id="@+id/total_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_8"
+            android:text="@string/total_score_example"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_80"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title_total_score" />
+
+
+        <TextView
+            android:id="@+id/button_continue_do_test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_20"
+            android:layout_marginTop="@dimen/space_15"
+            android:background="@drawable/color_primarycolor_corner_10"
+            android:paddingStart="@dimen/space_20"
+            android:paddingTop="@dimen/space_15"
+            android:paddingEnd="@dimen/space_20"
+            android:paddingBottom="@dimen/space_15"
+            android:text="@string/continue_do_test"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_26"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/total_score" />
+
+        <TextView
+            android:id="@+id/button_not_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_15"
+            android:layout_marginEnd="@dimen/space_20"
+            android:background="@drawable/stroke_pink_1_corner_10"
+            android:paddingStart="@dimen/space_20"
+            android:paddingTop="@dimen/space_15"
+            android:paddingEnd="@dimen/space_20"
+            android:paddingBottom="@dimen/space_15"
+            android:text="@string/answer"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_26"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/total_score" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -12,13 +12,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.toeictraining.R
 import com.example.toeictraining.ui.fragments.test.start_test.StartTestFragment
 import com.example.toeictraining.ui.main.MainActivity
-import kotlinx.android.synthetic.main.test_fragment.*
-import kotlinx.android.synthetic.main.toolbar.*
+import kotlinx.android.synthetic.main.home_test_fragment.*
 
-class TestFragment : Fragment() {
+class HomeTestFragment : Fragment() {
 
     companion object {
-        val TAG = TestFragment::class.java.name
+        val TAG = HomeTestFragment::class.java.name
         const val PART_ID = "part_id"
         const val TIME = "time"
         val IDS_PART = arrayOf(1, 2, 3, 4, 5, 6, 7, 8)
@@ -40,7 +39,7 @@ class TestFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.test_fragment, container, false)
+        return inflater.inflate(R.layout.home_test_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -52,10 +51,20 @@ class TestFragment : Fragment() {
     private fun initViews() {
         (activity as MainActivity).setTitle(resources.getString(R.string.test_toeic))
         (activity as MainActivity).setRightButtonText("")
+
+        configNavigationIcon()
+
         setRecyclerViewListPart()
 
 //        drawerToggle.isDrawerIndicatorEnabled = true
 //        toolbar.setNavigationIcon(R.drawable.menu_white_24dp)
+    }
+
+    private fun configNavigationIcon() {
+        val actionBar = (activity as MainActivity).supportActionBar
+        val actionBarDrawerToggle = (activity as MainActivity).getDrawerToggle()
+        actionBarDrawerToggle.isDrawerIndicatorEnabled = true
+        actionBar?.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp)
     }
 
     private fun setRecyclerViewListPart() {

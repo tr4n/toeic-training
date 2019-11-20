@@ -11,7 +11,7 @@ import com.example.toeictraining.R
 
 import com.example.toeictraining.ui.fragments.test.do_test.DoTestFragment
 
-import com.example.toeictraining.ui.fragments.test.home.TestFragment
+import com.example.toeictraining.ui.fragments.test.home.HomeTestFragment
 import com.example.toeictraining.ui.main.MainActivity
 import kotlinx.android.synthetic.main.start_test_fragment.*
 
@@ -57,7 +57,7 @@ class StartTestFragment : Fragment() {
     }
 
     private fun setTextContent() {
-        val partID = arguments?.getInt(TestFragment.PART_ID)
+        val partID = arguments?.getInt(HomeTestFragment.PART_ID)
         if (partID == 8) {
             text_part.text = getString(R.string.test_full)
         } else {
@@ -65,14 +65,14 @@ class StartTestFragment : Fragment() {
                 getString(R.string.part).plus(" ").plus(partID)
         }
         text_time.text =
-            getString(R.string.time).plus(" ").plus(arguments?.getString(TestFragment.TIME))
+            getString(R.string.time).plus(" ").plus(arguments?.getString(HomeTestFragment.TIME))
     }
 
     private fun configNavigationIcon() {
         val actionBar = (activity as MainActivity).supportActionBar
         val actionBarDrawerToggle = (activity as MainActivity).getDrawerToggle()
         actionBarDrawerToggle.isDrawerIndicatorEnabled = false
-        actionBar?.setHomeAsUpIndicator(R.drawable.back_white_24dp)
+        actionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white_24dp)
         actionBarDrawerToggle.setToolbarNavigationClickListener {
             (activity as MainActivity).onBackPressed()
         }
