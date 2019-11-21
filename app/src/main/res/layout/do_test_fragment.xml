@@ -18,7 +18,8 @@
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recyclerViewQuestion">
@@ -46,18 +47,17 @@
                     android:textSize="@dimen/text_18"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:visibility="gone" />
+                    tools:visibility="visible" />
 
                 <ImageView
                     android:id="@+id/imageView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/q1_p1"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:layout_editor_absoluteX="29dp"
-                    tools:layout_editor_absoluteY="16dp" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/button_play_sound"
@@ -66,6 +66,7 @@
                     android:layout_marginStart="60dp"
                     android:layout_marginTop="32dp"
                     android:background="@drawable/play_24"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/imageView2" />
 
@@ -77,6 +78,7 @@
                     android:layout_marginStart="13dp"
                     android:layout_marginTop="32dp"
                     android:layout_marginEnd="50dp"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/button_play_sound"
                     app:layout_constraintTop_toBottomOf="@+id/imageView2" />
@@ -92,6 +94,7 @@
                 android:text="A"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/text_18"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/layout_question" />
 
@@ -103,6 +106,7 @@
                 android:text="B"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/text_18"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_a" />
 
@@ -114,6 +118,7 @@
                 android:text="C"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/text_18"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_b" />
 
@@ -121,10 +126,13 @@
                 android:id="@+id/text_d"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
                 android:padding="@dimen/space_15"
                 android:text="D"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/text_18"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_c" />
 

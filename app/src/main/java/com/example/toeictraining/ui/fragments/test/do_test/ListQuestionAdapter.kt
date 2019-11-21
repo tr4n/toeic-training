@@ -2,11 +2,11 @@ package com.example.toeictraining.ui.fragments.test.do_test
 
 import android.content.Context
 import android.content.res.Resources
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.toeictraining.R
@@ -14,10 +14,10 @@ import kotlinx.android.synthetic.main.item_recyclerview_question_normal.view.*
 
 class ListQuestionAdapter(
     private var context: Context,
-    private var resources: MutableList<QuestionStatusEntity>
+    private var resources: MutableList<QuestionStatus>
 ) : RecyclerView.Adapter<ListQuestionAdapter.ViewHolder>() {
 
-    var indexMain = 0
+    val indexMain = MutableLiveData<Int>()
     private lateinit var recyclerView: RecyclerView
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(viewType, null, false))
@@ -30,8 +30,8 @@ class ListQuestionAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (resources[position].status) {
-            QuestionStatusEntity.Status.MAIN -> R.layout.item_recyclerview_question_main
-            QuestionStatusEntity.Status.DONE -> R.layout.item_recyclerview_question_done
+            QuestionStatus.Status.MAIN -> R.layout.item_recyclerview_question_main
+            QuestionStatus.Status.DONE -> R.layout.item_recyclerview_question_done
             else -> R.layout.item_recyclerview_question_normal
         }
     }
@@ -41,8 +41,8 @@ class ListQuestionAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (resources[position].status == QuestionStatusEntity.Status.MAIN) {
-            indexMain = position
+        if (resources[position].status == QuestionStatus.Status.MAIN) {
+            indexMain.postValue(position)
             recyclerView.apply {
                 (layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
                     position,
@@ -52,9 +52,11 @@ class ListQuestionAdapter(
         }
         holder.textQuestion.text = resources[position].index.toString()
         holder.itemView.setOnClickListener {
-            resources[indexMain].status =
-                QuestionStatusEntity.Status.NORMAL // load status from db instead of
-            resources[position].status = QuestionStatusEntity.Status.MAIN
+            indexMain.value?.let {
+                resources[it].status =
+                    QuestionStatus.Status.NORMAL // load status from db instead of
+            }
+            resources[position].status = QuestionStatus.Status.MAIN
             notifyDataSetChanged()
         }
 
