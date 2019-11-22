@@ -9,6 +9,6 @@ class QuestionStatus(
     var answer:String
 ) {
     enum class Status {
-        NORMAL, DONE, MAIN
+        NOT_DONE, DONE, MAIN
     }
 }

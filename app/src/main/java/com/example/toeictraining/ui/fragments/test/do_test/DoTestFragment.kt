@@ -56,98 +56,8 @@ class DoTestFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(DoTestViewModel::class.java)
 
         initViews()
-
         handleObservable()
-
-        (activity as MainActivity).toolbar_button_right.setOnClickListener {
-            val alertDialog = AlertDialog.Builder(context)
-                .setView(R.layout.dialog_submit_test)
-                .setCancelable(false)
-                .create()
-            alertDialog?.let {
-                it.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                it.show()
-                it.button_submit.setOnClickListener {
-                    (activity as MainActivity).openFragment(
-                        R.id.content,
-                        ScoreTestFragment(),
-                        false
-                    )
-                    alertDialog.cancel()
-                }
-                it.button_not_submit.setOnClickListener {
-                    alertDialog.cancel()
-                }
-            }
-        }
-
-        text_a.setOnClickListener {
-            recyclerViewQuestion.adapter?.let { adapter ->
-                (adapter as ListQuestionAdapter).indexMain.value?.let {
-                    if (text_a.tag == null || text_a.tag == false) {
-                        questions[it].answer = "a"
-                        setAnswer(text_a)
-                        removeAnswer(text_b)
-                        removeAnswer(text_c)
-                        removeAnswer(text_d)
-                    } else {
-                        questions[it].answer = ""
-                        removeAnswer(text_a)
-                    }
-                }
-            }
-        }
-
-        text_b.setOnClickListener {
-            recyclerViewQuestion.adapter?.let { adapter ->
-                (adapter as ListQuestionAdapter).indexMain.value?.let {
-                    if (text_b.tag == null || text_b.tag == false) {
-                        questions[it].answer = "b"
-                        setAnswer(text_b)
-                        removeAnswer(text_a)
-                        removeAnswer(text_c)
-                        removeAnswer(text_d)
-                    } else {
-                        questions[it].answer = ""
-                        removeAnswer(text_b)
-                    }
-                }
-            }
-        }
-
-        text_c.setOnClickListener {
-            recyclerViewQuestion.adapter?.let { adapter ->
-                (adapter as ListQuestionAdapter).indexMain.value?.let {
-                    if (text_c.tag == null || text_c.tag == false) {
-                        questions[it].answer = "c"
-                        setAnswer(text_c)
-                        removeAnswer(text_b)
-                        removeAnswer(text_a)
-                        removeAnswer(text_d)
-                    } else {
-                        questions[it].answer = ""
-                        removeAnswer(text_c)
-                    }
-                }
-            }
-        }
-
-        text_d.setOnClickListener {
-            recyclerViewQuestion.adapter?.let { adapter ->
-                (adapter as ListQuestionAdapter).indexMain.value?.let {
-                    if (text_d.tag == null || text_d.tag == false) {
-                        questions[it].answer = "d"
-                        setAnswer(text_d)
-                        removeAnswer(text_b)
-                        removeAnswer(text_c)
-                        removeAnswer(text_a)
-                    } else {
-                        questions[it].answer = ""
-                        removeAnswer(text_d)
-                    }
-                }
-            }
-        }
+        listener()
 
 
 //        button_play_sound.setOnClickListener {
@@ -172,6 +82,99 @@ class DoTestFragment : Fragment() {
 //            observer = MediaObserver()
 //            Thread(observer).start()
 //        }
+    }
+
+    private fun listener() {
+        (activity as MainActivity).toolbar_button_right.setOnClickListener {
+            val alertDialog = AlertDialog.Builder(context)
+                .setView(R.layout.dialog_submit_test)
+                .setCancelable(false)
+                .create()
+            alertDialog?.let {
+                it.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                it.show()
+                it.button_submit.setOnClickListener {
+
+                    (activity as MainActivity).openFragment(
+                        R.id.content,
+                        ScoreTestFragment(questions),
+                        false
+                    )
+                    alertDialog.cancel()
+                }
+                it.button_not_submit.setOnClickListener {
+                    alertDialog.cancel()
+                }
+            }
+        }
+
+        text_a.setOnClickListener {
+            recyclerViewQuestion.adapter?.let { adapter ->
+                (adapter as ListQuestionAdapter).indexMain.value?.let {
+                    if (text_a.tag == null || text_a.tag == false) {
+                        if (questions[it].answer == "b") removeAnswer(text_b)
+                        if (questions[it].answer == "c") removeAnswer(text_c)
+                        if (questions[it].answer == "d") removeAnswer(text_d)
+                        questions[it].answer = "a"
+                        setAnswer(text_a)
+                    } else {
+                        questions[it].answer = ""
+                        removeAnswer(text_a)
+                    }
+                }
+            }
+        }
+
+        text_b.setOnClickListener {
+            recyclerViewQuestion.adapter?.let { adapter ->
+                (adapter as ListQuestionAdapter).indexMain.value?.let {
+                    if (text_b.tag == null || text_b.tag == false) {
+                        if (questions[it].answer == "a") removeAnswer(text_a)
+                        if (questions[it].answer == "c") removeAnswer(text_c)
+                        if (questions[it].answer == "d") removeAnswer(text_d)
+                        questions[it].answer = "b"
+                        setAnswer(text_b)
+                    } else {
+                        questions[it].answer = ""
+                        removeAnswer(text_b)
+                    }
+                }
+            }
+        }
+
+        text_c.setOnClickListener {
+            recyclerViewQuestion.adapter?.let { adapter ->
+                (adapter as ListQuestionAdapter).indexMain.value?.let {
+                    if (text_c.tag == null || text_c.tag == false) {
+                        if (questions[it].answer == "a") removeAnswer(text_a)
+                        if (questions[it].answer == "b") removeAnswer(text_b)
+                        if (questions[it].answer == "d") removeAnswer(text_d)
+                        questions[it].answer = "c"
+                        setAnswer(text_c)
+                    } else {
+                        questions[it].answer = ""
+                        removeAnswer(text_c)
+                    }
+                }
+            }
+        }
+
+        text_d.setOnClickListener {
+            recyclerViewQuestion.adapter?.let { adapter ->
+                (adapter as ListQuestionAdapter).indexMain.value?.let {
+                    if (text_d.tag == null || text_d.tag == false) {
+                        if (questions[it].answer == "a") removeAnswer(text_a)
+                        if (questions[it].answer == "b") removeAnswer(text_b)
+                        if (questions[it].answer == "c") removeAnswer(text_c)
+                        questions[it].answer = "d"
+                        setAnswer(text_d)
+                    } else {
+                        questions[it].answer = ""
+                        removeAnswer(text_d)
+                    }
+                }
+            }
+        }
     }
 
     private fun setAnswer(answerView: TextView) {
@@ -215,6 +218,7 @@ class DoTestFragment : Fragment() {
         (recyclerViewQuestion.adapter as ListQuestionAdapter).indexMain.observe(
             viewLifecycleOwner,
             Observer {
+                scrollView2.scrollTo(0,0)
                 val question = questions[it]
                 text_question_content.visibility = View.VISIBLE
                 text_question_content.text = question.data.content
@@ -222,6 +226,14 @@ class DoTestFragment : Fragment() {
                 text_b.text = question.data.b
                 text_c.text = question.data.c
                 text_d.text = question.data.d
+                removeAnswer(text_a)
+                removeAnswer(text_b)
+                removeAnswer(text_c)
+                removeAnswer(text_d)
+                if(question.answer == "a") setAnswer(text_a)
+                if(question.answer == "b") setAnswer(text_b)
+                if(question.answer == "c") setAnswer(text_c)
+                if(question.answer == "d") setAnswer(text_d)
             })
     }
 
@@ -249,13 +261,13 @@ class DoTestFragment : Fragment() {
     private fun initViews() {
         (activity as MainActivity).setTitle("56:00")
         (activity as MainActivity).setRightButtonText(getString(R.string.submit_test))
-
         configNavigationIcon()
 
+        //fake data
         for (i in 1..100) {
             questions.add(
                 QuestionStatus(
-                    i, QuestionStatus.Status.NORMAL, Question(
+                    i, QuestionStatus.Status.NOT_DONE, Question(
                         i,
                         "Halls will come to Life with Music\n" +
                                 " \n" +
@@ -294,6 +306,10 @@ class DoTestFragment : Fragment() {
 
         questions[5].status = QuestionStatus.Status.MAIN
 
+        setRecyclerviewQuestion()
+    }
+
+    private fun setRecyclerviewQuestion() {
         recyclerViewQuestion.apply {
             layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false).apply {
@@ -357,7 +373,7 @@ class DoTestFragment : Fragment() {
                 private fun setMainPosition(pos: Int) {
                     (adapter as ListQuestionAdapter).indexMain.value?.let {
                         questions[it].status =
-                            QuestionStatus.Status.NORMAL // load lại status
+                            QuestionStatus.Status.NOT_DONE // load lại status
                     }
                     questions[pos].status = QuestionStatus.Status.MAIN
                 }

@@ -41,7 +41,8 @@ class ListQuestionAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (resources[position].status == QuestionStatus.Status.MAIN) {
+        val question = resources[position]
+        if (question.status == QuestionStatus.Status.MAIN) {
             indexMain.postValue(position)
             recyclerView.apply {
                 (layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
@@ -50,13 +51,13 @@ class ListQuestionAdapter(
                 )
             }
         }
-        holder.textQuestion.text = resources[position].index.toString()
+        holder.textQuestion.text = question.index.toString()
         holder.itemView.setOnClickListener {
             indexMain.value?.let {
                 resources[it].status =
-                    QuestionStatus.Status.NORMAL // load status from db instead of
+                    QuestionStatus.Status.NOT_DONE // load status from db instead of
             }
-            resources[position].status = QuestionStatus.Status.MAIN
+            question.status = QuestionStatus.Status.MAIN
             notifyDataSetChanged()
         }
 
