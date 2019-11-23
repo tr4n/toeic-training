@@ -1,6 +1,6 @@
 package com.example.toeictraining.utils
 
-import com.example.toeictraining.data.db.entity.Word
+import com.example.toeictraining.base.entity.Word
 import com.example.toeictraining.utils.WordHelper.LEVEL_MAX
 import com.example.toeictraining.utils.WordHelper.LEVEL_MIN
 

@@ -1,13 +1,11 @@
 package com.example.toeictraining.ui.fragments.test.score
 
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import com.example.toeictraining.R
 import com.example.toeictraining.ui.fragments.test.do_test.QuestionStatus
 import com.example.toeictraining.ui.fragments.test.home.HomeTestFragment
@@ -43,7 +41,7 @@ class ScoreTestFragment(val questions: List<QuestionStatus>) : Fragment() {
             }
         }
         total_score.text = totalScore.toString()
-        
+
 
         configNavigationIcon()
     }

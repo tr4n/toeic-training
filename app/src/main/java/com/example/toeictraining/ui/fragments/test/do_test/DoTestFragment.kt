@@ -218,7 +218,7 @@ class DoTestFragment : Fragment() {
         (recyclerViewQuestion.adapter as ListQuestionAdapter).indexMain.observe(
             viewLifecycleOwner,
             Observer {
-                scrollView2.scrollTo(0,0)
+                scrollView2.scrollTo(0, 0)
                 val question = questions[it]
                 text_question_content.visibility = View.VISIBLE
                 text_question_content.text = question.data.content
@@ -230,10 +230,10 @@ class DoTestFragment : Fragment() {
                 removeAnswer(text_b)
                 removeAnswer(text_c)
                 removeAnswer(text_d)
-                if(question.answer == "a") setAnswer(text_a)
-                if(question.answer == "b") setAnswer(text_b)
-                if(question.answer == "c") setAnswer(text_c)
-                if(question.answer == "d") setAnswer(text_d)
+                if (question.answer == "a") setAnswer(text_a)
+                if (question.answer == "b") setAnswer(text_b)
+                if (question.answer == "c") setAnswer(text_c)
+                if (question.answer == "d") setAnswer(text_d)
             })
     }
 

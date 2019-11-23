@@ -1,4 +1,4 @@
-package com.example.toeictraining.data.db.entity
+package com.example.toeictraining.base.entity
 
 import android.os.Parcelable
 import androidx.annotation.NonNull

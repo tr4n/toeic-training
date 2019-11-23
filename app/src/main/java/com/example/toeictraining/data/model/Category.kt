@@ -1,6 +1,6 @@
 package com.example.toeictraining.data.model
 
-import com.example.toeictraining.data.db.entity.Topic
+import com.example.toeictraining.base.entity.Topic
 
 data class Category(
     val name: String,

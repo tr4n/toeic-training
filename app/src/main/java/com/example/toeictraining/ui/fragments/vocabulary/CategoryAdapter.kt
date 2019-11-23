@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseRecyclerAdapter
 import com.example.toeictraining.base.BaseViewHolder
-import com.example.toeictraining.data.db.entity.Topic
+import com.example.toeictraining.base.entity.Topic
 import com.example.toeictraining.data.model.Category
 import kotlinx.android.synthetic.main.item_category.view.*
 

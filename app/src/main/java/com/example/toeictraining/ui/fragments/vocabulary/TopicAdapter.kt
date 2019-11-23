@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseRecyclerAdapter
 import com.example.toeictraining.base.BaseViewHolder
-import com.example.toeictraining.data.db.entity.Topic
+import com.example.toeictraining.base.entity.Topic
 import com.example.toeictraining.utils.Constants
 import kotlinx.android.synthetic.main.item_topic.view.*
 
