@@ -1,6 +1,6 @@
 package com.example.toeictraining.di
 
-import com.example.toeictraining.data.db.AppDatabase
+import com.example.toeictraining.base.database.AppDatabase
 import com.example.toeictraining.data.repository.TopicRepositoryImpl
 import com.example.toeictraining.data.repository.WordRepositoryImpl
 import org.koin.core.qualifier.named

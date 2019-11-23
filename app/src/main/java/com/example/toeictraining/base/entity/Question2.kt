@@ -3,18 +3,17 @@ package com.example.toeictraining.base.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.toeictraining.base.enums.QuestionType
 
-
-data class Question(
+@Entity(tableName = Question2.TABLE_NAME)
+data class Question2(
     @PrimaryKey @ColumnInfo(name = FIELD_ID) var id: Int,
     @ColumnInfo(name = FIELD_CONTENT) var content: String,
     @ColumnInfo(name = FIELD_A) var a: String,
     @ColumnInfo(name = FIELD_B) var b: String,
-    @ColumnInfo(name = FIELD_C) var c: String?,
+    @ColumnInfo(name = FIELD_C) var c: String,
     @ColumnInfo(name = FIELD_D) var d: String?,
     @ColumnInfo(name = FIELD_SOUND_LINK) var soundLink: String?,
-    @ColumnInfo(name = FIELD_TYPE) var type: QuestionType,
+    @ColumnInfo(name = FIELD_TYPE) var type: String,
     @ColumnInfo(name = FIELD_CORRECT_ANSWER) var correctAnswer: String,
     @ColumnInfo(name = FIELD_ID_PART) var idPart: Int
 ) {

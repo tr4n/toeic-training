@@ -1,6 +1,6 @@
 package com.example.toeictraining.data.repository
 
-import com.example.toeictraining.data.db.entity.Topic
+import com.example.toeictraining.base.entity.Topic
 import com.example.toeictraining.data.model.Category
 
 interface TopicRepository {

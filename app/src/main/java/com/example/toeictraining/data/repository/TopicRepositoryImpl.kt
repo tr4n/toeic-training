@@ -1,7 +1,7 @@
 package com.example.toeictraining.data.repository
 
-import com.example.toeictraining.data.db.dao.TopicDao
-import com.example.toeictraining.data.db.entity.Topic
+import com.example.toeictraining.base.database.dao.TopicDao
+import com.example.toeictraining.base.entity.Topic
 import com.example.toeictraining.data.model.Category
 import com.example.toeictraining.utils.Constants
 

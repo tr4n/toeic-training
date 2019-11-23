@@ -6,7 +6,7 @@ class QuestionStatus(
     var index: Int,
     var status: Status,
     var data: Question,
-    var answer:String
+    var answer: String
 ) {
     enum class Status {
         NOT_DONE, DONE, MAIN

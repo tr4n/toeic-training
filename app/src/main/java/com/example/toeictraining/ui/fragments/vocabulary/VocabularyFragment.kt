@@ -1,6 +1,6 @@
 package com.example.toeictraining.ui.fragments.vocabulary
 
-import androidx.lifecycle.LifecycleOwner
+import android.util.Log
 import androidx.lifecycle.Observer
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseFragment
@@ -16,8 +16,6 @@ class VocabularyFragment : BaseFragment<VocabularyViewModel>() {
     override val layoutResource = R.layout.fragment_vocabulary
 
     override val viewModel: VocabularyViewModel by viewModel()
-
-    override val lifecycleOwner: LifecycleOwner = this@VocabularyFragment
 
     private val categoryAdapter: CategoryAdapter by lazy {
         get<CategoryAdapter>(named(ScopeNames.CATEGORY_ADAPTER)).apply {
@@ -38,7 +36,8 @@ class VocabularyFragment : BaseFragment<VocabularyViewModel>() {
     override fun observeData() = with(viewModel) {
         super.observeData()
 
-        categories.observe(lifecycleOwner, Observer {
+        categories.observe(viewLifecycleOwner, Observer {
+            Log.d("VocabularyFragment", "category = $it")
             categoryAdapter.updateData(it)
         })
     }
