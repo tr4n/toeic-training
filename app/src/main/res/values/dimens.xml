@@ -44,4 +44,5 @@
     <dimen name="space_28">28dp</dimen>
     <dimen name="text_80">80sp</dimen>
     <dimen name="space_14">14dp</dimen>
+    <dimen name="text_64">64sp</dimen>
 </resources>

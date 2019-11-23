@@ -45,9 +45,9 @@
     <string name="submit_test_ask">Nộp bài?</string>
     <string name="submit">Nộp</string>
     <string name="not_submit">Chưa</string>
-    <string name="test_time_total">Thời gian: \t 89:45</string>
-    <string name="read_score">Điểm đọc: \t\t\t 400</string>
-    <string name="listen_score">Điểm nghe: \t\t\t 400</string>
+    <string name="test_time_total">Thời gian: \t</string>
+    <string name="read_score">Điểm đọc: \t</string>
+    <string name="listen_score">Điểm nghe: \t</string>
     <string name="total_score">Tổng điểm</string>
     <string name="total_score_example">800</string>
     <string name="continue_do_test">Làm tiếp</string>

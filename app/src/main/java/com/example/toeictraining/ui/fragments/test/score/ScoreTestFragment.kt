@@ -10,9 +10,10 @@ import com.example.toeictraining.R
 import com.example.toeictraining.ui.fragments.test.do_test.QuestionStatus
 import com.example.toeictraining.ui.fragments.test.home.HomeTestFragment
 import com.example.toeictraining.ui.main.MainActivity
+import com.example.toeictraining.utils.DateUtils
 import kotlinx.android.synthetic.main.score_test_fragment.*
 
-class ScoreTestFragment(val questions: List<QuestionStatus>) : Fragment() {
+class ScoreTestFragment(val questions: List<QuestionStatus>, val totalTime: Long) : Fragment() {
 
     companion object {
         val TAG = ScoreTestFragment::class.java.name
@@ -34,6 +35,10 @@ class ScoreTestFragment(val questions: List<QuestionStatus>) : Fragment() {
 
         initViews()
 
+        button_continue_do_test.setOnClickListener {
+            (activity as MainActivity).openFragment(R.id.content, HomeTestFragment(), false)
+        }
+
         //caculate score
         for (question in questions) {
             if (question.answer.equals(question.data.correctAnswer)) {
@@ -41,13 +46,28 @@ class ScoreTestFragment(val questions: List<QuestionStatus>) : Fragment() {
             }
         }
         total_score.text = totalScore.toString()
+        text_total_time.text =
+            getString(R.string.test_time_total).plus(DateUtils.secondsToStringTime(totalTime))
+        var listenScore = 0
+        var readScore = 0
 
-
+        for (question in questions) {
+            if (question.data.correctAnswer.equals(question.answer)) {
+                if (question.data.soundLink != null) {
+                    listenScore += 5
+                    continue
+                }
+                readScore += 5
+            }
+        }
+        text_listen_score.text = "Điểm nghe: $listenScore"
+        text_read_score.text = "Điểm đọc: $readScore"
         configNavigationIcon()
     }
 
     private fun initViews() {
-
+        (activity as MainActivity).setRightButtonText("")
+        (activity as MainActivity).setTitle("")
     }
 
     private fun configNavigationIcon() {
