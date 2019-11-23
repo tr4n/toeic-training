@@ -3,10 +3,6 @@ package com.example.toeictraining.data.db
 import android.content.Context
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
-import com.example.toeictraining.base.database.dao.QuestionDao
-import com.example.toeictraining.base.database.dao.QuestionTypeConverter
-import com.example.toeictraining.base.entity.Question
 import com.example.toeictraining.data.db.dao.TopicDao
 import com.example.toeictraining.data.db.dao.WordDao
 import com.example.toeictraining.data.db.entity.Topic

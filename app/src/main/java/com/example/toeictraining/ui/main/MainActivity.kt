@@ -5,7 +5,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseActivity
-import com.example.toeictraining.ui.fragments.test.do_test.DoTestFragment
 import com.example.toeictraining.ui.fragments.test.home.HomeTestFragment
 import com.example.toeictraining.ui.fragments.vocabulary.VocabularyFragment
 import kotlinx.android.synthetic.main.activity_main.*
