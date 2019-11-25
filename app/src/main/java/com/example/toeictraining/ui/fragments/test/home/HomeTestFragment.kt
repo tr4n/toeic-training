@@ -106,7 +106,7 @@ class HomeTestFragment : Fragment() {
         }
     }
 
-    private fun openStartTestFragment(index: Int) {
+    fun openStartTestFragment(index: Int) {
         val bundle = Bundle()
         bundle.putInt(PART_ID, IDS_PART[index])
         bundle.putString(TIME, TIMES_PART[index])

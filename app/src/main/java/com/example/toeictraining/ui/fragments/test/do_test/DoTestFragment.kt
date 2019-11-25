@@ -25,8 +25,8 @@ import com.example.toeictraining.base.enums.QuestionLevel
 import com.example.toeictraining.ui.fragments.test.score.ScoreTestFragment
 import com.example.toeictraining.ui.main.MainActivity
 import com.example.toeictraining.utils.DateUtils
-import kotlinx.android.synthetic.main.dialog_submit_test.*
 import kotlinx.android.synthetic.main.do_test_fragment.*
+import kotlinx.android.synthetic.main.score_test_fragment.*
 import kotlinx.android.synthetic.main.toolbar.*
 import kotlin.math.abs
 import kotlin.math.roundToLong
@@ -111,7 +111,7 @@ class DoTestFragment(val secondTotalTime: Long) : Fragment() {
     private fun listener() {
         (activity as MainActivity).toolbar_button_right.setOnClickListener {
             val alertDialog = AlertDialog.Builder(context)
-                .setView(R.layout.dialog_submit_test)
+                .setView(R.layout.dialog_do_test)
                 .setCancelable(false)
                 .create()
             alertDialog?.let {
@@ -286,7 +286,7 @@ class DoTestFragment(val secondTotalTime: Long) : Fragment() {
         configNavigationIcon()
 
         //fake data
-        for (i in 1..100) {
+        for (i in 1..200) {
             questions.add(
                 QuestionStatus(
                     i, QuestionStatus.Status.NOT_DONE, Question(
@@ -329,10 +329,10 @@ class DoTestFragment(val secondTotalTime: Long) : Fragment() {
         questions[5].status = QuestionStatus.Status.MAIN
         questions[1].data.soundLink = "123123133"
 
-        setRecyclerviewQuestion()
+        setRecyclerQuestion()
     }
 
-    private fun setRecyclerviewQuestion() {
+    private fun setRecyclerQuestion() {
         recyclerViewQuestion.apply {
             layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false).apply {
@@ -410,13 +410,35 @@ class DoTestFragment(val secondTotalTime: Long) : Fragment() {
         actionBarDrawerToggle.isDrawerIndicatorEnabled = false
         actionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white_24dp)
         actionBarDrawerToggle.setToolbarNavigationClickListener {
-            (activity as MainActivity).onBackPressed()
+            val alertDialog = AlertDialog.Builder(context)
+                .setView(R.layout.dialog_do_test)
+                .setCancelable(false)
+                .create()
+            alertDialog?.let {
+                it.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                it.show()
+                it.button_submit.text = "Không"
+                it.button_not_submit.text = "Thoát"
+                it.button_submit.setOnClickListener {
+                    alertDialog.cancel()
+                }
+                it.button_not_submit.setOnClickListener {
+                    (activity as MainActivity).onBackPressed()
+                    countDownTimer.cancel()
+                    alertDialog.cancel()
+                }
+            }
+
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         countDownTimer.cancel()
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        countDownTimer.cancel()
     }
 }

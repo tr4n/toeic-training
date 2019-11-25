@@ -71,31 +71,445 @@
             app:layout_constraintStart_toStartOf="@id/text_read_score"
             app:layout_constraintTop_toBottomOf="@id/text_read_score" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layoutDetail"
+        <TextView
+            android:id="@+id/text_expand"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:drawableEnd="@drawable/collapse_48"
+            android:drawablePadding="@dimen/space_10"
+            android:gravity="end|center_vertical"
+            android:includeFontPadding="false"
+            android:paddingStart="@dimen/space_10"
+            android:paddingEnd="@dimen/space_10"
+            android:text="Chi tiết kết quả"
+            android:textColor="@android:color/black"
+            android:textSize="26sp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_listen_score">
+            app:layout_constraintTop_toBottomOf="@id/text_listen_score" />
 
-            <ProgressBar
-                android:layout_marginTop="@dimen/space_20"
-                style="@android:style/Widget.ProgressBar.Horizontal"
-                android:layout_width="match_parent"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_expand">
+
+            <TextView
+                android:id="@+id/text_part_1"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:max="100"
-                android:progress="50"
-                android:indeterminateTint="@color/colorPrimary"
+                android:layout_marginStart="@dimen/space_10"
+                android:layout_marginTop="@dimen/space_20"
+                android:text="@string/part_1"
+                android:textColor="@android:color/black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <ProgressBar
+                android:id="@+id/progressbar_part_1"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="@dimen/space_150"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:indeterminateTint="@color/colorPrimary"
+                android:max="100"
+                android:progress="50"
+                app:layout_constraintBottom_toBottomOf="@id/text_part_1"
+                app:layout_constraintStart_toEndOf="@+id/text_part_1"
+                app:layout_constraintTop_toTopOf="@id/text_part_1" />
+
+            <TextView
+                android:id="@+id/text_evaluate_1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:gravity="center"
+                android:text="Trung bình"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_15"
+                app:layout_constraintBottom_toBottomOf="@id/progressbar_part_1"
+                app:layout_constraintEnd_toStartOf="@+id/button_learn_more_1"
+                app:layout_constraintStart_toEndOf="@id/progressbar_part_1"
+                app:layout_constraintTop_toTopOf="@id/progressbar_part_1" />
+
+            <TextView
+                android:id="@+id/button_learn_more_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/color_primarycolor_corner_10"
+                android:paddingStart="@dimen/space_10"
+                android:paddingTop="@dimen/space_5"
+                android:paddingEnd="@dimen/space_10"
+                android:paddingBottom="@dimen/space_5"
+                android:text="Học Thêm"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_15"
+                app:layout_constraintBottom_toBottomOf="@id/text_evaluate_1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/text_evaluate_1"
+                app:layout_constraintTop_toTopOf="@id/text_evaluate_1" />
+
+            <TextView
+                android:id="@+id/text_part_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_10"
+                android:layout_marginTop="20dp"
+                android:text="@string/part_2"
+                android:textColor="@android:color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_part_1" />
+
+            <ProgressBar
+                android:id="@+id/progressbar_part_2"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="@dimen/space_150"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:indeterminateTint="@color/colorPrimary"
+                android:max="100"
+                android:progress="50"
+                app:layout_constraintBottom_toBottomOf="@+id/text_part_2"
+                app:layout_constraintStart_toEndOf="@id/text_part_2"
+                app:layout_constraintTop_toTopOf="@+id/text_part_2" />
+
+            <TextView
+                android:id="@+id/text_evaluate_2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:gravity="center"
+                android:text="Xuất sắc"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_15"
+                app:layout_constraintBottom_toBottomOf="@id/progressbar_part_2"
+                app:layout_constraintEnd_toStartOf="@+id/button_learn_more_2"
+                app:layout_constraintStart_toEndOf="@id/progressbar_part_2"
+                app:layout_constraintTop_toTopOf="@id/progressbar_part_2" />
+
+            <TextView
+                android:id="@+id/button_learn_more_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/color_primarycolor_corner_10"
+                android:paddingStart="@dimen/space_10"
+                android:paddingTop="@dimen/space_5"
+                android:paddingEnd="@dimen/space_10"
+                android:paddingBottom="@dimen/space_5"
+                android:text="Học Thêm"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_15"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="@id/text_evaluate_2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/text_evaluate_2"
+                app:layout_constraintTop_toTopOf="@id/text_evaluate_2" />
+
+            <TextView
+                android:id="@+id/text_part_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_10"
+                android:layout_marginTop="20dp"
+                android:text="@string/part_3"
+                android:textColor="@android:color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_part_2" />
+
+            <ProgressBar
+                android:id="@+id/progressbar_part_3"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="@dimen/space_150"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:indeterminateTint="@color/colorPrimary"
+                android:max="100"
+                android:progress="50"
+                app:layout_constraintBottom_toBottomOf="@id/text_part_3"
+                app:layout_constraintStart_toEndOf="@id/text_part_3"
+                app:layout_constraintTop_toTopOf="@id/text_part_3" />
+
+            <TextView
+                android:id="@+id/text_evaluate_3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:gravity="center"
+                android:text="Yếu"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_15"
+                app:layout_constraintBottom_toBottomOf="@id/progressbar_part_3"
+                app:layout_constraintEnd_toStartOf="@+id/button_learn_more_3"
+                app:layout_constraintStart_toEndOf="@id/progressbar_part_3"
+                app:layout_constraintTop_toTopOf="@id/progressbar_part_3" />
+
+            <TextView
+                android:id="@+id/button_learn_more_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/color_primarycolor_corner_10"
+                android:paddingStart="@dimen/space_10"
+                android:paddingTop="@dimen/space_5"
+                android:paddingEnd="@dimen/space_10"
+                android:paddingBottom="@dimen/space_5"
+                android:text="Học Thêm"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_15"
+                app:layout_constraintBottom_toBottomOf="@id/text_evaluate_3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/text_evaluate_3"
+                app:layout_constraintTop_toTopOf="@id/text_evaluate_3" />
+
+            <TextView
+                android:id="@+id/text_part_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_10"
+                android:layout_marginTop="20dp"
+                android:text="@string/part_4"
+                android:textColor="@android:color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_part_3" />
+
+            <ProgressBar
+                android:id="@+id/progressbar_part_4"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="@dimen/space_150"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:indeterminateTint="@color/colorPrimary"
+                android:max="100"
+                android:progress="50"
+                app:layout_constraintBottom_toBottomOf="@+id/text_part_4"
+                app:layout_constraintStart_toEndOf="@id/text_part_4"
+                app:layout_constraintTop_toTopOf="@+id/text_part_4" />
+
+            <TextView
+                android:id="@+id/text_evaluate_4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:gravity="center"
+                android:text="Yếu"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_15"
+                app:layout_constraintBottom_toBottomOf="@id/progressbar_part_4"
+                app:layout_constraintEnd_toStartOf="@+id/button_learn_more_4"
+                app:layout_constraintStart_toEndOf="@id/progressbar_part_4"
+                app:layout_constraintTop_toTopOf="@id/progressbar_part_4" />
+
+            <TextView
+                android:id="@+id/button_learn_more_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/color_primarycolor_corner_10"
+                android:paddingStart="@dimen/space_10"
+                android:paddingTop="@dimen/space_5"
+                android:paddingEnd="@dimen/space_10"
+                android:paddingBottom="@dimen/space_5"
+                android:text="Học Thêm"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_15"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="@id/text_evaluate_4"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/text_evaluate_4"
+                app:layout_constraintTop_toTopOf="@id/text_evaluate_4" />
+
+            <TextView
+                android:id="@+id/text_part_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_10"
+                android:layout_marginTop="20dp"
+                android:text="@string/part_5"
+                android:textColor="@android:color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_part_4" />
+
+            <ProgressBar
+                android:id="@+id/progressbar_part_5"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="@dimen/space_150"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:indeterminateTint="@color/colorPrimary"
+                android:max="100"
+                android:progress="50"
+                app:layout_constraintBottom_toBottomOf="@+id/text_part_5"
+                app:layout_constraintStart_toEndOf="@id/text_part_5"
+                app:layout_constraintTop_toTopOf="@+id/text_part_5" />
+
+            <TextView
+                android:id="@+id/text_evaluate_5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:gravity="center"
+                android:text="Yếu"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_15"
+                app:layout_constraintBottom_toBottomOf="@id/progressbar_part_5"
+                app:layout_constraintEnd_toStartOf="@+id/button_learn_more_5"
+                app:layout_constraintStart_toEndOf="@id/progressbar_part_5"
+                app:layout_constraintTop_toTopOf="@id/progressbar_part_5" />
+
+            <TextView
+                android:id="@+id/button_learn_more_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/color_primarycolor_corner_10"
+                android:paddingStart="@dimen/space_10"
+                android:paddingTop="@dimen/space_5"
+                android:paddingEnd="@dimen/space_10"
+                android:paddingBottom="@dimen/space_5"
+                android:text="Học Thêm"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_15"
+                app:layout_constraintBottom_toBottomOf="@id/text_evaluate_5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/text_evaluate_5"
+                app:layout_constraintTop_toTopOf="@id/text_evaluate_5" />
+
+            <TextView
+                android:id="@+id/text_part_6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_10"
+                android:layout_marginTop="20dp"
+                android:text="@string/part_6"
+                android:textColor="@android:color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_part_5" />
+
+            <ProgressBar
+                android:id="@+id/progressbar_part_6"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="@dimen/space_150"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:indeterminateTint="@color/colorPrimary"
+                android:max="100"
+                android:progress="50"
+                app:layout_constraintBottom_toBottomOf="@+id/text_part_6"
+                app:layout_constraintStart_toEndOf="@id/text_part_6"
+                app:layout_constraintTop_toTopOf="@+id/text_part_6" />
+
+            <TextView
+                android:id="@+id/text_evaluate_6"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:gravity="center"
+                android:text="Yếu"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_15"
+                app:layout_constraintBottom_toBottomOf="@id/progressbar_part_6"
+                app:layout_constraintEnd_toStartOf="@+id/button_learn_more_6"
+                app:layout_constraintStart_toEndOf="@id/progressbar_part_6"
+                app:layout_constraintTop_toTopOf="@id/progressbar_part_6" />
+
+            <TextView
+                android:id="@+id/button_learn_more_6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/color_primarycolor_corner_10"
+                android:paddingStart="@dimen/space_10"
+                android:paddingTop="@dimen/space_5"
+                android:paddingEnd="@dimen/space_10"
+                android:paddingBottom="@dimen/space_5"
+                android:text="Học Thêm"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_15"
+                app:layout_constraintBottom_toBottomOf="@id/text_evaluate_6"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/text_evaluate_6"
+                app:layout_constraintTop_toTopOf="@id/text_evaluate_6" />
+
+            <TextView
+                android:id="@+id/text_part_7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_10"
+                android:layout_marginTop="20dp"
+                android:text="@string/part_7"
+                android:textColor="@android:color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_part_6" />
+
+            <ProgressBar
+                android:id="@+id/progressbar_part_7"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="@dimen/space_150"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:indeterminateTint="@color/colorPrimary"
+                android:max="100"
+                android:progress="50"
+                app:layout_constraintBottom_toBottomOf="@+id/text_part_7"
+                app:layout_constraintStart_toEndOf="@id/text_part_7"
+                app:layout_constraintTop_toTopOf="@+id/text_part_7" />
+
+            <TextView
+                android:id="@+id/text_evaluate_7"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:gravity="center"
+                android:text="Yếu"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_15"
+                app:layout_constraintBottom_toBottomOf="@id/progressbar_part_7"
+                app:layout_constraintEnd_toStartOf="@+id/button_learn_more_7"
+                app:layout_constraintStart_toEndOf="@id/progressbar_part_7"
+                app:layout_constraintTop_toTopOf="@id/progressbar_part_7" />
+
+            <TextView
+                android:id="@+id/button_learn_more_7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/color_primarycolor_corner_10"
+                android:paddingStart="@dimen/space_10"
+                android:paddingTop="@dimen/space_5"
+                android:paddingEnd="@dimen/space_10"
+                android:paddingBottom="@dimen/space_5"
+                android:text="Học Thêm"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_15"
+                app:layout_constraintBottom_toBottomOf="@id/text_evaluate_7"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/text_evaluate_7"
+                app:layout_constraintTop_toTopOf="@id/text_evaluate_7" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-            android:id="@+id/button_continue_do_test"
+            android:id="@+id/button_submit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space_20"
-            android:layout_marginTop="500dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="30dp"
             android:background="@drawable/color_primarycolor_corner_10"
             android:paddingStart="@dimen/space_20"
             android:paddingTop="@dimen/space_15"
@@ -104,15 +518,17 @@
             android:text="@string/continue_do_test"
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_26"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_listen_score" />
+            app:layout_constraintTop_toBottomOf="@+id/layout_detail" />
 
         <TextView
             android:id="@+id/button_not_submit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="500dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="@dimen/space_20"
+            android:layout_marginBottom="30dp"
             android:background="@drawable/stroke_pink_1_corner_10"
             android:paddingStart="@dimen/space_20"
             android:paddingTop="@dimen/space_15"
@@ -121,7 +537,8 @@
             android:text="@string/answer"
             android:textColor="@android:color/black"
             android:textSize="@dimen/text_26"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_listen_score" />
+            app:layout_constraintTop_toBottomOf="@+id/layout_detail" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -36,7 +36,7 @@ object DateUtils {
             result += "00:"
         }
         if (second > 0) {
-            result += if (second < 10) "0$second:" else "$second"
+            result += if (second < 10) "0$second" else "$second"
         } else {
             result += "00"
         }
