@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,16 +21,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.toeictraining.R
 import com.example.toeictraining.base.entity.Question
-import com.example.toeictraining.base.enums.QuestionType
+import com.example.toeictraining.base.enums.QuestionLevel
 import com.example.toeictraining.ui.fragments.test.score.ScoreTestFragment
 import com.example.toeictraining.ui.main.MainActivity
-import kotlinx.android.synthetic.main.dialog_submit_test.*
+import com.example.toeictraining.utils.DateUtils
 import kotlinx.android.synthetic.main.do_test_fragment.*
+import kotlinx.android.synthetic.main.score_test_fragment.*
 import kotlinx.android.synthetic.main.toolbar.*
 import kotlin.math.abs
+import kotlin.math.roundToLong
 
 
-class DoTestFragment : Fragment() {
+class DoTestFragment(val secondTotalTime: Long) : Fragment() {
 
     companion object {
         val TAG = DoTestFragment::class.java.name
@@ -39,6 +42,26 @@ class DoTestFragment : Fragment() {
     private lateinit var viewModel: DoTestViewModel
     lateinit var mediaPlayer: MediaPlayer
     val questions = mutableListOf<QuestionStatus>()
+    var totalTime = 0L
+
+    private var countDownTimer = object : CountDownTimer(secondTotalTime * 1000, 1000L) {
+        override fun onFinish() {
+            (activity as MainActivity).openFragment(
+                R.id.content,
+                ScoreTestFragment(questions, secondTotalTime),
+                false
+            )
+        }
+
+        override fun onTick(millisUntilFinished: Long) {
+            totalTime = (millisUntilFinished / 1000.0).roundToLong()
+            (activity as MainActivity).setTitle(
+                DateUtils.secondsToStringTime(
+                    (millisUntilFinished / 1000.0).roundToLong()
+                )
+            )
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,6 +79,7 @@ class DoTestFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(DoTestViewModel::class.java)
 
         initViews()
+        countDownTimer.start()
         handleObservable()
         listener()
 
@@ -87,7 +111,7 @@ class DoTestFragment : Fragment() {
     private fun listener() {
         (activity as MainActivity).toolbar_button_right.setOnClickListener {
             val alertDialog = AlertDialog.Builder(context)
-                .setView(R.layout.dialog_submit_test)
+                .setView(R.layout.dialog_do_test)
                 .setCancelable(false)
                 .create()
             alertDialog?.let {
@@ -97,7 +121,7 @@ class DoTestFragment : Fragment() {
 
                     (activity as MainActivity).openFragment(
                         R.id.content,
-                        ScoreTestFragment(questions),
+                        ScoreTestFragment(questions, secondTotalTime - totalTime),
                         false
                     )
                     alertDialog.cancel()
@@ -195,7 +219,6 @@ class DoTestFragment : Fragment() {
         )
     }
 
-
     private fun removeAnswer(answerView: TextView) {
         answerView.tag = false
         answerView.setBackgroundColor(
@@ -259,12 +282,11 @@ class DoTestFragment : Fragment() {
 //    }
 
     private fun initViews() {
-        (activity as MainActivity).setTitle("56:00")
         (activity as MainActivity).setRightButtonText(getString(R.string.submit_test))
         configNavigationIcon()
 
         //fake data
-        for (i in 1..100) {
+        for (i in 1..200) {
             questions.add(
                 QuestionStatus(
                     i, QuestionStatus.Status.NOT_DONE, Question(
@@ -284,7 +306,7 @@ class DoTestFragment : Fragment() {
                         "C. Occasions",
                         "D. Separation",
                         null,
-                        QuestionType.MEDIUM,
+                        QuestionLevel.MEDIUM,
                         "a",
                         1
                     ),
@@ -305,11 +327,12 @@ class DoTestFragment : Fragment() {
                 "By increasing the wire thickness in the outer two rows, Dreamaker Plus (12)........ a firmer seating edge, increases the usable sleeping space, and helps to prevent that “roll out of bed” feeling."
 
         questions[5].status = QuestionStatus.Status.MAIN
+        questions[1].data.soundLink = "123123133"
 
-        setRecyclerviewQuestion()
+        setRecyclerQuestion()
     }
 
-    private fun setRecyclerviewQuestion() {
+    private fun setRecyclerQuestion() {
         recyclerViewQuestion.apply {
             layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false).apply {
@@ -387,12 +410,35 @@ class DoTestFragment : Fragment() {
         actionBarDrawerToggle.isDrawerIndicatorEnabled = false
         actionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white_24dp)
         actionBarDrawerToggle.setToolbarNavigationClickListener {
-            (activity as MainActivity).onBackPressed()
+            val alertDialog = AlertDialog.Builder(context)
+                .setView(R.layout.dialog_do_test)
+                .setCancelable(false)
+                .create()
+            alertDialog?.let {
+                it.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                it.show()
+                it.button_submit.text = "Không"
+                it.button_not_submit.text = "Thoát"
+                it.button_submit.setOnClickListener {
+                    alertDialog.cancel()
+                }
+                it.button_not_submit.setOnClickListener {
+                    (activity as MainActivity).onBackPressed()
+                    countDownTimer.cancel()
+                    alertDialog.cancel()
+                }
+            }
+
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        countDownTimer.cancel()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-//        mediaPlayer.stop()
+        countDownTimer.cancel()
     }
 }
