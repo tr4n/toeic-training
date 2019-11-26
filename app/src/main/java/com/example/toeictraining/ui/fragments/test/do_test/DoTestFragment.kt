@@ -290,8 +290,11 @@ class DoTestFragment(val secondTotalTime: Long) : Fragment() {
             questions.add(
                 QuestionStatus(
                     i, QuestionStatus.Status.NOT_DONE, Question(
-                        i,
-                        "Halls will come to Life with Music\n" +
+                        id = i,
+                        idPart = 1,
+                        groupQuestionId = null,
+                        script = null,
+                        content = "Halls will come to Life with Music\n" +
                                 " \n" +
                                 "Albert Hall and Royal Hall have disclosed their schedules for the upcoming season, with everything (1)........ classical music to stand up comedy acts and lots in between.\n" +
                                 "\n" +
@@ -301,14 +304,14 @@ class DoTestFragment(val secondTotalTime: Long) : Fragment() {
                                 "\n" +
                                 "At Royal Hall, in its classical (3)........, American soprano Rosemary Voigt, Canadian soprano Jonathon Pierre,\n" +
                                 "Canadian baritone Mel Finley, and Polish contralto George Plodles (4)........  on the bill.",
-                        "A. Series",
-                        "B. Steps",
-                        "C. Occasions",
-                        "D. Separation",
-                        null,
-                        QuestionLevel.MEDIUM,
-                        "a",
-                        1
+                        a = "A. Series",
+                        b = "B. Steps",
+                        c = "C. Occasions",
+                        d = "D. Separation",
+                        soundLink = null,
+                        imageLink = null,
+                        type = QuestionLevel.MEDIUM,
+                        correctAnswer = "a"
                     ),
                     ""
                 )
