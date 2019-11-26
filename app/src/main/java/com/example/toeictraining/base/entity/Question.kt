@@ -8,19 +8,26 @@ import com.example.toeictraining.base.enums.QuestionLevel
 @Entity(tableName = Question.TABLE_NAME)
 data class Question(
     @PrimaryKey @ColumnInfo(name = FIELD_ID) var id: Int,
-    @ColumnInfo(name = FIELD_CONTENT) var content: String,
+    @ColumnInfo(name = FIELD_ID_PART) var idPart: Int,
+    @ColumnInfo(name = FIELD_GROUP_QUESTION_ID) var groupQuestionId: Int?,
+    @ColumnInfo(name = FIELD_SCRIPT) var script: String?,
+    @ColumnInfo(name = FIELD_CONTENT) var content: String?,
     @ColumnInfo(name = FIELD_A) var a: String,
     @ColumnInfo(name = FIELD_B) var b: String,
     @ColumnInfo(name = FIELD_C) var c: String,
     @ColumnInfo(name = FIELD_D) var d: String?,
     @ColumnInfo(name = FIELD_SOUND_LINK) var soundLink: String?,
+    @ColumnInfo(name = FIELD_IMAGE_LINK) var imageLink: String?,
     @ColumnInfo(name = FIELD_TYPE) var type: QuestionLevel,
-    @ColumnInfo(name = FIELD_CORRECT_ANSWER) var correctAnswer: String,
-    @ColumnInfo(name = FIELD_ID_PART) var idPart: Int
+    @ColumnInfo(name = FIELD_CORRECT_ANSWER) var correctAnswer: String
+
 ) {
     companion object {
         const val TABLE_NAME = "question"
         const val FIELD_ID = "id"
+        const val FIELD_GROUP_QUESTION_ID = "groupQuestionID"
+        const val FIELD_SCRIPT = "script"
+        const val FIELD_IMAGE_LINK = "imageLink"
         const val FIELD_CONTENT = "content"
         const val FIELD_A = "a"
         const val FIELD_B = "b"
