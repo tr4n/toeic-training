@@ -135,13 +135,14 @@
         <TextView
             android:id="@+id/textKnew"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginTop="@dimen/space_8"
             android:background="@color/colorGreen"
             android:padding="@dimen/space_16"
             android:text="@string/title_knew_word"
             android:textAlignment="center"
             android:textColor="@android:color/holo_green_dark"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textDidntKnow"
             app:layout_constraintTop_toBottomOf="@+id/textExampleTranslate" />
@@ -162,7 +163,7 @@
             android:id="@+id/group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:visibility="visible"
             app:constraint_referenced_ids="textExplain,textType,imageWord,textExample,textExampleTranslate,textDidntKnow,textKnew" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
