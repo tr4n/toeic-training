@@ -13,7 +13,6 @@ abstract class BaseFragment<VM : BaseViewModel> : Fragment(), LifecycleOwner {
 
     protected abstract val layoutResource: Int
     protected abstract val viewModel: VM
-    protected abstract val lifecycleOwner: LifecycleOwner
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,7 +37,7 @@ abstract class BaseFragment<VM : BaseViewModel> : Fragment(), LifecycleOwner {
     }
 
     protected open fun observeData() {
-        viewModel.message.observe(lifecycleOwner, Observer { data ->
+        viewModel.message.observe(viewLifecycleOwner, Observer { data ->
             context?.run {
                 Toast.makeText(this, data, Toast.LENGTH_SHORT).show()
             }

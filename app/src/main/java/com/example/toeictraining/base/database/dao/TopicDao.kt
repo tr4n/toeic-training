@@ -1,9 +1,9 @@
-package com.example.toeictraining.data.db.dao
+package com.example.toeictraining.base.database.dao
 
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Update
-import com.example.toeictraining.data.db.entity.Topic
+import com.example.toeictraining.base.entity.Topic
 
 @Dao
 interface TopicDao {

@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.toeictraining.base.BaseViewModel
-import com.example.toeictraining.data.db.entity.Topic
-import com.example.toeictraining.data.db.entity.Word
+import com.example.toeictraining.base.entity.Topic
+import com.example.toeictraining.base.entity.Word
 import com.example.toeictraining.data.repository.TopicRepository
 import com.example.toeictraining.data.repository.WordRepository
 import com.example.toeictraining.di.ScopeNames

@@ -13,8 +13,8 @@ import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseFragment
-import com.example.toeictraining.data.db.entity.Topic
-import com.example.toeictraining.data.db.entity.Word
+import com.example.toeictraining.base.entity.Topic
+import com.example.toeictraining.base.entity.Word
 import com.example.toeictraining.di.ScopeNames
 import com.example.toeictraining.utils.Constants
 import com.example.toeictraining.utils.WordHelper
@@ -28,8 +28,6 @@ class StudyFragment private constructor() : BaseFragment<StudyViewModel>(), View
     override val layoutResource: Int = R.layout.fragment_study
 
     override val viewModel: StudyViewModel by viewModel()
-
-    override val lifecycleOwner: LifecycleOwner = this@StudyFragment
 
     private lateinit var animatorSet: AnimatorSet
 
@@ -57,9 +55,7 @@ class StudyFragment private constructor() : BaseFragment<StudyViewModel>(), View
     override fun observeData() = with(viewModel) {
         super.observeData()
 
-        word.observe(lifecycleOwner, Observer {
-            showWordData(it)
-        })
+        word.observe(viewLifecycleOwner, Observer(::showWordData))
     }
 
     private fun showWordData(word: Word) {

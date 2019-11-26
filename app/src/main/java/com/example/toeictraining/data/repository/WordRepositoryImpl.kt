@@ -1,7 +1,7 @@
 package com.example.toeictraining.data.repository
 
-import com.example.toeictraining.data.db.dao.WordDao
-import com.example.toeictraining.data.db.entity.Word
+import com.example.toeictraining.base.database.dao.WordDao
+import com.example.toeictraining.base.entity.Word
 
 class WordRepositoryImpl(private val wordDao: WordDao) : WordRepository {
 
