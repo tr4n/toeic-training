@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.toeictraining.R
+import com.example.toeictraining.base.database.AppDatabase
 import com.example.toeictraining.base.entity.Question
 import com.example.toeictraining.base.enums.QuestionLevel
 import com.example.toeictraining.ui.fragments.test.score.ScoreTestFragment
@@ -32,7 +34,10 @@ import kotlin.math.abs
 import kotlin.math.roundToLong
 
 
-class DoTestFragment(val secondTotalTime: Long) : Fragment() {
+class DoTestFragment(
+    private val secondTotalTime: Long,
+    private val part: Int
+) : Fragment() {
 
     companion object {
         val TAG = DoTestFragment::class.java.name
@@ -43,12 +48,14 @@ class DoTestFragment(val secondTotalTime: Long) : Fragment() {
     lateinit var mediaPlayer: MediaPlayer
     val questions = mutableListOf<QuestionStatus>()
     var totalTime = 0L
+    var timestamp = System.currentTimeMillis()
+    val listQuestionId = mutableListOf<Int>()
 
     private var countDownTimer = object : CountDownTimer(secondTotalTime * 1000, 1000L) {
         override fun onFinish() {
             (activity as MainActivity).openFragment(
                 R.id.content,
-                ScoreTestFragment(questions, secondTotalTime),
+                ScoreTestFragment(questions, secondTotalTime, timestamp, part),
                 false
             )
         }
@@ -78,6 +85,7 @@ class DoTestFragment(val secondTotalTime: Long) : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(DoTestViewModel::class.java)
 
+        Log.d(TAG, "timestamp = $timestamp")
         initViews()
         countDownTimer.start()
         handleObservable()
@@ -118,10 +126,9 @@ class DoTestFragment(val secondTotalTime: Long) : Fragment() {
                 it.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 it.show()
                 it.button_submit.setOnClickListener {
-
                     (activity as MainActivity).openFragment(
                         R.id.content,
-                        ScoreTestFragment(questions, secondTotalTime - totalTime),
+                        ScoreTestFragment(questions, secondTotalTime - totalTime, timestamp, part),
                         false
                     )
                     alertDialog.cancel()
@@ -284,54 +291,29 @@ class DoTestFragment(val secondTotalTime: Long) : Fragment() {
     private fun initViews() {
         (activity as MainActivity).setRightButtonText(getString(R.string.submit_test))
         configNavigationIcon()
-
-        //fake data
+//        val listQuestionFromDB = AppDatabase.getInstance(context!!).questionDao().getAll()
+        val listQuestionFromDB = mutableListOf<Question>()
         for (i in 1..200) {
-            questions.add(
-                QuestionStatus(
-                    i, QuestionStatus.Status.NOT_DONE, Question(
-                        id = i,
-                        idPart = 1,
-                        groupQuestionId = null,
-                        script = null,
-                        content = "Halls will come to Life with Music\n" +
-                                " \n" +
-                                "Albert Hall and Royal Hall have disclosed their schedules for the upcoming season, with everything (1)........ classical music to stand up comedy acts and lots in between.\n" +
-                                "\n" +
-                                "The Smiths are set to make their debut at 100-year-old Albert hall on Jan 25, 2007. The venerable venue (2)........ will host Bruce\n" +
-                                " \n" +
-                                "Thornton on January 17, Ron Ghanem on January 3, Terry Lightfoot on January 9, and folk superstar Judith Bachman on February 12, 13 and 14.\n" +
-                                "\n" +
-                                "At Royal Hall, in its classical (3)........, American soprano Rosemary Voigt, Canadian soprano Jonathon Pierre,\n" +
-                                "Canadian baritone Mel Finley, and Polish contralto George Plodles (4)........  on the bill.",
-                        a = "A. Series",
-                        b = "B. Steps",
-                        c = "C. Occasions",
-                        d = "D. Separation",
-                        soundLink = null,
-                        imageLink = null,
-                        type = QuestionLevel.MEDIUM,
-                        correctAnswer = "a"
-                    ),
-                    ""
+            listQuestionFromDB.add(
+                Question(
+                    1, 1, null, null, "Question", "A. a",
+                    "B. b", "C. c", "D. d", null, null, QuestionLevel.EASY,
+                    "a"
                 )
             )
         }
-
-        questions[6].data.content = "Dreamaker\n" +
-                "The professionals that make your nights comfortable\n" +
-                "\n" +
-                "The Dreamaker Plus (9)........ the exclusive coil system everyone’s been talking about.\n" +
-                "\n" +
-                "For the past 5- years, the experts at Dreamaker (10)........ their time and effort to bring the Americans a good night’s rest by using our reliable and proven technology.\n" +
-                "\n" +
-                "Compared to any conventional spring systems available in the industry, the Dreamaker Plus has nearly twice the coils of any others. Quality comfort layers and fabrics (11)........ to ensure a comfortable and durable sleeping surface.\n" +
-                "\n" +
-                "By increasing the wire thickness in the outer two rows, Dreamaker Plus (12)........ a firmer seating edge, increases the usable sleeping space, and helps to prevent that “roll out of bed” feeling."
-
-        questions[5].status = QuestionStatus.Status.MAIN
-        questions[1].data.soundLink = "123123133"
-
+        for (i in 1..listQuestionFromDB.size) {
+            questions.add(
+                QuestionStatus(
+                    i,
+                    QuestionStatus.Status.NOT_DONE,
+                    listQuestionFromDB[i - 1],
+                    ""
+                )
+            )
+            listQuestionId.add(listQuestionFromDB[i - 1].id)
+        }
+        questions[0].status = QuestionStatus.Status.MAIN
         setRecyclerQuestion()
     }
 

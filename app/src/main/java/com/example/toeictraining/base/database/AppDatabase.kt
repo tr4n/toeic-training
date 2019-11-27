@@ -4,6 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.example.toeictraining.base.database.converter.DateConverter
+import com.example.toeictraining.base.database.converter.ListIntConverter
+import com.example.toeictraining.base.database.converter.ListStringConverter
+import com.example.toeictraining.base.database.converter.QuestionLevelConverter
 import com.example.toeictraining.base.database.dao.*
 import com.example.toeictraining.base.entity.*
 import com.huma.room_for_asset.RoomAsset
@@ -16,7 +20,11 @@ private const val DATABASE_VERSION = 2
     version = DATABASE_VERSION,
     exportSchema = false
 )
-@TypeConverters(QuestionLevelConverter::class)
+@TypeConverters(
+    QuestionLevelConverter::class,
+    ListIntConverter::class,
+    ListStringConverter::class
+)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun wordDao(): WordDao

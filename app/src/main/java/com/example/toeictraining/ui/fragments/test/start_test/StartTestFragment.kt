@@ -52,7 +52,16 @@ class StartTestFragment : Fragment() {
         setTextContent()
         configNavigationIcon()
         button_start.setOnClickListener {
-            (activity as MainActivity).openFragment(R.id.content, DoTestFragment(1*60), false)
+            arguments?.let {
+                (activity as MainActivity).openFragment(
+                    R.id.content,
+                    DoTestFragment(
+                        1 * 60,
+                        it.getInt(HomeTestFragment.PART_ID)
+                    ),
+                    false
+                )
+            }
         }
     }
 

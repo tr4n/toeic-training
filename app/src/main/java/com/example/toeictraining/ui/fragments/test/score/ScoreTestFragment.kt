@@ -10,6 +10,8 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import com.example.toeictraining.R
+import com.example.toeictraining.base.database.AppDatabase
+import com.example.toeictraining.base.entity.Exam
 import com.example.toeictraining.ui.fragments.test.do_test.QuestionStatus
 import com.example.toeictraining.ui.fragments.test.home.HomeTestFragment
 import com.example.toeictraining.ui.main.MainActivity
@@ -17,7 +19,13 @@ import com.example.toeictraining.utils.DateUtils
 import kotlinx.android.synthetic.main.score_test_fragment.*
 import kotlin.math.roundToInt
 
-class ScoreTestFragment(val questions: List<QuestionStatus>, private val totalTime: Long) : Fragment() {
+class ScoreTestFragment(
+    val questions: List<QuestionStatus>,
+    private val totalTime: Long,
+    private val timestamp: Long,
+    private val part: Int
+) :
+    Fragment() {
 
     companion object {
         val TAG = ScoreTestFragment::class.java.name
@@ -45,17 +53,13 @@ class ScoreTestFragment(val questions: List<QuestionStatus>, private val totalTi
             (activity as MainActivity).openFragment(R.id.content, HomeTestFragment(), false)
         }
 
-        //caculate score
-        for (question in questions) {
-            if (question.answer == question.data.correctAnswer) {
-                totalScore += 5
-            }
-        }
-        total_score.text = totalScore.toString()
         text_total_time.text =
             getString(R.string.test_time_total).plus(DateUtils.secondsToStringTime(totalTime))
         var listenScore = 0
         var readScore = 0
+
+        val listAnswer = mutableListOf<String>()
+        val listQuestionId = mutableListOf<Int>()
 
         for (question in questions) {
             if (question.data.correctAnswer == question.answer) {
@@ -65,9 +69,25 @@ class ScoreTestFragment(val questions: List<QuestionStatus>, private val totalTi
                 }
                 readScore += 5
             }
+            //create exam
+            listAnswer.add(question.answer)
+            listQuestionId.add(question.data.id)
         }
+        //save exam
+        val exam = Exam(
+            0,
+            listQuestionId,
+            listAnswer,
+            totalTime.toInt(),
+            part,
+            timestamp
+        )
+//        AppDatabase.getInstance(context!!).examDao().insertAll(exam)
+        //
         text_listen_score.text = getString(R.string.listen_score).plus("$listenScore")
         text_read_score.text = getString(R.string.read_score).plus("$readScore")
+        totalScore = readScore + listenScore
+        total_score.text = totalScore.toString()
         if (questions.size == 200) {
             text_expand?.visibility = View.VISIBLE
             text_expand?.setOnClickListener {
