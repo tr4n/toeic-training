@@ -57,7 +57,7 @@ dependencies {
     implementation "org.koin:koin-android:$koinVersion"
     implementation "org.koin:koin-androidx-scope:$koinVersion"
     implementation "org.koin:koin-androidx-viewmodel:$koinVersion"
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
 
     // Room
@@ -78,4 +78,7 @@ dependencies {
     implementation 'org.koin:koin-core:2.0.1'
     // Testing
     testImplementation 'org.koin:koin-test:2.0.1'
+
+    //Work Manager
+    implementation "androidx.work:work-runtime-ktx:$workVersion"
 }

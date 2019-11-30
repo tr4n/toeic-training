@@ -1,6 +1,5 @@
 package com.example.toeictraining.ui.fragments.vocabulary
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.example.toeictraining.base.BaseViewModel
@@ -12,7 +11,6 @@ class VocabularyViewModel(private val topicRepository: TopicRepository) : BaseVi
     val categories: LiveData<List<Category>> = liveData {
         try {
             emit(topicRepository.getCategories())
-            Log.d("VocabularyViewModel", "run here")
         } catch (e: Exception) {
             emit(emptyList())
             message.value = e.toString()

@@ -1,6 +1,7 @@
 package com.example.toeictraining.di
 
 object ScopeNames {
+    const val SHARED_PREFERENCES = "name_shared_preferences"
     const val APP_DATABASE = "name_app_database"
     const val WORD_REPOSITORY = "name_word_repository"
     const val CATEGORY_ADAPTER = "name_vocabulary_adapter"

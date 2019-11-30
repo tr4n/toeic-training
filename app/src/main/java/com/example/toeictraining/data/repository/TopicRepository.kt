@@ -8,4 +8,6 @@ interface TopicRepository {
     suspend fun getCategories(): List<Category>
 
     suspend fun updateTopic(topic: Topic)
+
+    suspend fun getTopics(): List<Topic>
 }

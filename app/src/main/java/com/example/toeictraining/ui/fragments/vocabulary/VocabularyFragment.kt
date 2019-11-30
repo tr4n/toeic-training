@@ -37,8 +37,7 @@ class VocabularyFragment : BaseFragment<VocabularyViewModel>() {
         super.observeData()
 
         categories.observe(viewLifecycleOwner, Observer {
-            Log.d("VocabularyFragment", "category = $it")
-            categoryAdapter.updateData(it)
+            categoryAdapter.submitList(it)
         })
     }
 }

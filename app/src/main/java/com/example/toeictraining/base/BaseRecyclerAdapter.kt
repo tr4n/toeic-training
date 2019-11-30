@@ -3,35 +3,22 @@ package com.example.toeictraining.base
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 
-abstract class BaseRecyclerAdapter<T, VH : BaseViewHolder<T>> : RecyclerView.Adapter<VH>() {
-
-    private val items = ArrayList<T>()
+abstract class BaseRecyclerAdapter<T, VH : BaseViewHolder<T>>(callback: DiffUtil.ItemCallback<T>) :
+    ListAdapter<T, VH>(callback) {
 
     abstract fun getItemLayoutResource(viewType: Int): Int
 
-    override fun onBindViewHolder(holder: VH, position: Int) = holder.onBindData(items[position])
+    override fun onBindViewHolder(holder: VH, position: Int) =
+        holder.onBindData(getItem(position))
 
-    override fun getItemCount(): Int = items.size
-
-    fun updateData(newItems: List<T>) {
-        items.clear()
-        items.addAll(newItems)
-        notifyDataSetChanged()
-    }
-
-    fun insertData(data: List<T>) {
-        val oldPosition = itemCount
-        items.addAll(data)
-        val newPosition = itemCount
-        if (newPosition > oldPosition) notifyItemRangeInserted(oldPosition, newPosition - 1)
+    override fun submitList(items: List<T>?) {
+        super.submitList(items ?: emptyList())
     }
 
     protected fun getItemView(parent: ViewGroup, viewType: Int): View =
         LayoutInflater.from(parent.context)
             .inflate(getItemLayoutResource(viewType), parent, false)
-
-    protected fun getItemData(position: Int): T? =
-        if (position in 0 until itemCount) items[position] else null
 }
