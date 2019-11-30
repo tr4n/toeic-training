@@ -13,11 +13,11 @@
         android:id="@+id/imageStudyBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/app_name"
         android:padding="@dimen/space_16"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_back_white_24dp"
-        android:contentDescription="@string/app_name" />
+        app:srcCompat="@drawable/ic_back_white_24dp" />
 
     <TextView
         android:id="@+id/textTopicName"
@@ -168,16 +168,16 @@
             <TextView
                 android:id="@+id/textKnew"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_8"
+                android:layout_height="0dp"
                 android:background="@color/colorGreen"
                 android:padding="@dimen/space_16"
                 android:text="@string/title_knew_word"
                 android:textAlignment="center"
                 android:textColor="@android:color/holo_green_dark"
+                app:layout_constraintBottom_toBottomOf="@+id/textDidntKnow"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textDidntKnow"
-                app:layout_constraintTop_toBottomOf="@+id/textExampleTranslate" />
+                app:layout_constraintTop_toTopOf="@+id/textDidntKnow" />
 
             <TextView
                 android:id="@+id/textLevel"
@@ -191,11 +191,30 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <ImageView
+                android:id="@+id/imageSound"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:contentDescription="@string/description"
+                android:padding="@dimen/space_8"
+                app:layout_constraintBottom_toBottomOf="@+id/textOrigin"
+                app:layout_constraintStart_toEndOf="@+id/textPronoun"
+                app:layout_constraintTop_toTopOf="@+id/textOrigin"
+                app:srcCompat="@drawable/sound_primaycolor_24dp" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/barrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="end"
+                app:constraint_referenced_ids="textOrigin,textPronoun" />
+
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/groupDetail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:constraint_referenced_ids="textExplain,textType,imageWord,textExample,textExampleTranslate,textDidntKnow,textKnew" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

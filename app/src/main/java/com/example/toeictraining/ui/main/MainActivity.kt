@@ -105,7 +105,6 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun openReminderScreen() {
-        toolbar?.toolbar_title?.text = getString(R.string.title_remind)
         openFragment(R.id.content, RemindFragment(), true)
         drawer_layout.closeDrawer(GravityCompat.START)
     }

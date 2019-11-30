@@ -5,6 +5,6 @@ import org.koin.dsl.module
 val remindModule = module {
 
     single {
-        ReviewAdapter(ReviewAdapter.ReviewDiffUtilCallback())
+        RemindTopicAdapter(RemindTopicAdapter.ReviewDiffUtilCallback())
     }
 }

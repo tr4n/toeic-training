@@ -35,6 +35,9 @@ data class Word(
     @ColumnInfo(name = FIELD_SOUND) val sound: String? = null
 ) : Parcelable {
 
+    fun getSoundLink(): String =
+        "https://600tuvungtoeic.com/audio/${origin.replace(' ', '_')}.mp3"
+
     companion object {
         const val TABLE_NAME = "tbl_word"
         const val FIELD_ID = "id"

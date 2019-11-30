@@ -4,11 +4,12 @@ import android.animation.Animator
 import android.animation.AnimatorInflater
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
+import android.media.AudioAttributes
+import android.media.MediaPlayer
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.example.toeictraining.R
@@ -31,6 +32,16 @@ class StudyFragment private constructor() : BaseFragment<StudyViewModel>(), View
 
     private lateinit var animatorSet: AnimatorSet
 
+    private val mediaPlayer by lazy {
+        MediaPlayer().apply {
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build()
+            )
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         (activity as AppCompatActivity).supportActionBar?.hide()
@@ -42,6 +53,7 @@ class StudyFragment private constructor() : BaseFragment<StudyViewModel>(), View
         textKnew?.setOnClickListener(this)
         textOrigin?.setOnClickListener(this)
         imageStudyBack?.setOnClickListener(this)
+        imageSound?.setOnClickListener(this)
     }
 
     override fun initData() {
@@ -85,6 +97,7 @@ class StudyFragment private constructor() : BaseFragment<StudyViewModel>(), View
             R.id.textOrigin -> shiftFlashCardStatus()
             R.id.textDidntKnow -> changeNextWord(isKnown = false)
             R.id.textKnew -> changeNextWord(isKnown = true)
+            R.id.imageSound -> playSound()
         }
     }
 
@@ -105,6 +118,17 @@ class StudyFragment private constructor() : BaseFragment<StudyViewModel>(), View
             }
         })
 
+    }
+
+    private fun playSound() {
+        val word = viewModel.word.value ?: return
+        mediaPlayer.apply {
+            stop()
+            reset()
+            setDataSource(word.getSoundLink())
+            setOnPreparedListener { it.start() }
+            prepareAsync()
+        }
     }
 
     private fun View.setAnimation(resId: Int) {

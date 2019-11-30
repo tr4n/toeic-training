@@ -54,7 +54,7 @@ abstract class BaseFragment<VM : BaseViewModel> : Fragment(), LifecycleOwner {
             if (addToBackStack) addToBackStack(null)
         }?.commit()
 
-    private fun toast(message: String) = context?.let {
+    protected fun toast(message: String) = context?.let {
         Toast.makeText(it, message, Toast.LENGTH_SHORT).show()
     }
 }

@@ -18,11 +18,15 @@ data class Topic(
     @ColumnInfo(name = FIELD_CATEGORY) var category: String = "",
     @ColumnInfo(name = FIELD_COLOR) var color: String? = null,
     @ColumnInfo(name = FIELD_LAST_TIME) var lastTime: String? = null,
-    @ColumnInfo(name = FIELD_TOTAL) var total: Int? = null,
-    @ColumnInfo(name = FIELD_MASTER) var master: Int? = null
+    @ColumnInfo(name = FIELD_TOTAL) var total: Int = 12,
+    @ColumnInfo(name = FIELD_MASTER) var master: Int = 0,
+    @ColumnInfo(name = FIELD_NEW_WORD) var newWord: Int = 0,
+    @ColumnInfo(name = FIELD_REMIND) var remind: Int = 0
 ) : Parcelable {
 
     companion object {
+        const val IS_REMINDED = 1
+        const val IS_NOT_REMINDED = 0
         const val TABLE_NAME = "tbl_topic"
         const val FIELD_ID = "id"
         const val FIELD_NAME = "name"
@@ -33,5 +37,6 @@ data class Topic(
         const val FIELD_TOTAL = "total"
         const val FIELD_MASTER = "master"
         const val FIELD_NEW_WORD = "new_word"
+        const val FIELD_REMIND = "remind"
     }
 }
