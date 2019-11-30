@@ -1,6 +1,5 @@
 package com.example.toeictraining.ui.fragments.vocabulary
 
-import android.util.Log
 import androidx.lifecycle.Observer
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseFragment

@@ -60,4 +60,6 @@
     <string name="title_review_words">Review words</string>
     <string name="title_enable_review_mode">Enable review mode</string>
     <string name="time_default">00:00</string>
+    <string name="msg_remind_topics">Enable review mode with words in topic %s</string>
+    <string name="msg_save_setting">The setting has been saved</string>
 </resources>
