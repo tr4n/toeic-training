@@ -52,4 +52,12 @@
     <string name="total_score_example">800</string>
     <string name="continue_do_test">Làm tiếp</string>
     <string name="answer">Đáp án</string>
+
+    <string name="title_remind">Reminder</string>
+    <string name="title_daily_reminder">Daily reminder</string>
+    <string name="description">description</string>
+    <string name="title_enable_reminder">Enable reminder</string>
+    <string name="title_review_words">Review words</string>
+    <string name="title_enable_review_mode">Enable review mode</string>
+    <string name="time_default">00:00</string>
 </resources>

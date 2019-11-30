@@ -2,6 +2,7 @@ package com.example.toeictraining.ui.fragments.vocabulary
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseRecyclerAdapter
 import com.example.toeictraining.base.BaseViewHolder
@@ -9,7 +10,9 @@ import com.example.toeictraining.base.entity.Topic
 import com.example.toeictraining.utils.Constants
 import kotlinx.android.synthetic.main.item_topic.view.*
 
-class TopicAdapter : BaseRecyclerAdapter<Topic, TopicAdapter.TopicViewHolder>() {
+class TopicAdapter(
+    callback: TopicDiffUtilCallback
+) : BaseRecyclerAdapter<Topic, TopicAdapter.TopicViewHolder>(callback) {
 
     var onItemClick: (Topic) -> Unit = {}
 
@@ -39,5 +42,13 @@ class TopicAdapter : BaseRecyclerAdapter<Topic, TopicAdapter.TopicViewHolder>() 
         }
 
         override fun onItemClickListener(itemData: Topic) = onItemClick(itemData)
+    }
+
+    class TopicDiffUtilCallback : DiffUtil.ItemCallback<Topic>() {
+        override fun areItemsTheSame(oldItem: Topic, newItem: Topic): Boolean =
+            oldItem === newItem
+
+        override fun areContentsTheSame(oldItem: Topic, newItem: Topic): Boolean =
+            oldItem == newItem
     }
 }

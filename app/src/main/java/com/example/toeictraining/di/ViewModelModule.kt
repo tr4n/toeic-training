@@ -1,5 +1,6 @@
 package com.example.toeictraining.di
 
+import com.example.toeictraining.ui.fragments.reminder.RemindViewModel
 import com.example.toeictraining.ui.fragments.study.StudyViewModel
 import com.example.toeictraining.ui.fragments.vocabulary.VocabularyViewModel
 import org.koin.android.viewmodel.dsl.viewModel
@@ -15,6 +16,13 @@ val viewModelModule = module {
         StudyViewModel(
             wordRepository = get(named(ScopeNames.WORD_REPOSITORY)),
             topicRepository = get(named(ScopeNames.TOPIC_REPOSITORY))
+        )
+    }
+
+    viewModel {
+        RemindViewModel(
+            topicRepository = get(named(ScopeNames.TOPIC_REPOSITORY)),
+            sharedPreferences = get(named(ScopeNames.SHARED_PREFERENCES))
         )
     }
 }

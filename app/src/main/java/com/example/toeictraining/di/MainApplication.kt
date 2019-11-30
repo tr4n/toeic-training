@@ -1,6 +1,7 @@
 package com.example.toeictraining.di
 
 import android.app.Application
+import com.example.toeictraining.ui.fragments.reminder.remindModule
 import com.example.toeictraining.ui.fragments.study.studyModule
 import com.example.toeictraining.ui.fragments.vocabulary.vocabularyModule
 import org.koin.android.ext.koin.androidContext
@@ -21,7 +22,8 @@ class MainApplication : Application() {
                     repositoryModule,
                     viewModelModule,
                     vocabularyModule,
-                    studyModule
+                    studyModule,
+                    remindModule
                 )
             )
         }

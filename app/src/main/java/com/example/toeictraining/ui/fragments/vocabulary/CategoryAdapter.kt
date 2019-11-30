@@ -3,6 +3,7 @@ package com.example.toeictraining.ui.fragments.vocabulary
 import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseRecyclerAdapter
@@ -11,7 +12,9 @@ import com.example.toeictraining.base.entity.Topic
 import com.example.toeictraining.data.model.Category
 import kotlinx.android.synthetic.main.item_category.view.*
 
-class CategoryAdapter : BaseRecyclerAdapter<Category, CategoryAdapter.CategoryViewHolder>() {
+class CategoryAdapter(
+    callback: CategoryDiffUtilCallback
+) : BaseRecyclerAdapter<Category, CategoryAdapter.CategoryViewHolder>(callback) {
 
     var onTopicClick: (Topic) -> Unit = {}
 
@@ -31,9 +34,7 @@ class CategoryAdapter : BaseRecyclerAdapter<Category, CategoryAdapter.CategoryVi
         )
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
-        getItemData(position)?.let { category ->
-            holder.onBindData(position, category)
-        }
+        holder.onBindData(position, getItem(position))
     }
 
     class CategoryViewHolder(
@@ -43,7 +44,7 @@ class CategoryAdapter : BaseRecyclerAdapter<Category, CategoryAdapter.CategoryVi
         private val onTopicClick: (Topic) -> Unit = {}
     ) : BaseViewHolder<Category>(itemView) {
 
-        private val topicAdapter = TopicAdapter().apply {
+        private val topicAdapter = TopicAdapter(TopicAdapter.TopicDiffUtilCallback()).apply {
             onItemClick = onTopicClick
         }
 
@@ -70,9 +71,18 @@ class CategoryAdapter : BaseRecyclerAdapter<Category, CategoryAdapter.CategoryVi
                     imageExpand?.setImageResource(R.drawable.ic_keyboard_arrow_down)
                 }
             }
-            topicAdapter.updateData(category.topics)
+            topicAdapter.submitList(category.topics)
         }
 
         override fun onItemClickListener(itemData: Category) = onItemClick(itemPosition, itemData)
+    }
+
+    class CategoryDiffUtilCallback : DiffUtil.ItemCallback<Category>() {
+
+        override fun areItemsTheSame(oldItem: Category, newItem: Category): Boolean =
+            oldItem === newItem
+
+        override fun areContentsTheSame(oldItem: Category, newItem: Category): Boolean =
+            oldItem == newItem
     }
 }

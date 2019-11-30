@@ -46,4 +46,5 @@
     <dimen name="space_14">14dp</dimen>
     <dimen name="text_64">64sp</dimen>
     <dimen name="text_15">15sp</dimen>
+    <dimen name="text_16">16sp</dimen>
 </resources>

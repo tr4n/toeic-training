@@ -18,7 +18,8 @@
         android:textSize="@dimen/text_19" />
 
     <TextView
-        android:id="@+id/textLearnWord"
+        android:id="@+id/textVocabulary"
+        style="@style/TextAppearance.AppCompat.Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_18"
@@ -26,8 +27,15 @@
         android:drawableStart="@drawable/word_24"
         android:drawablePadding="@dimen/space_20"
         android:gravity="center_vertical"
-        android:text="@string/learn_words"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/text_19" />
+        android:text="@string/title_vocabulary" />
 
+    <TextView
+        android:id="@+id/textReminder"
+        style="@style/TextAppearance.AppCompat.Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_16"
+        android:drawableStart="@drawable/ic_settings_black_24dp"
+        android:drawablePadding="@dimen/space_20"
+        android:text="@string/title_remind" />
 </LinearLayout>

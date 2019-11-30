@@ -22,4 +22,6 @@ class TopicRepositoryImpl(private val topicDao: TopicDao) : TopicRepository {
     }
 
     override suspend fun updateTopic(topic: Topic) = topicDao.updateTopic(topic)
+
+    override suspend fun getTopics(): List<Topic> = topicDao.getTopics()
 }
