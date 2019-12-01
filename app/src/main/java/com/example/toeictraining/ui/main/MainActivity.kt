@@ -1,5 +1,7 @@
 package com.example.toeictraining.ui.main
 
+import android.content.Context
+import android.content.Intent
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
@@ -107,5 +109,9 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     private fun openReminderScreen() {
         openFragment(R.id.content, RemindFragment(), true)
         drawer_layout.closeDrawer(GravityCompat.START)
+    }
+
+    companion object {
+        fun getIntent(context: Context): Intent = Intent(context, MainActivity::class.java)
     }
 }

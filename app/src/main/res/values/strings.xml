@@ -62,4 +62,6 @@
     <string name="time_default">00:00</string>
     <string name="msg_remind_topics">Enable review mode with words in topic %s</string>
     <string name="msg_save_setting">The setting has been saved</string>
+    <string name="content_title_daily_reminder_notification">Time to study</string>
+    <string name="content_text_daily_reminder_notification">Tap to start</string>
 </resources>

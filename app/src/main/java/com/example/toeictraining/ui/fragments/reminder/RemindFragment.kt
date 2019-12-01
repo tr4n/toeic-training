@@ -8,18 +8,26 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.work.Constraints
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseFragment
 import com.example.toeictraining.base.entity.Topic
+import com.example.toeictraining.utils.Constants
+import com.example.toeictraining.utils.DateUtils
+import com.example.toeictraining.works.RemindWorker
 import kotlinx.android.synthetic.main.fragment_reminder.*
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 /**
  * A simple [Fragment] subclass.
  */
-class RemindFragment : BaseFragment<RemindViewModel>(), View.OnClickListener,
+class RemindFragment : BaseFragment<RemindViewModel>(),
+    View.OnClickListener,
     CompoundButton.OnCheckedChangeListener {
 
     override val layoutResource: Int get() = R.layout.fragment_reminder
@@ -51,6 +59,7 @@ class RemindFragment : BaseFragment<RemindViewModel>(), View.OnClickListener,
         super.observeData()
         remindTime.observe(viewLifecycleOwner, Observer(::onObserverRemindTime))
         topics.observe(viewLifecycleOwner, Observer(::onObserverReviewTopics))
+        reviewMode.observe(viewLifecycleOwner, Observer(::onObserverReviewMode))
     }
 
     private fun onObserverRemindTime(time: String?) {
@@ -61,6 +70,11 @@ class RemindFragment : BaseFragment<RemindViewModel>(), View.OnClickListener,
             }
             switchReminder.isChecked = true
         }
+    }
+
+    private fun onObserverReviewMode(isEnable: Boolean) {
+        recyclerReviews.isVisible = isEnable == true
+        switchReviewWords.isChecked = isEnable == true
     }
 
     private fun onObserverReviewTopics(topics: List<Topic>) = remindTopicAdapter.submitList(topics)
@@ -82,15 +96,43 @@ class RemindFragment : BaseFragment<RemindViewModel>(), View.OnClickListener,
 
     private fun handleTimeRemindSwitch(buttonView: CompoundButton, isChecked: Boolean) {
         textPickerTime?.isVisible = isChecked == true
+        if (!buttonView.isShown) return
 
-        if (buttonView.isShown && isChecked) {
-            if (!isFirstTimeBindData) showTimePickerDialog()
-            isFirstTimeBindData = false
+        if (isChecked && !isFirstTimeBindData) {
+            showTimePickerDialog()
+            enableDailyReminder("00:00")
+        } else if (!isFirstTimeBindData) {
+            disableDailyReminder()
         }
+        isFirstTimeBindData = false
     }
 
     private fun handleReviewModeEnable(buttonView: CompoundButton, isChecked: Boolean) {
         recyclerReviews?.isVisible = isChecked == true
+        viewModel.saveEnableReviewMode(isChecked)
+    }
+
+    private fun enableDailyReminder(time: String) {
+
+        disableDailyReminder()
+        val constraints = Constraints.Builder().setRequiresCharging(true).build()
+
+        val saveRequest = PeriodicWorkRequestBuilder<RemindWorker>(1, TimeUnit.DAYS)
+            .addTag(Constants.TAG_DAILY_REMINDER)
+            .setInitialDelay(DateUtils.getDelayMinutes(time), TimeUnit.MINUTES)
+            .setConstraints(constraints)
+            .build()
+
+        context?.let {
+            WorkManager.getInstance(it).enqueue(saveRequest)
+        }
+    }
+
+    private fun disableDailyReminder() {
+        viewModel.removeRemindTime()
+        context?.let {
+            WorkManager.getInstance(it).cancelAllWorkByTag(Constants.TAG_DAILY_REMINDER)
+        }
     }
 
     private fun showTimePickerDialog() {
@@ -101,8 +143,9 @@ class RemindFragment : BaseFragment<RemindViewModel>(), View.OnClickListener,
         TimePickerDialog(
             context,
             TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                textPickerTime.text = String.format("%02d:%02d", hourOfDay, minute).also {
+                textPickerTime.text = String.format(DateUtils.TIME_FORMAT, hourOfDay, minute).also {
                     viewModel.saveRemindTime(it)
+                    enableDailyReminder(it)
                 }
             },
             currentHour, currentMinute, true

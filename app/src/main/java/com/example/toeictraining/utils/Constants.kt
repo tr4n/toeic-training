@@ -8,4 +8,5 @@ object Constants {
     const val MAX_WORD_LEVEL = 4
     const val PREFERENCE_TIME_REMINDER = "com.example.toeictraining.utils.PREFERENCE_TIME_REMINDER"
     const val PREFERENCE_TOPIC_REMINDER = "com.example.toeictraining.utils.PREFERENCE_TOPIC_REMINDER"
+    const val TAG_DAILY_REMINDER = "com.example.toeictraining.utils.TAG_DAILY_REMINDER"
 }
