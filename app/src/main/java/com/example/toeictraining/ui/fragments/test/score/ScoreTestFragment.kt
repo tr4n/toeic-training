@@ -10,10 +10,9 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import com.example.toeictraining.R
-import com.example.toeictraining.base.database.AppDatabase
-import com.example.toeictraining.base.entity.Exam
 import com.example.toeictraining.ui.fragments.test.do_test.QuestionStatus
 import com.example.toeictraining.ui.fragments.test.home.HomeTestFragment
+import com.example.toeictraining.ui.fragments.test.result.ResultTestFragment
 import com.example.toeictraining.ui.main.MainActivity
 import com.example.toeictraining.utils.DateUtils
 import kotlinx.android.synthetic.main.score_test_fragment.*
@@ -25,7 +24,7 @@ class ScoreTestFragment(
     private val timestamp: Long,
     private val part: Int
 ) :
-    Fragment() {
+    Fragment(), View.OnClickListener {
 
     companion object {
         val TAG = ScoreTestFragment::class.java.name
@@ -49,11 +48,7 @@ class ScoreTestFragment(
 
         initViews()
 
-        button_submit.setOnClickListener {
-            (activity as MainActivity).openFragment(R.id.content, HomeTestFragment(), false)
-        }
-
-        text_total_time.text =
+        text_result.text =
             getString(R.string.test_time_total).plus(DateUtils.secondsToStringTime(totalTime))
         var listenScore = 0
         var readScore = 0
@@ -74,14 +69,14 @@ class ScoreTestFragment(
             listQuestionId.add(question.data.id)
         }
         //save exam
-        val exam = Exam(
-            0,
-            listQuestionId,
-            listAnswer,
-            totalTime.toInt(),
-            part,
-            timestamp
-        )
+//        val exam = Exam(
+//            0,
+//            listQuestionId,
+//            listAnswer,
+//            totalTime.toInt(),
+//            part,
+//            timestamp
+//        )
 //        AppDatabase.getInstance(context!!).examDao().insertAll(exam)
         //
         text_listen_score.text = getString(R.string.listen_score).plus("$listenScore")
@@ -128,9 +123,7 @@ class ScoreTestFragment(
                     it.tag = null
                 }
             }
-            button_learn_more_1?.setOnClickListener {
-                Toast.makeText(context, "button 1", Toast.LENGTH_SHORT).show()
-            }
+            button_learn_more_1?.setOnClickListener(this)
             button_learn_more_2?.setOnClickListener {
                 Toast.makeText(context, "button 2", Toast.LENGTH_SHORT).show()
             }
@@ -162,7 +155,7 @@ class ScoreTestFragment(
         // tính số câu đúng part 1
         var countCorrectAnswerPart = 0
         for (i in startQuestion.minus(1)..endQuestion.minus(1)) {
-            if (questions[i].answer.equals(questions[i].data.correctAnswer)) {
+            if (questions[i].answer == questions[i].data.correctAnswer) {
                 countCorrectAnswerPart++
             }
         }
@@ -186,6 +179,9 @@ class ScoreTestFragment(
     private fun initViews() {
         (activity as MainActivity).setRightButtonText("")
         (activity as MainActivity).setTitle("")
+
+        button_continue_do.setOnClickListener(this)
+        button_result.setOnClickListener(this)
     }
 
     private fun configNavigationIcon() {
@@ -195,6 +191,21 @@ class ScoreTestFragment(
         actionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
         actionBarDrawerToggle.setToolbarNavigationClickListener {
             (activity as MainActivity).openFragment(R.id.content, HomeTestFragment(), false)
+        }
+    }
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.button_continue_do -> {
+                (activity as MainActivity).openFragment(R.id.content, HomeTestFragment(), false)
+            }
+            R.id.button_result -> {
+
+                (activity as MainActivity).openFragment(R.id.content, ResultTestFragment(), true)
+            }
+            R.id.button_learn_more_1->{
+                Toast.makeText(context, "button 1", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

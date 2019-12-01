@@ -10,6 +10,7 @@ import com.example.toeictraining.base.BaseActivity
 import com.example.toeictraining.ui.fragments.home.HomeFragment
 import com.example.toeictraining.ui.fragments.reminder.RemindFragment
 import com.example.toeictraining.ui.fragments.test.home.HomeTestFragment
+import com.example.toeictraining.ui.fragments.test.result.ResultTestFragment
 import com.example.toeictraining.ui.fragments.vocabulary.VocabularyFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.navigation_view_menu.*

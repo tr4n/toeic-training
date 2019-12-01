@@ -1,6 +1,7 @@
 package com.example.toeictraining.ui.fragments.test.do_test
 
 import android.app.AlertDialog
+import android.app.Application
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -23,12 +24,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.toeictraining.R
 import com.example.toeictraining.base.database.AppDatabase
 import com.example.toeictraining.base.entity.Question
-import com.example.toeictraining.base.enums.QuestionLevel
 import com.example.toeictraining.ui.fragments.test.score.ScoreTestFragment
 import com.example.toeictraining.ui.main.MainActivity
 import com.example.toeictraining.utils.DateUtils
+import kotlinx.android.synthetic.main.dialog_do_test.*
 import kotlinx.android.synthetic.main.do_test_fragment.*
-import kotlinx.android.synthetic.main.score_test_fragment.*
 import kotlinx.android.synthetic.main.toolbar.*
 import kotlin.math.abs
 import kotlin.math.roundToLong
@@ -37,7 +37,7 @@ import kotlin.math.roundToLong
 class DoTestFragment(
     private val secondTotalTime: Long,
     private val part: Int
-) : Fragment() {
+) : Fragment(), View.OnClickListener {
 
     companion object {
         val TAG = DoTestFragment::class.java.name
@@ -49,7 +49,7 @@ class DoTestFragment(
     val questions = mutableListOf<QuestionStatus>()
     var totalTime = 0L
     var timestamp = System.currentTimeMillis()
-    val listQuestionId = mutableListOf<Int>()
+    private val listQuestionId = mutableListOf<Int>()
 
     private var countDownTimer = object : CountDownTimer(secondTotalTime * 1000, 1000L) {
         override fun onFinish() {
@@ -74,6 +74,10 @@ class DoTestFragment(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val application: Application = requireNotNull(this.activity).application
+        val dataSource = AppDatabase.getInstance(application).questionDao()
+        val viewModelFactory = DoTestViewModelFactory(dataSource, application)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(DoTestViewModel::class.java)
         return inflater.inflate(
             R.layout.do_test_fragment,
             container,
@@ -83,9 +87,6 @@ class DoTestFragment(
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(DoTestViewModel::class.java)
-
-        Log.d(TAG, "timestamp = $timestamp")
         initViews()
         countDownTimer.start()
         handleObservable()
@@ -117,95 +118,11 @@ class DoTestFragment(
     }
 
     private fun listener() {
-        (activity as MainActivity).toolbar_button_right.setOnClickListener {
-            val alertDialog = AlertDialog.Builder(context)
-                .setView(R.layout.dialog_do_test)
-                .setCancelable(false)
-                .create()
-            alertDialog?.let {
-                it.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                it.show()
-                it.button_submit.setOnClickListener {
-                    (activity as MainActivity).openFragment(
-                        R.id.content,
-                        ScoreTestFragment(questions, secondTotalTime - totalTime, timestamp, part),
-                        false
-                    )
-                    alertDialog.cancel()
-                }
-                it.button_not_submit.setOnClickListener {
-                    alertDialog.cancel()
-                }
-            }
-        }
-
-        text_a.setOnClickListener {
-            recyclerViewQuestion.adapter?.let { adapter ->
-                (adapter as ListQuestionAdapter).indexMain.value?.let {
-                    if (text_a.tag == null || text_a.tag == false) {
-                        if (questions[it].answer == "b") removeAnswer(text_b)
-                        if (questions[it].answer == "c") removeAnswer(text_c)
-                        if (questions[it].answer == "d") removeAnswer(text_d)
-                        questions[it].answer = "a"
-                        setAnswer(text_a)
-                    } else {
-                        questions[it].answer = ""
-                        removeAnswer(text_a)
-                    }
-                }
-            }
-        }
-
-        text_b.setOnClickListener {
-            recyclerViewQuestion.adapter?.let { adapter ->
-                (adapter as ListQuestionAdapter).indexMain.value?.let {
-                    if (text_b.tag == null || text_b.tag == false) {
-                        if (questions[it].answer == "a") removeAnswer(text_a)
-                        if (questions[it].answer == "c") removeAnswer(text_c)
-                        if (questions[it].answer == "d") removeAnswer(text_d)
-                        questions[it].answer = "b"
-                        setAnswer(text_b)
-                    } else {
-                        questions[it].answer = ""
-                        removeAnswer(text_b)
-                    }
-                }
-            }
-        }
-
-        text_c.setOnClickListener {
-            recyclerViewQuestion.adapter?.let { adapter ->
-                (adapter as ListQuestionAdapter).indexMain.value?.let {
-                    if (text_c.tag == null || text_c.tag == false) {
-                        if (questions[it].answer == "a") removeAnswer(text_a)
-                        if (questions[it].answer == "b") removeAnswer(text_b)
-                        if (questions[it].answer == "d") removeAnswer(text_d)
-                        questions[it].answer = "c"
-                        setAnswer(text_c)
-                    } else {
-                        questions[it].answer = ""
-                        removeAnswer(text_c)
-                    }
-                }
-            }
-        }
-
-        text_d.setOnClickListener {
-            recyclerViewQuestion.adapter?.let { adapter ->
-                (adapter as ListQuestionAdapter).indexMain.value?.let {
-                    if (text_d.tag == null || text_d.tag == false) {
-                        if (questions[it].answer == "a") removeAnswer(text_a)
-                        if (questions[it].answer == "b") removeAnswer(text_b)
-                        if (questions[it].answer == "c") removeAnswer(text_c)
-                        questions[it].answer = "d"
-                        setAnswer(text_d)
-                    } else {
-                        questions[it].answer = ""
-                        removeAnswer(text_d)
-                    }
-                }
-            }
-        }
+        (activity as MainActivity).toolbar_button_right.setOnClickListener(this)
+        text_a.setOnClickListener(this)
+        text_b.setOnClickListener(this)
+        text_c.setOnClickListener(this)
+        text_d.setOnClickListener(this)
     }
 
     private fun setAnswer(answerView: TextView) {
@@ -217,54 +134,42 @@ class DoTestFragment(
                 null
             )
         )
-        answerView.setTextColor(
-            ResourcesCompat.getColor(
-                resources,
-                android.R.color.white,
-                null
-            )
-        )
+        answerView.setTextColor(Color.WHITE)
     }
 
     private fun removeAnswer(answerView: TextView) {
         answerView.tag = false
-        answerView.setBackgroundColor(
-            ResourcesCompat.getColor(
-                resources,
-                android.R.color.white,
-                null
-            )
-        )
-        answerView.setTextColor(
-            ResourcesCompat.getColor(
-                resources,
-                android.R.color.black,
-                null
-            )
-        )
+        answerView.setBackgroundColor(Color.WHITE)
+        answerView.setTextColor(Color.BLACK)
     }
 
     private fun handleObservable() {
-        (recyclerViewQuestion.adapter as ListQuestionAdapter).indexMain.observe(
-            viewLifecycleOwner,
-            Observer {
-                scrollView2.scrollTo(0, 0)
-                val question = questions[it]
-                text_question_content.visibility = View.VISIBLE
-                text_question_content.text = question.data.content
-                text_a.text = question.data.a
-                text_b.text = question.data.b
-                text_c.text = question.data.c
-                text_d.text = question.data.d
-                removeAnswer(text_a)
-                removeAnswer(text_b)
-                removeAnswer(text_c)
-                removeAnswer(text_d)
-                if (question.answer == "a") setAnswer(text_a)
-                if (question.answer == "b") setAnswer(text_b)
-                if (question.answer == "c") setAnswer(text_c)
-                if (question.answer == "d") setAnswer(text_d)
-            })
+//        (recyclerViewQuestion.adapter as ListQuestionAdapter).indexMain.observe(
+//            viewLifecycleOwner,
+//            Observer {
+//                scrollView2.scrollTo(0, 0)
+//                val question = questions[it]
+//                text_question_content.visibility = View.VISIBLE
+//                text_question_content.text = question.data.content
+//                text_a.text = question.data.a
+//                text_b.text = question.data.b
+//                text_c.text = question.data.c
+//                text_d.text = question.data.d
+//                removeAnswer(text_a)
+//                removeAnswer(text_b)
+//                removeAnswer(text_c)
+//                removeAnswer(text_d)
+//                if (question.answer == "a") setAnswer(text_a)
+//                if (question.answer == "b") setAnswer(text_b)
+//                if (question.answer == "c") setAnswer(text_c)
+//                if (question.answer == "d") setAnswer(text_d)
+//            })
+
+        viewModel.getQuestionsLiveData().observe(viewLifecycleOwner, Observer {
+            Log.d(TAG, it.size.toString())
+//            prepareData(it)
+//            setRecyclerQuestion()
+        })
     }
 
 //    private var observer: MediaObserver? = null
@@ -291,30 +196,32 @@ class DoTestFragment(
     private fun initViews() {
         (activity as MainActivity).setRightButtonText(getString(R.string.submit_test))
         configNavigationIcon()
-//        val listQuestionFromDB = AppDatabase.getInstance(context!!).questionDao().getAll()
-        val listQuestionFromDB = mutableListOf<Question>()
-        for (i in 1..200) {
-            listQuestionFromDB.add(
-                Question(
-                    1, 1, null, null, "Question", "A. a",
-                    "B. b", "C. c", "D. d", null, null, QuestionLevel.EASY,
-                    "a"
-                )
-            )
-        }
-        for (i in 1..listQuestionFromDB.size) {
+//        prepareData()
+//        setRecyclerQuestion()
+    }
+
+    private fun prepareData(questionsFromDB: List<Question>) {
+//        for (i in 1..200) {
+//            listQuestionFromDB.add(
+//                Question(
+//                    1, 1, null, null, "Question", "A. a",
+//                    "B. b", "C. c", "D. d", null, null, QuestionLevel.EASY,
+//                    "a"
+//                )
+//            )
+//        }
+        for (i in 1..questionsFromDB.size) {
             questions.add(
                 QuestionStatus(
                     i,
                     QuestionStatus.Status.NOT_DONE,
-                    listQuestionFromDB[i - 1],
+                    questionsFromDB[i - 1],
                     ""
                 )
             )
-            listQuestionId.add(listQuestionFromDB[i - 1].id)
+            listQuestionId.add(questionsFromDB[i - 1].id)
         }
         questions[0].status = QuestionStatus.Status.MAIN
-        setRecyclerQuestion()
     }
 
     private fun setRecyclerQuestion() {
@@ -425,5 +332,100 @@ class DoTestFragment(
     override fun onDestroy() {
         super.onDestroy()
         countDownTimer.cancel()
+    }
+
+    override fun onClick(v: View?) {
+        when (view?.id) {
+            R.id.toolbar_button_right -> {
+                val alertDialog = AlertDialog.Builder(context)
+                    .setView(R.layout.dialog_do_test)
+                    .setCancelable(false)
+                    .create()
+                alertDialog?.let {
+                    it.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                    it.show()
+                    it.button_submit.setOnClickListener {
+                        (activity as MainActivity).openFragment(
+                            R.id.content,
+                            ScoreTestFragment(
+                                questions,
+                                secondTotalTime - totalTime,
+                                timestamp,
+                                part
+                            ),
+                            false
+                        )
+                        alertDialog.cancel()
+                    }
+                    it.button_not_submit.setOnClickListener {
+                        alertDialog.cancel()
+                    }
+                }
+            }
+            R.id.text_a -> {
+                recyclerViewQuestion.adapter?.let { adapter ->
+                    (adapter as ListQuestionAdapter).indexMain.value?.let {
+                        if (text_a.tag == null || text_a.tag == false) {
+                            if (questions[it].answer == "b") removeAnswer(text_b)
+                            if (questions[it].answer == "c") removeAnswer(text_c)
+                            if (questions[it].answer == "d") removeAnswer(text_d)
+                            questions[it].answer = "a"
+                            setAnswer(text_a)
+                        } else {
+                            questions[it].answer = ""
+                            removeAnswer(text_a)
+                        }
+                    }
+                }
+            }
+            R.id.text_b -> {
+                recyclerViewQuestion.adapter?.let { adapter ->
+                    (adapter as ListQuestionAdapter).indexMain.value?.let {
+                        if (text_b.tag == null || text_b.tag == false) {
+                            if (questions[it].answer == "a") removeAnswer(text_a)
+                            if (questions[it].answer == "c") removeAnswer(text_c)
+                            if (questions[it].answer == "d") removeAnswer(text_d)
+                            questions[it].answer = "b"
+                            setAnswer(text_b)
+                        } else {
+                            questions[it].answer = ""
+                            removeAnswer(text_b)
+                        }
+                    }
+                }
+            }
+            R.id.text_c -> {
+                recyclerViewQuestion.adapter?.let { adapter ->
+                    (adapter as ListQuestionAdapter).indexMain.value?.let {
+                        if (text_c.tag == null || text_c.tag == false) {
+                            if (questions[it].answer == "a") removeAnswer(text_a)
+                            if (questions[it].answer == "b") removeAnswer(text_b)
+                            if (questions[it].answer == "d") removeAnswer(text_d)
+                            questions[it].answer = "c"
+                            setAnswer(text_c)
+                        } else {
+                            questions[it].answer = ""
+                            removeAnswer(text_c)
+                        }
+                    }
+                }
+            }
+            R.id.text_d -> {
+                recyclerViewQuestion.adapter?.let { adapter ->
+                    (adapter as ListQuestionAdapter).indexMain.value?.let {
+                        if (text_d.tag == null || text_d.tag == false) {
+                            if (questions[it].answer == "a") removeAnswer(text_a)
+                            if (questions[it].answer == "b") removeAnswer(text_b)
+                            if (questions[it].answer == "c") removeAnswer(text_c)
+                            questions[it].answer = "d"
+                            setAnswer(text_d)
+                        } else {
+                            questions[it].answer = ""
+                            removeAnswer(text_d)
+                        }
+                    }
+                }
+            }
+        }
     }
 }

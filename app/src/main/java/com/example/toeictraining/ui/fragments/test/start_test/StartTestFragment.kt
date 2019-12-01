@@ -68,9 +68,9 @@ class StartTestFragment : Fragment() {
     private fun setTextContent() {
         val partID = arguments?.getInt(HomeTestFragment.PART_ID)
         if (partID == 8) {
-            text_part.text = getString(R.string.test_full)
+            text_correct_answer.text = getString(R.string.test_full)
         } else {
-            text_part.text =
+            text_correct_answer.text =
                 getString(R.string.part).plus(" ").plus(partID)
         }
         text_time.text =

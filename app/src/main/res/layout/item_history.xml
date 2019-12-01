@@ -5,7 +5,7 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/text_id_exam"
+        android:id="@+id/text_index_question"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -14,12 +14,12 @@
         android:text="@string/id_exam"
         android:textColor="@android:color/black"
         android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/text_total_time"
+        app:layout_constraintEnd_toStartOf="@+id/text_result"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/text_part"
+        android:id="@+id/text_correct_answer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -30,12 +30,12 @@
         android:textColor="@android:color/black"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/text_total_score"
+        app:layout_constraintEnd_toStartOf="@+id/text_my_answer"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_id_exam" />
+        app:layout_constraintTop_toBottomOf="@+id/text_index_question" />
 
     <TextView
-        android:id="@+id/text_total_time"
+        android:id="@+id/text_result"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -46,11 +46,11 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/text_id_exam"
+        app:layout_constraintStart_toEndOf="@+id/text_index_question"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/text_total_score"
+        android:id="@+id/text_my_answer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -62,7 +62,7 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/text_part"
-        app:layout_constraintTop_toBottomOf="@+id/text_total_time" />
+        app:layout_constraintStart_toEndOf="@+id/text_correct_answer"
+        app:layout_constraintTop_toBottomOf="@+id/text_result" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

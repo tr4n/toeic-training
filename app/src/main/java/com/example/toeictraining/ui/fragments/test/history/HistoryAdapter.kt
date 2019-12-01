@@ -1,14 +1,12 @@
 package com.example.toeictraining.ui.fragments.test.history
 
 import android.content.Context
-import android.text.Layout
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
 import com.example.toeictraining.R
 import com.example.toeictraining.base.database.AppDatabase
 import com.example.toeictraining.base.entity.Exam
@@ -51,9 +49,9 @@ class HistoryAdapter(
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var textIdExam: TextView = view.text_id_exam
-        var textTotalTime: TextView = view.text_total_time
-        var textPart: TextView = view.text_part
-        var textTotalScore: TextView = view.text_total_score
+        var textIdExam: TextView = view.text_index_question
+        var textTotalTime: TextView = view.text_result
+        var textPart: TextView = view.text_correct_answer
+        var textTotalScore: TextView = view.text_my_answer
     }
 }

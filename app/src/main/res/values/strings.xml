@@ -95,4 +95,8 @@
     <string name="title_start_day">Ngày bắt đầu</string>
     <string name="title_end_day">Ngày kết thúc</string>
     <string name="id_exam">Mã đề:\t</string>
+    <string name="index_question">Câu số: \t</string>
+    <string name="result">Kết quả:</string>
+    <string name="correct_answer">Đáp án đúng:</string>
+    <string name="my_answer">Đáp án của bạn:</string>
 </resources>
