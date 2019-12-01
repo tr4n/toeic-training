@@ -35,6 +35,14 @@ class RemindViewModel(
         }
     }
 
+    val reviewMode: LiveData<Boolean> = liveData {
+        try {
+            emit(sharedPreferences.getBoolean(Constants.PREFERENCE_TOPIC_REMINDER, false))
+        } catch (e: Exception) {
+            emit(false)
+        }
+    }
+
     fun updateTopicReviews(topic: Topic) {
         try {
             viewModelScope.launch {
@@ -49,6 +57,20 @@ class RemindViewModel(
     fun saveRemindTime(time: String) {
         sharedPreferences.edit().run {
             putString(Constants.PREFERENCE_TIME_REMINDER, time)
+            commit()
+        }
+    }
+
+    fun removeRemindTime() {
+        sharedPreferences.edit().run {
+            remove(Constants.PREFERENCE_TIME_REMINDER)
+            commit()
+        }
+    }
+
+    fun saveEnableReviewMode(isEnable: Boolean) {
+        sharedPreferences.edit().run {
+            putBoolean(Constants.PREFERENCE_TOPIC_REMINDER, isEnable)
             commit()
         }
     }
