@@ -14,7 +14,7 @@ data class Exam(
     @ColumnInfo(name = FIELD_LIST_ANSWER) var answerList: MutableList<String> = mutableListOf(),
     @ColumnInfo(name = FIELD_TIME) var time: Int = 0,
     @ColumnInfo(name = FIELD_PART) var part: Int = 0,
-    @ColumnInfo(name = FIELD_TIMESTAMP) var timestamp: Long
+    @ColumnInfo(name = FIELD_TIMESTAMP) var timestamp: String
 ) {
     companion object {
         const val TABLE_NAME = "exam"

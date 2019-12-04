@@ -1,8 +1,8 @@
 package com.example.toeictraining.ui.fragments.test.result
 
+import com.example.toeictraining.base.entity.Question
+
 class Result(
-    var indexQuestion: Int,
-    var result: String,
-    var correctAnswer: String,
+    var question: Question,
     var myAnswer: String
 )

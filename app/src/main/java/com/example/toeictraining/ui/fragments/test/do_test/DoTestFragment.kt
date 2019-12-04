@@ -5,10 +5,11 @@ import android.app.Application
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,21 +22,23 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.toeictraining.R
 import com.example.toeictraining.base.database.AppDatabase
 import com.example.toeictraining.base.entity.Question
+import com.example.toeictraining.ui.fragments.test.Constant
 import com.example.toeictraining.ui.fragments.test.score.ScoreTestFragment
 import com.example.toeictraining.ui.main.MainActivity
 import com.example.toeictraining.utils.DateUtils
 import kotlinx.android.synthetic.main.dialog_do_test.*
 import kotlinx.android.synthetic.main.do_test_fragment.*
 import kotlinx.android.synthetic.main.toolbar.*
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.math.abs
-import kotlin.math.roundToLong
-
+import kotlin.math.roundToInt
 
 class DoTestFragment(
-    private val secondTotalTime: Long,
     private val part: Int
 ) : Fragment(), View.OnClickListener {
 
@@ -44,29 +47,33 @@ class DoTestFragment(
         const val THRESHOLD_SPEED = 60
     }
 
+    private var secondTotalTime: Int = 0
     private lateinit var viewModel: DoTestViewModel
-    lateinit var mediaPlayer: MediaPlayer
-    val questions = mutableListOf<QuestionStatus>()
-    var totalTime = 0L
-    var timestamp = System.currentTimeMillis()
+    private var mediaPlayer: MediaPlayer? = null
+    val questionsStatus = mutableListOf<QuestionStatus>()
+    var totalTime = 0
+    var timestamp: String = ""
     private val listQuestionId = mutableListOf<Int>()
 
-    private var countDownTimer = object : CountDownTimer(secondTotalTime * 1000, 1000L) {
-        override fun onFinish() {
-            (activity as MainActivity).openFragment(
-                R.id.content,
-                ScoreTestFragment(questions, secondTotalTime, timestamp, part),
-                false
-            )
-        }
+    private var countDownTimer: CountDownTimer? = null
 
-        override fun onTick(millisUntilFinished: Long) {
-            totalTime = (millisUntilFinished / 1000.0).roundToLong()
-            (activity as MainActivity).setTitle(
-                DateUtils.secondsToStringTime(
-                    (millisUntilFinished / 1000.0).roundToLong()
+    private fun setCountDownTimer(time: Int) {
+        countDownTimer = object : CountDownTimer(time * 1000L, 1000L) {
+            override fun onFinish() {
+                (activity as MainActivity).openFragment(
+                    ScoreTestFragment(questionsStatus, secondTotalTime, timestamp, part),
+                    false
                 )
-            )
+            }
+
+            override fun onTick(millisUntilFinished: Long) {
+                totalTime = (millisUntilFinished / 1000.0).roundToInt()
+                (activity as MainActivity).setTitle(
+                    DateUtils.secondsToStringTime(
+                        (millisUntilFinished / 1000.0).roundToInt()
+                    )
+                )
+            }
         }
     }
 
@@ -74,9 +81,11 @@ class DoTestFragment(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val application: Application = requireNotNull(this.activity).application
+        timestamp = SimpleDateFormat(getString(R.string.date_time_format), Locale.getDefault())
+            .format(Calendar.getInstance().time)
+        val application: Application = requireNotNull(activity).application
         val dataSource = AppDatabase.getInstance(application).questionDao()
-        val viewModelFactory = DoTestViewModelFactory(dataSource, application)
+        val viewModelFactory = DoTestViewModelFactory(dataSource, application, part)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(DoTestViewModel::class.java)
         return inflater.inflate(
             R.layout.do_test_fragment,
@@ -87,45 +96,12 @@ class DoTestFragment(
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        (activity as MainActivity).showLoadingDialog()
         initViews()
-        countDownTimer.start()
         handleObservable()
-        listener()
-
-
-//        button_play_sound.setOnClickListener {
-//            mediaPlayer = MediaPlayer.create(context, R.raw.q1_p1).apply {
-//                start()
-//            }
-//            it.background =
-//                resources.getDrawable(R.drawable.pause_24, null)
-//
-//            mediaPlayer.setOnCompletionListener { mp ->
-//                observer?.stop()
-//                progressBar_sound.progress = mp.currentPosition
-//                mediaPlayer.stop()
-//                mediaPlayer.reset()
-//            }
-//            mediaPlayer.setOnBufferingUpdateListener { _, _ ->
-//                Log.d(" UpdateListener", " vào")
-//                progressBar_sound.progress =
-//                    (mediaPlayer.currentPosition.toDouble() / mediaPlayer.duration.toDouble() * 100).toInt()
-//            }
-////        mediaPlayer.setOnPreparedListener { btn_play_stop.setEnabled(true) }
-//            observer = MediaObserver()
-//            Thread(observer).start()
-//        }
     }
 
-    private fun listener() {
-        (activity as MainActivity).toolbar_button_right.setOnClickListener(this)
-        text_a.setOnClickListener(this)
-        text_b.setOnClickListener(this)
-        text_c.setOnClickListener(this)
-        text_d.setOnClickListener(this)
-    }
-
-    private fun setAnswer(answerView: TextView) {
+    private fun drawAnswer(answerView: TextView) {
         answerView.tag = true
         answerView.setBackgroundColor(
             ResourcesCompat.getColor(
@@ -138,90 +114,115 @@ class DoTestFragment(
     }
 
     private fun removeAnswer(answerView: TextView) {
-        answerView.tag = false
+        answerView.tag = null
         answerView.setBackgroundColor(Color.WHITE)
         answerView.setTextColor(Color.BLACK)
     }
 
     private fun handleObservable() {
-//        (recyclerViewQuestion.adapter as ListQuestionAdapter).indexMain.observe(
-//            viewLifecycleOwner,
-//            Observer {
-//                scrollView2.scrollTo(0, 0)
-//                val question = questions[it]
-//                text_question_content.visibility = View.VISIBLE
-//                text_question_content.text = question.data.content
-//                text_a.text = question.data.a
-//                text_b.text = question.data.b
-//                text_c.text = question.data.c
-//                text_d.text = question.data.d
-//                removeAnswer(text_a)
-//                removeAnswer(text_b)
-//                removeAnswer(text_c)
-//                removeAnswer(text_d)
-//                if (question.answer == "a") setAnswer(text_a)
-//                if (question.answer == "b") setAnswer(text_b)
-//                if (question.answer == "c") setAnswer(text_c)
-//                if (question.answer == "d") setAnswer(text_d)
-//            })
+        viewModel.indexMain.observe(
+            viewLifecycleOwner,
+            Observer {
+                scrollView2.scrollTo(0, 0)
+                val question = questionsStatus[it]
+                (activity as MainActivity).showLoadingDialog()
+                //script
+                text_script.visibility = View.GONE
+                question.data.script?.let { script ->
+                    text_script.visibility = View.VISIBLE
+                    text_script.text = script
+                }
+                //content
+                text_question_content.visibility = View.GONE
+                question.data.content?.let { content ->
+                    text_question_content.visibility = View.VISIBLE
+                    text_question_content.text = content
+                }
+                //audio
+                question.data.soundLink?.let {
+                    mediaPlayer?.stop()
+                    mediaPlayer = MediaPlayer()
+                    mediaPlayer?.setAudioAttributes(
+                        AudioAttributes.Builder().setContentType(
+                            AudioAttributes.CONTENT_TYPE_MUSIC
+                        ).build()
+                    )
+                    mediaPlayer?.setDataSource(context!!, Uri.parse(question.data.soundLink))
+                    mediaPlayer?.prepare()
+                    mediaPlayer?.setOnPreparedListener {
+                        (activity as MainActivity).cancelLoadingDialog()
+                        mediaPlayer?.start()
+                    }
+                }
+                //image
+                image_question.visibility = View.GONE
+                question.data.imageLink?.let { link ->
+                    image_question.visibility = View.VISIBLE
+                    Glide.with(context!!)
+                        .load(link)
+                        .fitCenter()
+                        .into(image_question)
+                }
+                //answer
+                text_a.text = getString(R.string.a).plus(". ").plus(question.data.a)
+                text_b.text = getString(R.string.b).plus(". ").plus(question.data.b)
+                text_c.text = getString(R.string.c).plus(". ").plus(question.data.c)
+                text_d.visibility = View.GONE
+                question.data.d?.let { d ->
+                    text_d.visibility = View.VISIBLE
+                    text_d.text = getString(R.string.d).plus(". ").plus(d)
+                }
+                removeDrawAnswers()
+                when (question.answer) {
+                    getString(R.string.a) -> drawAnswer(text_a)
+                    getString(R.string.b) -> drawAnswer(text_b)
+                    getString(R.string.c) -> drawAnswer(text_c)
+                    getString(R.string.d) -> drawAnswer(text_d)
+                }
+                /*khi có link sound, không cancelloadingdialog, đợi loading xong sound,
+                cancelloadingdialog bên mediaPlayer*/
+                if (question.data.soundLink == null) {
+                    (activity as MainActivity).cancelLoadingDialog()
+                }
+            })
 
         viewModel.getQuestionsLiveData().observe(viewLifecycleOwner, Observer {
-            Log.d(TAG, it.size.toString())
-//            prepareData(it)
-//            setRecyclerQuestion()
+            prepareData(it)
+            setRecyclerQuestion()
+            if (countDownTimer == null) {
+                setCountDownTimer(secondTotalTime)
+            }
+            countDownTimer?.start()
         })
     }
-
-//    private var observer: MediaObserver? = null
-//
-//    private inner class MediaObserver : Runnable {
-//        private val stop = AtomicBoolean(false)
-//        fun stop() {
-//            stop.set(true)
-//        }
-//
-//        override fun run() {
-//            while (!stop.get()) {
-//                progressBar_sound.progress =
-//                    (mediaPlayer.currentPosition.toDouble() / mediaPlayer.duration.toDouble() * 100).toInt()
-//                try {
-//                    Thread.sleep(200)
-//                } catch (ex: Exception) {
-//                    Log.e(TAG, ex.toString())
-//                }
-//            }
-//        }
-//    }
 
     private fun initViews() {
         (activity as MainActivity).setRightButtonText(getString(R.string.submit_test))
         configNavigationIcon()
-//        prepareData()
-//        setRecyclerQuestion()
+        (activity as MainActivity).toolbar_button_right.setOnClickListener(this)
+        text_a.setOnClickListener(this)
+        text_b.setOnClickListener(this)
+        text_c.setOnClickListener(this)
+        text_d.setOnClickListener(this)
+
+        secondTotalTime = Constant.TIMES_PART[part]
+        //load data
+        viewModel.getQuestions(part)
     }
 
     private fun prepareData(questionsFromDB: List<Question>) {
-//        for (i in 1..200) {
-//            listQuestionFromDB.add(
-//                Question(
-//                    1, 1, null, null, "Question", "A. a",
-//                    "B. b", "C. c", "D. d", null, null, QuestionLevel.EASY,
-//                    "a"
-//                )
-//            )
-//        }
-        for (i in 1..questionsFromDB.size) {
-            questions.add(
+        for (i in questionsFromDB.indices) {
+            questionsStatus.add(
                 QuestionStatus(
-                    i,
+                    i + 1,
                     QuestionStatus.Status.NOT_DONE,
-                    questionsFromDB[i - 1],
+                    questionsFromDB[i],
                     ""
                 )
             )
-            listQuestionId.add(questionsFromDB[i - 1].id)
+            listQuestionId.add(questionsFromDB[i].id)
         }
-        questions[0].status = QuestionStatus.Status.MAIN
+        questionsStatus[0].status = QuestionStatus.Status.MAIN
     }
 
     private fun setRecyclerQuestion() {
@@ -233,7 +234,7 @@ class DoTestFragment(
                         (Resources.getSystem().displayMetrics.widthPixels - (Resources.getSystem().displayMetrics.density * 60).toInt()) / 2
                     )
                 }
-            adapter = ListQuestionAdapter(context, questions)
+            adapter = ListQuestionAdapter(activity as MainActivity, questionsStatus, viewModel)
             addItemDecoration(
                 DividerItemDecoration(
                     context,
@@ -260,8 +261,8 @@ class DoTestFragment(
                                 val speed = abs((lastTimePoint - firstTimePoint) / (fp2 - fp1))
                                 if (speed < THRESHOLD_SPEED && fp2 == 0) {
                                     setMainPosition(0)
-                                } else if (speed < THRESHOLD_SPEED && lp2 == (questions.size - 1)) {
-                                    setMainPosition(questions.size - 1)
+                                } else if (speed < THRESHOLD_SPEED && lp2 == (questionsStatus.size - 1)) {
+                                    setMainPosition(questionsStatus.size - 1)
                                 } else {
                                     val item =
                                         (layoutManager as LinearLayoutManager).findViewByPosition(
@@ -284,16 +285,17 @@ class DoTestFragment(
                         }
                     }
                 }
-
-                private fun setMainPosition(pos: Int) {
-                    (adapter as ListQuestionAdapter).indexMain.value?.let {
-                        questions[it].status =
-                            QuestionStatus.Status.NOT_DONE // load lại status
-                    }
-                    questions[pos].status = QuestionStatus.Status.MAIN
-                }
             })
         }
+    }
+
+    private fun setMainPosition(pos: Int) {
+        (activity as MainActivity).showLoadingDialog()
+        viewModel.indexMain.value?.let {
+            questionsStatus[it].status =
+                QuestionStatus.Status.NOT_DONE // load lại status
+        }
+        questionsStatus[pos].status = QuestionStatus.Status.MAIN
     }
 
     private fun configNavigationIcon() {
@@ -302,40 +304,30 @@ class DoTestFragment(
         actionBarDrawerToggle.isDrawerIndicatorEnabled = false
         actionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white_24dp)
         actionBarDrawerToggle.setToolbarNavigationClickListener {
-            val alertDialog = AlertDialog.Builder(context)
-                .setView(R.layout.dialog_do_test)
-                .setCancelable(false)
-                .create()
-            alertDialog?.let {
-                it.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                it.show()
-                it.button_submit.text = "Không"
-                it.button_not_submit.text = "Thoát"
-                it.button_submit.setOnClickListener {
-                    alertDialog.cancel()
-                }
-                it.button_not_submit.setOnClickListener {
-                    (activity as MainActivity).onBackPressed()
-                    countDownTimer.cancel()
-                    alertDialog.cancel()
-                }
-            }
-
+            (activity as MainActivity).onBackPressed()
         }
     }
 
     override fun onDestroyView() {
+        countDownTimer?.cancel()
+        mediaPlayer?.stop()
         super.onDestroyView()
-        countDownTimer.cancel()
     }
 
     override fun onDestroy() {
+        countDownTimer?.cancel()
+        mediaPlayer?.stop()
         super.onDestroy()
-        countDownTimer.cancel()
+    }
+
+    override fun onPause() {
+        countDownTimer?.cancel()
+        mediaPlayer?.pause()
+        super.onPause()
     }
 
     override fun onClick(v: View?) {
-        when (view?.id) {
+        when (v?.id) {
             R.id.toolbar_button_right -> {
                 val alertDialog = AlertDialog.Builder(context)
                     .setView(R.layout.dialog_do_test)
@@ -346,9 +338,8 @@ class DoTestFragment(
                     it.show()
                     it.button_submit.setOnClickListener {
                         (activity as MainActivity).openFragment(
-                            R.id.content,
                             ScoreTestFragment(
-                                questions,
+                                questionsStatus,
                                 secondTotalTime - totalTime,
                                 timestamp,
                                 part
@@ -363,69 +354,68 @@ class DoTestFragment(
                 }
             }
             R.id.text_a -> {
-                recyclerViewQuestion.adapter?.let { adapter ->
-                    (adapter as ListQuestionAdapter).indexMain.value?.let {
-                        if (text_a.tag == null || text_a.tag == false) {
-                            if (questions[it].answer == "b") removeAnswer(text_b)
-                            if (questions[it].answer == "c") removeAnswer(text_c)
-                            if (questions[it].answer == "d") removeAnswer(text_d)
-                            questions[it].answer = "a"
-                            setAnswer(text_a)
+                recyclerViewQuestion.adapter?.let {
+                    viewModel.indexMain.value?.let {
+                        if (text_a.tag == null) {
+                            removeDrawAnswers()
+                            questionsStatus[it].answer = getString(R.string.a)
+                            drawAnswer(text_a)
                         } else {
-                            questions[it].answer = ""
+                            questionsStatus[it].answer = ""
                             removeAnswer(text_a)
                         }
                     }
                 }
             }
             R.id.text_b -> {
-                recyclerViewQuestion.adapter?.let { adapter ->
-                    (adapter as ListQuestionAdapter).indexMain.value?.let {
-                        if (text_b.tag == null || text_b.tag == false) {
-                            if (questions[it].answer == "a") removeAnswer(text_a)
-                            if (questions[it].answer == "c") removeAnswer(text_c)
-                            if (questions[it].answer == "d") removeAnswer(text_d)
-                            questions[it].answer = "b"
-                            setAnswer(text_b)
+                recyclerViewQuestion.adapter?.let {
+                    viewModel.indexMain.value?.let {
+                        if (text_b.tag == null) {
+                            removeDrawAnswers()
+                            questionsStatus[it].answer = getString(R.string.b)
+                            drawAnswer(text_b)
                         } else {
-                            questions[it].answer = ""
+                            questionsStatus[it].answer = ""
                             removeAnswer(text_b)
                         }
                     }
                 }
             }
             R.id.text_c -> {
-                recyclerViewQuestion.adapter?.let { adapter ->
-                    (adapter as ListQuestionAdapter).indexMain.value?.let {
-                        if (text_c.tag == null || text_c.tag == false) {
-                            if (questions[it].answer == "a") removeAnswer(text_a)
-                            if (questions[it].answer == "b") removeAnswer(text_b)
-                            if (questions[it].answer == "d") removeAnswer(text_d)
-                            questions[it].answer = "c"
-                            setAnswer(text_c)
+                recyclerViewQuestion.adapter?.let {
+                    viewModel.indexMain.value?.let {
+                        if (text_c.tag == null) {
+                            removeDrawAnswers()
+                            questionsStatus[it].answer = getString(R.string.c)
+                            drawAnswer(text_c)
                         } else {
-                            questions[it].answer = ""
+                            questionsStatus[it].answer = ""
                             removeAnswer(text_c)
                         }
                     }
                 }
             }
             R.id.text_d -> {
-                recyclerViewQuestion.adapter?.let { adapter ->
-                    (adapter as ListQuestionAdapter).indexMain.value?.let {
-                        if (text_d.tag == null || text_d.tag == false) {
-                            if (questions[it].answer == "a") removeAnswer(text_a)
-                            if (questions[it].answer == "b") removeAnswer(text_b)
-                            if (questions[it].answer == "c") removeAnswer(text_c)
-                            questions[it].answer = "d"
-                            setAnswer(text_d)
+                recyclerViewQuestion.adapter?.let {
+                    viewModel.indexMain.value?.let {
+                        if (text_d.tag == null) {
+                            removeDrawAnswers()
+                            questionsStatus[it].answer = getString(R.string.d)
+                            drawAnswer(text_d)
                         } else {
-                            questions[it].answer = ""
+                            questionsStatus[it].answer = ""
                             removeAnswer(text_d)
                         }
                     }
                 }
             }
         }
+    }
+
+    private fun removeDrawAnswers() {
+        removeAnswer(text_a)
+        removeAnswer(text_b)
+        removeAnswer(text_c)
+        removeAnswer(text_d)
     }
 }

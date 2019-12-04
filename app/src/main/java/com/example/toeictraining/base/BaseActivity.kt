@@ -3,6 +3,7 @@ package com.example.toeictraining.base
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.toeictraining.R
 
 abstract class BaseActivity : AppCompatActivity() {
 
@@ -20,8 +21,9 @@ abstract class BaseActivity : AppCompatActivity() {
 
     protected abstract fun initData()
 
-    fun openFragment(id: Int, fragment: Fragment, addToBackStack: Boolean) =
-        supportFragmentManager.beginTransaction().replace(id, fragment).apply {
+    fun openFragment(fragment: Fragment, addToBackStack: Boolean) {
+        supportFragmentManager.beginTransaction().replace(R.id.content, fragment).apply {
             if (addToBackStack) addToBackStack(null)
         }.commit()
+    }
 }

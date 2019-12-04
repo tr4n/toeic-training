@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.toeictraining.R
+import com.example.toeictraining.ui.fragments.test.Constant
 import com.example.toeictraining.ui.fragments.test.start_test.StartTestFragment
 import com.example.toeictraining.ui.main.MainActivity
 import kotlinx.android.synthetic.main.home_test_fragment.*
@@ -19,18 +20,6 @@ class HomeTestFragment : Fragment() {
     companion object {
         val TAG = HomeTestFragment::class.java.name
         const val PART_ID = "part_id"
-        const val TIME = "time"
-        val IDS_PART = arrayOf(1, 2, 3, 4, 5, 6, 7, 8)
-        val TIMES_PART = arrayOf(
-            "00:06:00",
-            "00:25:00",
-            "00:39:00",
-            "00:30:00",
-            "00:30:00",
-            "00:16:00",
-            "00:54:00",
-            "02:00:00"
-        )
     }
 
     private lateinit var viewModel: TestViewModel
@@ -99,20 +88,15 @@ class HomeTestFragment : Fragment() {
                 resourcesImage,
                 object : ItemClickListener {
                     override fun onClick(view: View, position: Int, isLongClick: Boolean) {
-                        openStartTestFragment(position)
+                        val bundle = Bundle()
+                        bundle.putInt(PART_ID, Constant.IDS_PART[position])
+                        (activity as MainActivity).openFragment(
+                            StartTestFragment().apply { arguments = bundle },
+                            true
+                        )
                     }
                 }
             )
         }
     }
-
-    fun openStartTestFragment(index: Int) {
-        val bundle = Bundle()
-        bundle.putInt(PART_ID, IDS_PART[index])
-        bundle.putString(TIME, TIMES_PART[index])
-        val fragment = StartTestFragment()
-        fragment.arguments = bundle
-        (activity as MainActivity).openFragment(R.id.content, fragment, true)
-    }
-
 }

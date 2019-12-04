@@ -34,7 +34,7 @@ class HistoryAdapter(
         holder.textIdExam.text = context.getString(R.string.id_exam).plus(exam.id.toString())
         holder.textPart.text = context.getString(R.string.part).plus(exam.part)
         holder.textTotalTime.text =
-            context.getString(R.string.time).plus(DateUtils.secondsToStringTime(exam.time.toLong()))
+            context.getString(R.string.time).plus(DateUtils.secondsToStringTime(exam.time))
         val db = AppDatabase.getInstance(context)
         var score = 0
         for (i in 0..exam.answerList.size) {

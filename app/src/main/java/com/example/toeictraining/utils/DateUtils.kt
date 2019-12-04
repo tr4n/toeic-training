@@ -16,11 +16,11 @@ object DateUtils {
     fun getCurrentTime(): String =
         SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).format(Date(System.currentTimeMillis()))
 
-    fun secondsToStringTime(seconds: Long): String {
+    fun secondsToStringTime(seconds: Int): String {
         var temp = seconds
-        var hour = 0L
-        var minute = 0L
-        var second = 0L
+        var hour = 0
+        var minute = 0
+        var second = 0
 
         if (temp >= 3600) {
             hour = temp / (3600)

@@ -96,7 +96,16 @@
     <string name="title_end_day">Ngày kết thúc</string>
     <string name="id_exam">Mã đề:\t</string>
     <string name="index_question">Câu số: \t</string>
-    <string name="result">Kết quả:</string>
+    <string name="result">Kết quả: \t</string>
     <string name="correct_answer">Đáp án đúng:</string>
     <string name="my_answer">Đáp án của bạn:</string>
+    <string name="no">Không</string>
+    <string name="exit">Thoát</string>
+    <string name="a">A</string>
+    <string name="b">B</string>
+    <string name="c">C</string>
+    <string name="d">D</string>
+    <string name="right">Đúng</string>
+    <string name="failed">Sai</string>
+    <string name="date_time_format">dd/MM/yyyy HH:mm:ss</string>
 </resources>

@@ -1,15 +1,20 @@
 package com.example.toeictraining.ui.fragments.test.score
 
+import android.app.Application
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProviders
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.example.toeictraining.R
+import com.example.toeictraining.base.database.AppDatabase
+import com.example.toeictraining.base.entity.Exam
 import com.example.toeictraining.ui.fragments.test.do_test.QuestionStatus
 import com.example.toeictraining.ui.fragments.test.home.HomeTestFragment
 import com.example.toeictraining.ui.fragments.test.result.ResultTestFragment
@@ -19,9 +24,9 @@ import kotlinx.android.synthetic.main.score_test_fragment.*
 import kotlin.math.roundToInt
 
 class ScoreTestFragment(
-    val questions: List<QuestionStatus>,
-    private val totalTime: Long,
-    private val timestamp: Long,
+    private val questionsStatus: List<QuestionStatus>,
+    private val totalTime: Int,
+    private val timestamp: String,
     private val part: Int
 ) :
     Fragment(), View.OnClickListener {
@@ -34,20 +39,25 @@ class ScoreTestFragment(
 
     private lateinit var viewModel: ScoreTestViewModel
     var totalScore = 0
+    private var idExam: Long? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val application: Application = requireNotNull(this.activity).application
+        val examDao = AppDatabase.getInstance(application).examDao()
+        val viewModelFactory = ScoreTestViewModelFactory(examDao, application)
+        viewModel =
+            ViewModelProviders.of(this, viewModelFactory).get(ScoreTestViewModel::class.java)
         return inflater.inflate(R.layout.score_test_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(ScoreTestViewModel::class.java)
-
         initViews()
-
+        handleObservable()
         text_result.text =
             getString(R.string.test_time_total).plus(DateUtils.secondsToStringTime(totalTime))
         var listenScore = 0
@@ -56,34 +66,33 @@ class ScoreTestFragment(
         val listAnswer = mutableListOf<String>()
         val listQuestionId = mutableListOf<Int>()
 
-        for (question in questions) {
-            if (question.data.correctAnswer == question.answer) {
-                if (question.data.soundLink != null) {
+        for (questionStatus in questionsStatus) {
+            //create exam
+            listAnswer.add(questionStatus.answer)
+            listQuestionId.add(questionStatus.data.id)
+            if (questionStatus.data.correctAnswer == questionStatus.answer) {
+                if (questionStatus.data.soundLink != null) {
                     listenScore += 5
                     continue
                 }
                 readScore += 5
             }
-            //create exam
-            listAnswer.add(question.answer)
-            listQuestionId.add(question.data.id)
         }
         //save exam
-//        val exam = Exam(
-//            0,
-//            listQuestionId,
-//            listAnswer,
-//            totalTime.toInt(),
-//            part,
-//            timestamp
-//        )
-//        AppDatabase.getInstance(context!!).examDao().insertAll(exam)
+        val exam = Exam(
+            questionIdList = listQuestionId,
+            answerList = listAnswer,
+            time = totalTime,
+            part = part,
+            timestamp = timestamp
+        )
+        viewModel.insert(exam)
         //
         text_listen_score.text = getString(R.string.listen_score).plus("$listenScore")
         text_read_score.text = getString(R.string.read_score).plus("$readScore")
         totalScore = readScore + listenScore
         total_score.text = totalScore.toString()
-        if (questions.size == 200) {
+        if (questionsStatus.size == 200) {
             text_expand?.visibility = View.VISIBLE
             text_expand?.setOnClickListener {
                 if (it.tag == null) {
@@ -146,6 +155,13 @@ class ScoreTestFragment(
         configNavigationIcon()
     }
 
+    private fun handleObservable() {
+        viewModel.getInsertResultLiveData().observe(viewLifecycleOwner, Observer {
+            Log.d(TAG, "idExam = $it")
+            idExam = it
+        })
+    }
+
     private fun setDetailPart(
         startQuestion: Int,
         endQuestion: Int,
@@ -155,7 +171,7 @@ class ScoreTestFragment(
         // tính số câu đúng part 1
         var countCorrectAnswerPart = 0
         for (i in startQuestion.minus(1)..endQuestion.minus(1)) {
-            if (questions[i].answer == questions[i].data.correctAnswer) {
+            if (questionsStatus[i].answer == questionsStatus[i].data.correctAnswer) {
                 countCorrectAnswerPart++
             }
         }
@@ -190,20 +206,30 @@ class ScoreTestFragment(
         actionBarDrawerToggle.isDrawerIndicatorEnabled = false
         actionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
         actionBarDrawerToggle.setToolbarNavigationClickListener {
-            (activity as MainActivity).openFragment(R.id.content, HomeTestFragment(), false)
+            (activity as MainActivity).openFragment(
+                HomeTestFragment(),
+                false
+            )
         }
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.button_continue_do -> {
-                (activity as MainActivity).openFragment(R.id.content, HomeTestFragment(), false)
+                (activity as MainActivity).openFragment(
+                    HomeTestFragment(),
+                    false
+                )
             }
             R.id.button_result -> {
-
-                (activity as MainActivity).openFragment(R.id.content, ResultTestFragment(), true)
+                idExam?.let {
+                    (activity as MainActivity).openFragment(
+                        ResultTestFragment(it),
+                        true
+                    )
+                }
             }
-            R.id.button_learn_more_1->{
+            R.id.button_learn_more_1 -> {
                 Toast.makeText(context, "button 1", Toast.LENGTH_SHORT).show()
             }
         }

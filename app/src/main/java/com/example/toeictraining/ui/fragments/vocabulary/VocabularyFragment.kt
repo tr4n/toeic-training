@@ -12,6 +12,10 @@ import org.koin.core.qualifier.named
 
 class VocabularyFragment private constructor() : BaseFragment<VocabularyViewModel>() {
 
+    companion object{
+        val TAG :String = VocabularyFragment::class.java.name
+        fun newInstance() = VocabularyFragment()
+    }
     override val layoutResource = R.layout.fragment_vocabulary
 
     override val viewModel: VocabularyViewModel by viewModel()
@@ -38,9 +42,5 @@ class VocabularyFragment private constructor() : BaseFragment<VocabularyViewMode
         categories.observe(viewLifecycleOwner, Observer {
             categoryAdapter.submitList(it)
         })
-    }
-
-    companion object {
-        fun newInstance() = VocabularyFragment()
     }
 }
