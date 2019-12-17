@@ -60,6 +60,11 @@ class RemindFragment : BaseFragment<RemindViewModel>(),
         remindTime.observe(viewLifecycleOwner, Observer(::onObserverRemindTime))
         topics.observe(viewLifecycleOwner, Observer(::onObserverReviewTopics))
         reviewMode.observe(viewLifecycleOwner, Observer(::onObserverReviewMode))
+        reviewTopic.observe(viewLifecycleOwner, Observer {
+            context?.run {
+                toast(getString(R.string.msg_remind_topics) + " " + it)
+            }
+        })
     }
 
     private fun onObserverRemindTime(time: String?) {

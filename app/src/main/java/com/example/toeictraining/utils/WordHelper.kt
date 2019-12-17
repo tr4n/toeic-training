@@ -10,9 +10,9 @@ object WordHelper {
     const val LEVEL_2 = 2
     const val LEVEL_3 = 3
     const val LEVEL_MAX = 4
-    const val NEVER = "Never"
-    const val REVIEWING = "Reviewing"
-    const val MASTER = "Master"
+    const val NEVER = "Chưa học"
+    const val REVIEWING = "Đang ôn tập"
+    const val MASTER = "Nhớ như in"
 
     fun getLevelContent(level: Int) = when (level) {
         LEVEL_MIN -> NEVER
