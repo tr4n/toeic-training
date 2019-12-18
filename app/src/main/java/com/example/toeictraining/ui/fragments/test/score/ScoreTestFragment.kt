@@ -84,7 +84,8 @@ class ScoreTestFragment(
             answerList = listAnswer,
             time = totalTime,
             part = part,
-            timestamp = timestamp
+            timestamp = timestamp,
+            score = readScore + listenScore
         )
         viewModel.insert(exam)
         //

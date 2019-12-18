@@ -1,7 +1,7 @@
 package com.example.toeictraining.ui.fragments.test.result
 
+import android.app.Activity
 import android.app.Dialog
-import android.content.Context
 import android.graphics.Color
 import android.media.AudioAttributes
 import android.media.MediaPlayer
@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.toeictraining.R
+import com.example.toeictraining.ui.main.MainActivity
 import kotlinx.android.synthetic.main.dialog_show_question.*
 import kotlinx.android.synthetic.main.do_test_fragment.image_question
 import kotlinx.android.synthetic.main.do_test_fragment.text_a
@@ -24,7 +25,7 @@ import kotlinx.android.synthetic.main.do_test_fragment.text_script
 import kotlinx.android.synthetic.main.item_result.view.*
 
 class ResultRecyclerViewAdapter(
-    var context: Context,
+    var activity: Activity,
     var results: MutableList<Result>
 ) : RecyclerView.Adapter<ResultRecyclerViewAdapter.ViewHolder>() {
 
@@ -40,24 +41,35 @@ class ResultRecyclerViewAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_result, parent, false))
+        return ViewHolder(
+            LayoutInflater.from(activity).inflate(
+                R.layout.item_result,
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val result = results[position]
         val question = result.question
         holder.textIndexQuestion.text =
-            context.getString(R.string.index_question).plus(position + 1)
-        holder.textResult.text = context.getString(R.string.result).plus(
-            if (result.myAnswer == result.question.correctAnswer) context.getString(R.string.right)
-            else context.getString(R.string.failed)
+            activity.getString(R.string.index_question).plus(position + 1)
+        holder.textResult.text = activity.getString(R.string.result).plus(
+            if (result.myAnswer == result.question.correctAnswer) activity.getString(R.string.right)
+            else activity.getString(R.string.failed)
         )
         holder.itemView.setOnClickListener {
+            (activity as MainActivity).showLoadingDialog()
             if (showQuestionDialog == null) {
-                showQuestionDialog = Dialog(context)
+                showQuestionDialog = Dialog(activity)
             }
             showQuestionDialog?.apply {
                 setContentView(R.layout.dialog_show_question)
+                window?.setLayout(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                );
                 setCanceledOnTouchOutside(true)
                 //index question
                 text_index_question.text =
@@ -87,6 +99,7 @@ class ResultRecyclerViewAdapter(
                     mediaPlayer?.prepare()
                     mediaPlayer?.setOnPreparedListener {
                         mediaPlayer?.start()
+                        (activity as MainActivity).cancelLoadingDialog()
                     }
                 }
                 //image
@@ -144,6 +157,11 @@ class ResultRecyclerViewAdapter(
                         text_d.setTextColor(Color.WHITE)
                     }
                 }
+                /*khi có link sound, không cancelloadingdialog, đợi loading xong sound,
+                cancelloadingdialog bên mediaPlayer*/
+                if (question.soundLink == null) {
+                    (activity as MainActivity).cancelLoadingDialog()
+                }
 
                 setOnCancelListener {
                     mediaPlayer?.stop()
@@ -151,8 +169,6 @@ class ResultRecyclerViewAdapter(
                 show()
             }
         }
-
-
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

@@ -61,9 +61,9 @@ class ResultTestFragment(
                 }
                 rv_result.adapter?.notifyDataSetChanged()
                 exam?.time?.let { time ->
-                    total_time.text = context?.getString(R.string.test_time_total).plus(time)
+                    total_time.text = getString(R.string.test_time_total).plus(time)
                 }
-                total_score.text = totalScore.toString()
+                total_score.text = getString(R.string.total_score_2).plus(totalScore.toString())
             }
         })
     }
@@ -72,7 +72,7 @@ class ResultTestFragment(
         viewModel.getExam(idExam)
         rv_result.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        rv_result.adapter = ResultRecyclerViewAdapter(context!!, list)
+        rv_result.adapter = activity?.let { activity -> ResultRecyclerViewAdapter(activity, list) }
     }
 
 }

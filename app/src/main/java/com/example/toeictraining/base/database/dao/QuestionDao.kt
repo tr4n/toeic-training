@@ -14,6 +14,9 @@ interface QuestionDao {
     @Query("SELECT * FROM question WHERE id IN (:questionIds)")
     fun loadAllByIds(questionIds: IntArray): List<Question>
 
+    @Query("SELECT correctAnswer FROM question WHERE id IN (:questionIds)")
+    fun getCorrectAnswersByIds(questionIds: IntArray): List<String>
+
     @Insert
     fun insertAll(vararg questions: Question)
 

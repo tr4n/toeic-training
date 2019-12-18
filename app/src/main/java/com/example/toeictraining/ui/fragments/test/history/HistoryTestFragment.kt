@@ -3,6 +3,7 @@ package com.example.toeictraining.ui.fragments.test.history
 import android.app.Application
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.toeictraining.R
 import com.example.toeictraining.base.database.AppDatabase
+import com.example.toeictraining.base.entity.Exam
 import kotlinx.android.synthetic.main.history_test_fragment.*
 
 class HistoryTestFragment : Fragment() {
@@ -20,6 +22,7 @@ class HistoryTestFragment : Fragment() {
     }
 
     private lateinit var viewModel: HistoryTestViewModel
+    private var exams = listOf<Exam>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,14 +46,15 @@ class HistoryTestFragment : Fragment() {
 
     private fun handleObservable() {
         viewModel.getQuestionsLiveData().observe(viewLifecycleOwner, Observer {
-            recyclerViewHistory.adapter = HistoryAdapter(context!!, it)
-            recyclerViewHistory.layoutManager =
-                LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            exams = it
+            recyclerViewHistory.adapter =
+                activity?.let { activity -> HistoryAdapter(activity, exams) }
         })
     }
 
     private fun initViews() {
-
+        recyclerViewHistory.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
 
 }
