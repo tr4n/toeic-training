@@ -1,4 +1,7 @@
 package com.example.toeictraining.ui.fragments.intro
 
-class IntroViewModel {
+import com.example.toeictraining.base.BaseViewModel
+
+class IntroViewModel: BaseViewModel() {
+
 }
