@@ -72,12 +72,13 @@
                 android:id="@+id/textShowDetail"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_8"
-                android:background="@color/colorGray"
+                android:layout_marginTop="8dp"
+                android:background="#F7F3F3"
                 android:padding="@dimen/space_16"
                 android:text="@string/title_show_word_detail"
                 android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textPronoun" />
 
@@ -86,7 +87,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/space_16"
-                android:layout_marginTop="@dimen/space_8"
                 android:layout_marginEnd="@dimen/space_16"
                 android:textSize="@dimen/text_12"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -195,11 +195,11 @@
                 android:id="@+id/imageSound"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="8dp"
                 android:contentDescription="@string/description"
                 android:padding="@dimen/space_8"
                 app:layout_constraintBottom_toBottomOf="@+id/textOrigin"
-                app:layout_constraintStart_toEndOf="@+id/textPronoun"
+                app:layout_constraintStart_toEndOf="@+id/textOrigin"
                 app:layout_constraintTop_toTopOf="@+id/textOrigin"
                 app:srcCompat="@drawable/sound_primaycolor_24dp" />
 
@@ -215,7 +215,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="visible"
-                app:constraint_referenced_ids="textExplain,textType,imageWord,textExample,textExampleTranslate,textDidntKnow,textKnew" />
+                app:constraint_referenced_ids="textExplain,textType,imageWord,textExample,textExampleTranslate" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

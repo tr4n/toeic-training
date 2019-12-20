@@ -2,6 +2,7 @@ package com.example.toeictraining.ui.fragments.reminder
 
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.toeictraining.base.BaseViewModel
@@ -14,6 +15,9 @@ class RemindViewModel(
     private val topicRepository: TopicRepository,
     private val sharedPreferences: SharedPreferences
 ) : BaseViewModel() {
+
+    private val _reviewTopic: MutableLiveData<String> = MutableLiveData()
+    val reviewTopic: LiveData<String> get() = _reviewTopic
 
     val remindTime: LiveData<String?> = liveData {
         try {
@@ -48,7 +52,8 @@ class RemindViewModel(
             viewModelScope.launch {
                 topicRepository.updateTopic(topic)
             }
-            message.value = "Enable topic ${topic.name}"
+            _reviewTopic.value = topic.name
+      //      message.value = "Enable topic ${topic.name}"
         } catch (e: Exception) {
             message.value = e.message
         }

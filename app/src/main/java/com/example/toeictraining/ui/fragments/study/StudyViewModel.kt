@@ -59,6 +59,7 @@ class StudyViewModel(
             lastTime = DateUtils.getCurrentTime()
             total = progressProperties.first
             master = progressProperties.second
+            newWord = progressProperties.third
         }
         topicRepository.updateTopic(mainTopic)
     }

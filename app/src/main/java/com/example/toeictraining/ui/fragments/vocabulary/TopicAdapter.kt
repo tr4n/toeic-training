@@ -32,9 +32,9 @@ class TopicAdapter(
             super.onBindData(topic)
 
             progressTopic.apply {
-                max = topic.total ?: 12
-                progress = topic.master ?: 0
-                secondaryProgress = max - progress
+                max = topic.total
+                progress = topic.master
+                secondaryProgress = topic.total - topic.master - topic.newWord
             }
 
             textNameTopic?.text = topic.name

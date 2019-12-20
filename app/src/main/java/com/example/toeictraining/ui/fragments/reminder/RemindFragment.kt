@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit
 /**
  * A simple [Fragment] subclass.
  */
-class RemindFragment : BaseFragment<RemindViewModel>(),
+class RemindFragment private constructor() : BaseFragment<RemindViewModel>(),
     View.OnClickListener,
     CompoundButton.OnCheckedChangeListener {
 
@@ -60,6 +60,11 @@ class RemindFragment : BaseFragment<RemindViewModel>(),
         remindTime.observe(viewLifecycleOwner, Observer(::onObserverRemindTime))
         topics.observe(viewLifecycleOwner, Observer(::onObserverReviewTopics))
         reviewMode.observe(viewLifecycleOwner, Observer(::onObserverReviewMode))
+        reviewTopic.observe(viewLifecycleOwner, Observer {
+            context?.run {
+                toast(getString(R.string.msg_remind_topics) + " " + it)
+            }
+        })
     }
 
     private fun onObserverRemindTime(time: String?) {
@@ -155,5 +160,9 @@ class RemindFragment : BaseFragment<RemindViewModel>(),
     override fun onStop() {
         super.onStop()
         (activity as AppCompatActivity).supportActionBar?.show()
+    }
+
+    companion object {
+        fun newInstance() = RemindFragment()
     }
 }

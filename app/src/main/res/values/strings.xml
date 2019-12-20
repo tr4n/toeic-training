@@ -4,7 +4,7 @@
     <!--    Navigation view-->
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
-    <string name="test_toeic">Thi thử Toeic</string>
+    <string name="test_toeic">Luyện thi TOEIC</string>
     <string name="learn_words">Học từ vựng</string>
 
     <!--    Test main scree-->
@@ -22,26 +22,35 @@
     <string name="part">Part</string>
     <string name="test_full">Test Full</string>
     <string name="history">Lịch sử</string>
-    <string name="title_show_word_detail">Tap to show detail</string>
-    <string name="title_pronoun">pronun</string>
-    <string name="title_level">Level</string>
-    <string name="title_knew_word">I knew this word</string>
-    <string name="title_didnt_know_word">I didn\'t know this word</string>
-    <string name="title_never">Never</string>
-    <string name="title_reviewing">Reviewing</string>
-    <string name="title_master">Master</string>
-    <string name="title_vocabulary">Vocabulary</string>
+    <!--    <string name="title_show_word_detail">Tap to show detail</string>-->
+    <!--    <string name="title_pronoun">pronun</string>-->
+    <!--    <string name="title_level">Level</string>-->
+    <!--    <string name="title_knew_word">I knew this word</string>-->
+    <!--    <string name="title_didnt_know_word">I didn\'t know this word</string>-->
+    <!--    <string name="title_never">Never</string>-->
+    <!--    <string name="title_reviewing">Reviewing</string>-->
+    <!--    <string name="title_master">Master</string>-->
+    <!--    <string name="title_vocabulary">Vocabulary</string>-->
+    <string name="title_show_word_detail">Hiển thị chi tiết</string>
+    <string name="title_pronoun">Phát âm</string>
+    <string name="title_level">Mức độ</string>
+    <string name="title_knew_word">Tôi nhớ từ này</string>
+    <string name="title_didnt_know_word">Tôi quên từ này</string>
+    <string name="title_never">Mới toanh</string>
+    <string name="title_reviewing">Ôn tập</string>
+    <string name="title_master">Bá đạo</string>
+    <string name="title_vocabulary">Từ vựng</string>
     <string name="submit_test">Nộp bài</string>
 
     <string name="test">sjdh khskdfhk hkshf khskdhfkhks dhkjfh khskdjfh hskdh skjdhfkj hksdjhfk jhskjfhk
-    sdkfhk kshdfkh jskdh sjdh khskdfhk hkshf khskdhfkhks dhkjfh khskdjfh hskdh skjdhfkj hksdjhfk jhskjfhk
-    sdkfhk kshdfkh jskdhfk hsdkfjh khsdfkjh s
-     ksjhdfh ksjdhfkj hsdfkjskdfjk jsdkjf kjsdfkj skdjfk jsdkjf ksdjfksjdfkj ksd sjdh khskdfhk hkshf khskdhfkhks dhkjfh khskdjfh hskdh skjdhfkj hksdjhfk jhskjfhk
-    sdkfhk kshdfkh jskdhfk hsdkfjh khsdfkjh s
-     ksjhdfh ksjdhfkj hsdfkjskdfjk jsdkjf kjsdfkj skdjfk jsdkjf ksdjfksjdfkj ksd sjdh khskdfhk hkshf khskdhfkhks dhkjfh khskdjfh hskdh skjdhfkj hksdjhfk jhskjfhk
-    sdkfhk kshdfkh jskdhfk hsdkfjh khsdfkjh s
-     ksjhdfh ksjdhfkj hsdfkjskdfjk jsdkjf kjsdfkj skdjfk jsdkjf ksdjfksjdfkj ksdfk hsdkfjh khsdfkjh s
-     ksjhdfh ksjdhfkj hsdfkjskdfjk jsdkjf kjsdfkj skdjfk jsdkjf ksdjfksjdfkj ksd</string>
+        sdkfhk kshdfkh jskdh sjdh khskdfhk hkshf khskdhfkhks dhkjfh khskdjfh hskdh skjdhfkj hksdjhfk jhskjfhk
+        sdkfhk kshdfkh jskdhfk hsdkfjh khsdfkjh s
+         ksjhdfh ksjdhfkj hsdfkjskdfjk jsdkjf kjsdfkj skdjfk jsdkjf ksdjfksjdfkj ksd sjdh khskdfhk hkshf khskdhfkhks dhkjfh khskdjfh hskdh skjdhfkj hksdjhfk jhskjfhk
+        sdkfhk kshdfkh jskdhfk hsdkfjh khsdfkjh s
+         ksjhdfh ksjdhfkj hsdfkjskdfjk jsdkjf kjsdfkj skdjfk jsdkjf ksdjfksjdfkj ksd sjdh khskdfhk hkshf khskdhfkhks dhkjfh khskdjfh hskdh skjdhfkj hksdjhfk jhskjfhk
+        sdkfhk kshdfkh jskdhfk hsdkfjh khsdfkjh s
+         ksjhdfh ksjdhfkj hsdfkjskdfjk jsdkjf kjsdfkj skdjfk jsdkjf ksdjfksjdfkj ksdfk hsdkfjh khsdfkjh s
+         ksjhdfh ksjdhfkj hsdfkjskdfjk jsdkjf kjsdfkj skdjfk jsdkjf ksdjfksjdfkj ksd</string>
     <string name="submit_test_ask">Nộp bài?</string>
     <string name="submit">Nộp</string>
     <string name="not_submit">Chưa</string>
@@ -53,15 +62,35 @@
     <string name="continue_do_test">Làm tiếp</string>
     <string name="answer">Đáp án</string>
 
-    <string name="title_remind">Reminder</string>
-    <string name="title_daily_reminder">Daily reminder</string>
+    <!--    <string name="title_remind">Reminder</string>-->
+    <!--    <string name="title_daily_reminder">Daily reminder</string>-->
+    <!--    <string name="description">description</string>-->
+    <!--    <string name="title_enable_reminder">Enable reminder</string>-->
+    <!--    <string name="title_review_words">Review words</string>-->
+    <!--    <string name="title_enable_review_mode">Enable review mode</string>-->
+    <!--    <string name="time_default">00:00</string>-->
+    <!--    <string name="msg_remind_topics">Enable review mode with words in topic %s</string>-->
+    <!--    <string name="msg_save_setting">The setting has been saved</string>-->
+    <!--    <string name="content_title_daily_reminder_notification">Time to study</string>-->
+    <!--    <string name="content_text_daily_reminder_notification">Tap to start</string>-->
+    <string name="title_remind">Nhắc nhở</string>
+    <string name="title_daily_reminder">Nhắc nhở hằng ngày</string>
     <string name="description">description</string>
-    <string name="title_enable_reminder">Enable reminder</string>
-    <string name="title_review_words">Review words</string>
-    <string name="title_enable_review_mode">Enable review mode</string>
+    <string name="title_enable_reminder">Bật nhắc nhở</string>
+    <string name="title_review_words">Ôn tập từ vựng</string>
+    <string name="title_enable_review_mode">Bật chế độ ôn tập từ vựng</string>
     <string name="time_default">00:00</string>
-    <string name="msg_remind_topics">Enable review mode with words in topic %s</string>
-    <string name="msg_save_setting">The setting has been saved</string>
-    <string name="content_title_daily_reminder_notification">Time to study</string>
-    <string name="content_text_daily_reminder_notification">Tap to start</string>
+    <string name="msg_remind_topics">Đã bật chế độ ôn tập từ vựng trong topic %s</string>
+    <string name="msg_save_setting">Đã lưu sự thay đổi</string>
+    <string name="content_title_daily_reminder_notification">Đến giờ học rồi</string>
+    <string name="content_text_daily_reminder_notification">Ấn vào đây để chinh phục mục tiêu của bạn nhé</string>
+    <string name="title_home">Trang chủ</string>
+    <string name="title_test_practice">Luyện Thi TOEIC</string>
+    <string name="title_mini_test">Làm bài thi thử</string>
+    <string name="title_part_practice">Luyện thi theo phần</string>
+    <string name="text_600_TOEIC_words">600 Từ vựng TOEIC\'s</string>
+    <string name="title_reminder">Nhắc nhở</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
