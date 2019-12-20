@@ -1,5 +1,6 @@
 package com.example.toeictraining.di
 
+import com.example.toeictraining.ui.fragments.home.HomeViewModel
 import com.example.toeictraining.ui.fragments.reminder.RemindViewModel
 import com.example.toeictraining.ui.fragments.study.StudyViewModel
 import com.example.toeictraining.ui.fragments.vocabulary.VocabularyViewModel
@@ -23,6 +24,12 @@ val viewModelModule = module {
         RemindViewModel(
             topicRepository = get(named(ScopeNames.TOPIC_REPOSITORY)),
             sharedPreferences = get(named(ScopeNames.SHARED_PREFERENCES))
+        )
+    }
+
+    viewModel {
+        HomeViewModel(
+
         )
     }
 }

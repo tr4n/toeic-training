@@ -10,7 +10,7 @@ import org.koin.android.ext.android.get
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.qualifier.named
 
-class VocabularyFragment : BaseFragment<VocabularyViewModel>() {
+class VocabularyFragment private constructor() : BaseFragment<VocabularyViewModel>() {
 
     override val layoutResource = R.layout.fragment_vocabulary
 
@@ -38,5 +38,9 @@ class VocabularyFragment : BaseFragment<VocabularyViewModel>() {
         categories.observe(viewLifecycleOwner, Observer {
             categoryAdapter.submitList(it)
         })
+    }
+
+    companion object {
+        fun newInstance() = VocabularyFragment()
     }
 }

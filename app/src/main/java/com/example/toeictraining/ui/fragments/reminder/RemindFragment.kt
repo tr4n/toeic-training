@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit
 /**
  * A simple [Fragment] subclass.
  */
-class RemindFragment : BaseFragment<RemindViewModel>(),
+class RemindFragment private constructor() : BaseFragment<RemindViewModel>(),
     View.OnClickListener,
     CompoundButton.OnCheckedChangeListener {
 
@@ -160,5 +160,9 @@ class RemindFragment : BaseFragment<RemindViewModel>(),
     override fun onStop() {
         super.onStop()
         (activity as AppCompatActivity).supportActionBar?.show()
+    }
+
+    companion object {
+        fun newInstance() = RemindFragment()
     }
 }
