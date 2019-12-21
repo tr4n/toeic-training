@@ -4,12 +4,14 @@ import android.util.Log
 import com.example.toeictraining.ui.fragments.test.score.ScoreTestFragment.Companion.TAG
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 object DateUtils {
 
     private const val DATE_FORMAT = "dd/MM/yyyy"
     private const val HOUR_MINUTE_FORMAT = "mm:ss"
     const val TIME_FORMAT = "%02d:%02d"
+    val dateFormater = SimpleDateFormat(DATE_FORMAT, Locale.getDefault())
 
     fun getCurrentTime(): String =
         SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).format(Date(System.currentTimeMillis()))
@@ -68,6 +70,13 @@ object DateUtils {
             Log.d(TAG, "DELAY MINUTES $it")
         }
     }
+
+    fun getDaysBetween(start: String, end: String): Long {
+        val startMillis = dateFormater.parse(start)?.time ?: System.currentTimeMillis()
+        val endMillis = dateFormater.parse(end)?.time ?: System.currentTimeMillis()
+        return TimeUnit.MILLISECONDS.toDays(endMillis - startMillis)
+    }
+
 }
 
 

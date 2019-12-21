@@ -26,8 +26,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         setToolbar()
         setNavigationView()
         setRightButtonText("")
-
-        openFragment(R.id.content, HomeTestFragment(), false)
+        openFragment(R.id.content, HomeFragment.newInstance(), false)
     }
 
     override fun initData() {}
