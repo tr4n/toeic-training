@@ -10,6 +10,7 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,7 @@ import com.bumptech.glide.Glide
 import com.example.toeictraining.R
 import com.example.toeictraining.base.database.AppDatabase
 import com.example.toeictraining.base.entity.Question
+import com.example.toeictraining.base.enums.ExamLevel
 import com.example.toeictraining.ui.fragments.test.Constant
 import com.example.toeictraining.ui.fragments.test.score.ScoreTestFragment
 import com.example.toeictraining.ui.main.MainActivity
@@ -39,7 +41,8 @@ import kotlin.math.abs
 import kotlin.math.roundToInt
 
 class DoTestFragment(
-    private val part: Int
+    private val part: Int,
+    private val examLevel: ExamLevel
 ) : Fragment(), View.OnClickListener {
 
     companion object {
@@ -50,13 +53,13 @@ class DoTestFragment(
     private var secondTotalTime: Int = 0
     private lateinit var viewModel: DoTestViewModel
     private var mediaPlayer: MediaPlayer? = null
-    val questionsStatus = mutableListOf<QuestionStatus>()
-    var totalTime = 0
-    var timestamp: String = ""
+    private val questionsStatus = mutableListOf<QuestionStatus>()
+    private var totalTime = 0
+    private var timestamp: String = ""
+    private var level: ExamLevel = examLevel
     private val listQuestionId = mutableListOf<Int>()
-
+    private val questions = mutableListOf<Question>()
     private var countDownTimer: CountDownTimer? = null
-
     private fun setCountDownTimer(time: Int) {
         countDownTimer = object : CountDownTimer(time * 1000L, 1000L) {
             override fun onFinish() {
@@ -187,12 +190,54 @@ class DoTestFragment(
             })
 
         viewModel.getQuestionsLiveData().observe(viewLifecycleOwner, Observer {
-            prepareData(it)
-            setRecyclerQuestion()
-            if (countDownTimer == null) {
-                setCountDownTimer(secondTotalTime)
+            questions.addAll(it)
+            while (questions.size > Constant.COUNT_QUESTIONS_OF_PART[part]) {
+                questions.removeAt(questions.size - 1)
             }
-            countDownTimer?.start()
+            Log.d(TAG, "questions.size = ${questions.size}")
+            if (questions.size == Constant.COUNT_QUESTIONS_OF_PART[part]) {
+                prepareData(questions)
+                setRecyclerQuestion()
+                if (countDownTimer == null) {
+                    setCountDownTimer(secondTotalTime)
+                }
+                countDownTimer?.start()
+            } else {
+//                o	Khi chọn EASY thì chỉ query tất cả các câu EASY. NEW: Nếu hết câu EASY, thì query tiếp MEDIUM, rồi đến EASY cho các câu còn lại.
+//                o	Khi chọn MEDIUM, query tất cả các câu MEDIUM. NEW: Nếu hết câu MEDIUM, thì query tiếp EASY, rồi đến HARD cho các câu còn lại.
+//                o	Khi chọn đề HARD, query tất cả các câu HARD. Nếu hết câu HARD thì query tiếp MEDIUM, rồi đến EASY cho các câu còn lại.
+                when (level) {
+                    ExamLevel.EASY -> {
+                        if (examLevel == ExamLevel.EASY) {
+                            level = ExamLevel.MEDIUM
+                        }
+                        if (examLevel == ExamLevel.MEDIUM) {
+                            level = ExamLevel.HARD
+                        }
+                    }
+                    ExamLevel.MEDIUM -> {
+                        if (examLevel == ExamLevel.EASY) {
+                            level = ExamLevel.HARD
+                        }
+                        if (examLevel == ExamLevel.MEDIUM) {
+                            level = ExamLevel.EASY
+                        }
+                        if (examLevel == ExamLevel.HARD) {
+                            level = ExamLevel.EASY
+                        }
+                    }
+                    ExamLevel.HARD -> {
+                        if (examLevel == ExamLevel.HARD) {
+                            level = ExamLevel.MEDIUM
+                        }
+                    }
+                }
+                viewModel.getQuestions(
+                    part,
+                    level,
+                    Constant.COUNT_QUESTIONS_OF_PART[part] - questions.size
+                )
+            }
         })
     }
 
@@ -207,7 +252,7 @@ class DoTestFragment(
 
         secondTotalTime = Constant.TIMES_PART[part]
         //load data
-        viewModel.getQuestions(part)
+        viewModel.getQuestions(part, level, Constant.COUNT_QUESTIONS_OF_PART[part])
     }
 
     private fun prepareData(questionsFromDB: List<Question>) {
@@ -292,8 +337,13 @@ class DoTestFragment(
     private fun setMainPosition(pos: Int) {
         (activity as MainActivity).showLoadingDialog()
         viewModel.indexMain.value?.let {
-            questionsStatus[it].status =
-                QuestionStatus.Status.NOT_DONE // load lại status
+            if (questionsStatus[it].answer.isNotBlank()) {
+                questionsStatus[it].status =
+                    QuestionStatus.Status.DONE // load lại status
+            } else {
+                questionsStatus[it].status =
+                    QuestionStatus.Status.NOT_DONE // load lại status
+            }
         }
         questionsStatus[pos].status = QuestionStatus.Status.MAIN
     }

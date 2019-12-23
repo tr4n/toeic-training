@@ -50,9 +50,9 @@
                     android:paddingBottom="@dimen/space_5"
                     android:textColor="@android:color/black"
                     android:textSize="@dimen/text_18"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:visibility="visible" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/text_question_content"
@@ -61,9 +61,9 @@
                     android:padding="@dimen/space_15"
                     android:textColor="@android:color/black"
                     android:textSize="@dimen/text_18"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/text_script"
-                    tools:visibility="visible" />
+                    app:layout_constraintTop_toBottomOf="@id/text_script" />
 
                 <ImageView
                     android:id="@+id/image_question"
@@ -71,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:scaleType="fitCenter"
                     android:src="@drawable/q1_p1"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

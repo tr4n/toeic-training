@@ -47,7 +47,6 @@ class HistoryAdapter(
         holder.itemView.setOnClickListener {
             (activity as MainActivity).openFragment(
                 ResultTestFragment(exam.id),
-                ResultTestFragment.TAG,
                 true
             )
         }

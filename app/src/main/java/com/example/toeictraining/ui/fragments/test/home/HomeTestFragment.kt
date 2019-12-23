@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.toeictraining.R
-import com.example.toeictraining.ui.fragments.test.Constant
 import com.example.toeictraining.ui.fragments.test.start_test.StartTestFragment
 import com.example.toeictraining.ui.main.MainActivity
 import kotlinx.android.synthetic.main.home_test_fragment.*
@@ -19,7 +18,6 @@ class HomeTestFragment : Fragment() {
 
     companion object {
         val TAG = HomeTestFragment::class.java.name
-        const val PART_ID = "part_id"
     }
 
     private lateinit var viewModel: TestViewModel
@@ -88,10 +86,8 @@ class HomeTestFragment : Fragment() {
                 resourcesImage,
                 object : ItemClickListener {
                     override fun onClick(view: View, position: Int, isLongClick: Boolean) {
-                        val bundle = Bundle()
-                        bundle.putInt(PART_ID, Constant.IDS_PART[position])
                         (activity as MainActivity).openFragment(
-                            StartTestFragment().apply { arguments = bundle },
+                            StartTestFragment(position + 1),
                             true
                         )
                     }

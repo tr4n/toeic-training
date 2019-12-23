@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.item_recyclerview_question_normal.view.*
 
 class ListQuestionAdapter(
     private var activity: MainActivity,
-    private var resources: MutableList<QuestionStatus>,
+    private var questionsStatus: MutableList<QuestionStatus>,
     private var viewModel: DoTestViewModel
 ) : RecyclerView.Adapter<ListQuestionAdapter.ViewHolder>() {
     private lateinit var recyclerView: RecyclerView
@@ -27,7 +27,7 @@ class ListQuestionAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when (resources[position].status) {
+        return when (questionsStatus[position].status) {
             QuestionStatus.Status.MAIN -> R.layout.item_recyclerview_question_main
             QuestionStatus.Status.DONE -> R.layout.item_recyclerview_question_done
             else -> R.layout.item_recyclerview_question_normal
@@ -35,11 +35,11 @@ class ListQuestionAdapter(
     }
 
     override fun getItemCount(): Int {
-        return resources.size
+        return questionsStatus.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val question = resources[position]
+        val question = questionsStatus[position]
         if (question.status == QuestionStatus.Status.MAIN) {
             viewModel.indexMain.postValue(position)
             recyclerView.apply {
@@ -53,8 +53,13 @@ class ListQuestionAdapter(
         holder.itemView.setOnClickListener {
             activity.showLoadingDialog()
             viewModel.indexMain.value?.let {
-                resources[it].status =
-                    QuestionStatus.Status.NOT_DONE // load status from db instead of
+                if (questionsStatus[it].answer.isNotBlank()) {
+                    questionsStatus[it].status =
+                        QuestionStatus.Status.DONE // load lại status
+                } else {
+                    questionsStatus[it].status =
+                        QuestionStatus.Status.NOT_DONE // load lại status
+                }
             }
             question.status = QuestionStatus.Status.MAIN
             notifyDataSetChanged()

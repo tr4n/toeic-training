@@ -7,15 +7,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.example.toeictraining.R
+import com.example.toeictraining.base.enums.ExamLevel
 import com.example.toeictraining.ui.fragments.test.Constant
 import com.example.toeictraining.ui.fragments.test.do_test.DoTestFragment
 import com.example.toeictraining.ui.fragments.test.history.HistoryTestFragment
-import com.example.toeictraining.ui.fragments.test.home.HomeTestFragment
 import com.example.toeictraining.ui.main.MainActivity
 import com.example.toeictraining.utils.DateUtils
 import kotlinx.android.synthetic.main.start_test_fragment.*
 
-class StartTestFragment : Fragment() {
+class StartTestFragment(
+    private val part: Int
+) : Fragment() {
 
     companion object {
         val TAG = StartTestFragment::class.java.name
@@ -50,29 +52,24 @@ class StartTestFragment : Fragment() {
         }
         setTextContent()
         button_start.setOnClickListener {
-            arguments?.let {
-                (activity as MainActivity).openFragment(
-                    DoTestFragment(
-                        it.getInt(HomeTestFragment.PART_ID)
-                    ),
-                    false
-                )
-            }
+            var examLevel: ExamLevel = ExamLevel.EASY
+            if (radio_medium.isChecked) examLevel = ExamLevel.MEDIUM
+            if (radio_hard.isChecked) examLevel = ExamLevel.HARD
+            (activity as MainActivity).openFragment(
+                DoTestFragment(part, examLevel),
+                false
+            )
         }
     }
 
     private fun setTextContent() {
-        val partID: Int? = arguments?.getInt(HomeTestFragment.PART_ID)
         text_correct_answer.text =
-            getString(R.string.part).plus(" ").plus(partID)
-        if (partID == 8) {
+            getString(R.string.part).plus(" ").plus(part)
+        if (part == 8) {
             text_correct_answer.text = getString(R.string.test_full)
         }
-        partID?.let {
-            text_time.text =
-                getString(R.string.time).plus(" ")
-                    .plus(DateUtils.secondsToStringTime(Constant.TIMES_PART[it]))
-        }
+        text_time.text =
+            getString(R.string.time).plus(DateUtils.secondsToStringTime(Constant.TIMES_PART[part]))
     }
 
     private fun configNavigationIcon() {

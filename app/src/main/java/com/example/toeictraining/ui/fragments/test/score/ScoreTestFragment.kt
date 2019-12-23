@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -18,6 +17,7 @@ import com.example.toeictraining.base.entity.Exam
 import com.example.toeictraining.ui.fragments.test.do_test.QuestionStatus
 import com.example.toeictraining.ui.fragments.test.home.HomeTestFragment
 import com.example.toeictraining.ui.fragments.test.result.ResultTestFragment
+import com.example.toeictraining.ui.fragments.test.start_test.StartTestFragment
 import com.example.toeictraining.ui.main.MainActivity
 import com.example.toeictraining.utils.DateUtils
 import kotlinx.android.synthetic.main.score_test_fragment.*
@@ -35,10 +35,9 @@ class ScoreTestFragment(
         val TAG = ScoreTestFragment::class.java.name
     }
 
-    val level = arrayOf("Yếu", "Trung Bình", "Giỏi")
-
+    private val level = arrayOf("Yếu", "Trung Bình", "Tốt", "Rất Tốt")
     private lateinit var viewModel: ScoreTestViewModel
-    var totalScore = 0
+    private var totalScore = 0
     private var idExam: Long? = null
 
     override fun onCreateView(
@@ -88,9 +87,13 @@ class ScoreTestFragment(
             score = readScore + listenScore
         )
         viewModel.insert(exam)
-        //
-        text_listen_score.text = getString(R.string.listen_score).plus("$listenScore")
-        text_read_score.text = getString(R.string.read_score).plus("$readScore")
+        //chỉ bài full mới show điểm đọc, điểm nghe
+        if (part == 8) {
+            text_listen_score?.visibility = View.VISIBLE
+            text_listen_score?.text = getString(R.string.listen_score).plus("$listenScore")
+            text_read_score?.visibility = View.VISIBLE
+            text_read_score?.text = getString(R.string.read_score).plus("$readScore")
+        }
         totalScore = readScore + listenScore
         total_score.text = totalScore.toString()
         if (questionsStatus.size == 200) {
@@ -134,24 +137,12 @@ class ScoreTestFragment(
                 }
             }
             button_learn_more_1?.setOnClickListener(this)
-            button_learn_more_2?.setOnClickListener {
-                Toast.makeText(context, "button 2", Toast.LENGTH_SHORT).show()
-            }
-            button_learn_more_3?.setOnClickListener {
-                Toast.makeText(context, "button 3", Toast.LENGTH_SHORT).show()
-            }
-            button_learn_more_4?.setOnClickListener {
-                Toast.makeText(context, "button 4", Toast.LENGTH_SHORT).show()
-            }
-            button_learn_more_5?.setOnClickListener {
-                Toast.makeText(context, "button 5", Toast.LENGTH_SHORT).show()
-            }
-            button_learn_more_6?.setOnClickListener {
-                Toast.makeText(context, "button 6", Toast.LENGTH_SHORT).show()
-            }
-            button_learn_more_7?.setOnClickListener {
-                Toast.makeText(context, "button 7", Toast.LENGTH_SHORT).show()
-            }
+            button_learn_more_2?.setOnClickListener(this)
+            button_learn_more_3?.setOnClickListener(this)
+            button_learn_more_4?.setOnClickListener(this)
+            button_learn_more_5?.setOnClickListener(this)
+            button_learn_more_6?.setOnClickListener(this)
+            button_learn_more_7?.setOnClickListener(this)
         }
         configNavigationIcon()
     }
@@ -180,14 +171,17 @@ class ScoreTestFragment(
         val progress = (countCorrectAnswerPart * 100.0 / (endQuestion - startQuestion)).roundToInt()
         progressBar.progress = progress
         //set level of part
-        if (progress < 40) {
-            textView.text = level[0]
-        }
-        if (progress in 41..79) {
+        textView.text = level[0]
+        if (progress >= 50) {
             textView.text = level[1]
         }
-        if (80 < progress) {
+        if (progress >= 80) {
             textView.text = level[2]
+            button_learn_more_1.visibility = View.INVISIBLE
+            button_learn_more_1.isEnabled = false
+        }
+        if (progress >= 95) {
+            textView.text = level[3]
             button_learn_more_1.visibility = View.INVISIBLE
             button_learn_more_1.isEnabled = false
         }
@@ -231,7 +225,46 @@ class ScoreTestFragment(
                 }
             }
             R.id.button_learn_more_1 -> {
-                Toast.makeText(context, "button 1", Toast.LENGTH_SHORT).show()
+                (activity as MainActivity).openFragment(
+                    StartTestFragment(1),
+                    false
+                )
+            }
+            R.id.button_learn_more_2 -> {
+                (activity as MainActivity).openFragment(
+                    StartTestFragment(2),
+                    false
+                )
+            }
+            R.id.button_learn_more_3 -> {
+                (activity as MainActivity).openFragment(
+                    StartTestFragment(3),
+                    false
+                )
+            }
+            R.id.button_learn_more_4 -> {
+                (activity as MainActivity).openFragment(
+                    StartTestFragment(4),
+                    false
+                )
+            }
+            R.id.button_learn_more_5 -> {
+                (activity as MainActivity).openFragment(
+                    StartTestFragment(5),
+                    false
+                )
+            }
+            R.id.button_learn_more_6 -> {
+                (activity as MainActivity).openFragment(
+                    StartTestFragment(6),
+                    false
+                )
+            }
+            R.id.button_learn_more_7 -> {
+                (activity as MainActivity).openFragment(
+                    StartTestFragment(7),
+                    false
+                )
             }
         }
     }
