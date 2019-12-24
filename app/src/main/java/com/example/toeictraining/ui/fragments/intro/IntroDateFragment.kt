@@ -3,22 +3,19 @@ package com.example.toeictraining.ui.fragments.intro
 
 import android.app.DatePickerDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.example.toeictraining.R
 import com.example.toeictraining.utils.DateUtils
 import kotlinx.android.synthetic.main.intro_date_fragment.*
-import java.util.Calendar
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class IntroDateFragment : Fragment(){
-
-    companion object {
-        val TAG = IntroDateFragment::class.java.name
-    }
 
     private lateinit var viewModel: IntroDateViewModel
 
@@ -48,26 +45,18 @@ class IntroDateFragment : Fragment(){
         val currentMonth = calendar.get(Calendar.MONTH)
         val currentYear = calendar.get(Calendar.YEAR)
 
-//        textDate.setOnClickListener {
-//            val dlg = DatePickerDialog(
-//                this.activity,
-//                DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-//                    textDate.text = String.format(DateUtils.DATE_FORMAT, year, month, dayOfMonth)
-//                },
-//                currentYear,
-//                currentMonth,
-//                currentDay
-//            )
-//            dlg.show()
-//        }
+        textDate.setOnClickListener {
+            val dlg = DatePickerDialog(
+                context!!,
+                DatePickerDialog.OnDateSetListener { _, dayOfMonth, month, year ->
+                    val formatter = SimpleDateFormat(DateUtils.DATE_FORMAT)
+                    textDate.text = formatter.format(Date(dayOfMonth, month, year))
+                },
+                currentDay,
+                currentMonth,
+                currentYear
+            )
+            dlg.show()
+        }
     }
-
-//        context?.let {
-//            DatePickerDialog(
-//                it,
-//                DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-//                    textDate.text = String.format(DateUtils.DATE_FORMAT, year, month, dayOfMonth)
-//                }, currentYear, currentMonth, currentDay
-//            ).show()
-//        }
 }
