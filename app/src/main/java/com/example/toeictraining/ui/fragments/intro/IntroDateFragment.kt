@@ -33,7 +33,7 @@ class IntroDateFragment : Fragment(){
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(IntroDateViewModel::class.java)
 
-        initViews()
+        //initViews()
         pickDate()
     }
 
@@ -48,18 +48,18 @@ class IntroDateFragment : Fragment(){
         val currentMonth = calendar.get(Calendar.MONTH)
         val currentYear = calendar.get(Calendar.YEAR)
 
-        textDate.setOnClickListener {
-            val dlg = DatePickerDialog(
-                this.activity,
-                DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-                    textDate.text = String.format(DateUtils.DATE_FORMAT, year, month, dayOfMonth)
-                },
-                currentYear,
-                currentMonth,
-                currentDay
-            )
-            dlg.show()
-        }
+//        textDate.setOnClickListener {
+//            val dlg = DatePickerDialog(
+//                this.activity,
+//                DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+//                    textDate.text = String.format(DateUtils.DATE_FORMAT, year, month, dayOfMonth)
+//                },
+//                currentYear,
+//                currentMonth,
+//                currentDay
+//            )
+//            dlg.show()
+//        }
     }
 
 //        context?.let {
