@@ -1,7 +1,7 @@
 package com.example.toeictraining.ui.fragments.intro
 
-import androidx.lifecycle.ViewModel
+import com.example.toeictraining.base.BaseViewModel
 
-class IntroDateViewModel : ViewModel() {
-    // TODO: Implement the ViewModel
+class IntroDateViewModel() : BaseViewModel() {
+
 }

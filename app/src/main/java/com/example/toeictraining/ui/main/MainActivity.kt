@@ -8,6 +8,7 @@ import androidx.core.view.GravityCompat
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseActivity
 import com.example.toeictraining.ui.fragments.reminder.RemindFragment
+import com.example.toeictraining.ui.fragments.intro.IntroDateFragment
 import com.example.toeictraining.ui.fragments.test.home.HomeTestFragment
 import com.example.toeictraining.ui.fragments.vocabulary.VocabularyFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -22,10 +23,11 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
     override fun initComponent() {
         setToolbar()
-        setNavigationView()
+        //setNavigationView()
         setRightButtonText("")
 
-        openFragment(R.id.content, HomeTestFragment(), false)
+        //openFragment(R.id.content, HomeTestFragment(), false)
+        openFragment(R.id.content, IntroDateFragment(), false)
     }
 
     override fun initData() {}

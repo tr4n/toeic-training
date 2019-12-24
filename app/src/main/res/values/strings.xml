@@ -10,6 +10,9 @@
     <string name="button_ok">OK</string>
     <string name="button_change_date">Change Date</string>
 
+    <!--    Test-Fix-->
+    <string name="test_fixed_date">2019/12/21</string>
+
     <!--    Intro-->
     <string name="text_intended_test_date">Bạn sẽ thi TOEIC vào ngày nào?</string>
     <string name="text_desired_score">Bạn mong muốn đạt được bao nhiêu điểm?</string>

@@ -1,21 +1,26 @@
 package com.example.toeictraining.ui.fragments.intro
 
-import androidx.lifecycle.ViewModelProviders
+
+import android.app.DatePickerDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import androidx.lifecycle.ViewModelProviders
 import com.example.toeictraining.R
+import com.example.toeictraining.utils.DateUtils
+import kotlinx.android.synthetic.main.intro_date_fragment.*
+import java.util.Calendar
 
-class IntroDateFragment : Fragment() {
+
+class IntroDateFragment : Fragment(){
 
     companion object {
-        fun newInstance() = IntroDateFragment()
+        val TAG = IntroDateFragment::class.java.name
     }
 
-    private lateinit var dateViewModel: IntroDateViewModel
+    private lateinit var viewModel: IntroDateViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,8 +31,43 @@ class IntroDateFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        dateViewModel = ViewModelProviders.of(this).get(IntroDateViewModel::class.java)
-        // TODO: Use the ViewModel
+        viewModel = ViewModelProviders.of(this).get(IntroDateViewModel::class.java)
+
+        initViews()
+        pickDate()
     }
 
+    private fun initViews() {
+
+    }
+
+
+    private fun pickDate() {
+        val calendar = Calendar.getInstance()
+        val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
+        val currentMonth = calendar.get(Calendar.MONTH)
+        val currentYear = calendar.get(Calendar.YEAR)
+
+        textDate.setOnClickListener {
+            val dlg = DatePickerDialog(
+                this.activity,
+                DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                    textDate.text = String.format(DateUtils.DATE_FORMAT, year, month, dayOfMonth)
+                },
+                currentYear,
+                currentMonth,
+                currentDay
+            )
+            dlg.show()
+        }
+    }
+
+//        context?.let {
+//            DatePickerDialog(
+//                it,
+//                DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+//                    textDate.text = String.format(DateUtils.DATE_FORMAT, year, month, dayOfMonth)
+//                }, currentYear, currentMonth, currentDay
+//            ).show()
+//        }
 }
