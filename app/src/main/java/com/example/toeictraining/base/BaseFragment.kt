@@ -8,6 +8,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import com.example.toeictraining.R
+import kotlinx.android.synthetic.main.activity_main.view.*
 
 abstract class BaseFragment<VM : BaseViewModel> : Fragment(), LifecycleOwner {
 
@@ -44,12 +46,12 @@ abstract class BaseFragment<VM : BaseViewModel> : Fragment(), LifecycleOwner {
         })
     }
 
-    protected fun replaceFragment(id: Int, fragment: Fragment, addToBackStack: Boolean) =
+    protected fun replaceFragment(id: Int = R.id.content, fragment: Fragment, addToBackStack: Boolean) =
         activity?.supportFragmentManager?.beginTransaction()?.replace(id, fragment)?.apply {
             if (addToBackStack) addToBackStack(null)
         }?.commit()
 
-    protected fun addFragment(id: Int, fragment: Fragment, addToBackStack: Boolean) =
+    protected fun addFragment(id: Int = R.id.content, fragment: Fragment, addToBackStack: Boolean) =
         activity?.supportFragmentManager?.beginTransaction()?.add(id, fragment)?.apply {
             if (addToBackStack) addToBackStack(null)
         }?.commit()

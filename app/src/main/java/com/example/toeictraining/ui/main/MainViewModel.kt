@@ -2,8 +2,10 @@ package com.example.toeictraining.ui.main
 
 import android.content.SharedPreferences
 import android.text.format.DateUtils
+import android.util.Log
 import com.example.toeictraining.base.BaseViewModel
 import com.example.toeictraining.utils.Constants
+import com.example.toeictraining.utils.PracticeMode
 
 class MainViewModel(private val sharedPreferences: SharedPreferences) : BaseViewModel() {
 
@@ -11,19 +13,29 @@ class MainViewModel(private val sharedPreferences: SharedPreferences) : BaseView
         super.onCreate()
         val lastAccessTime = sharedPreferences.getLong(Constants.PREFERENCE_LAST_ACCESS, 0L)
         if (lastAccessTime == 0L || !DateUtils.isToday(lastAccessTime)) {
-            resetDailyWork()
+            initDailyWorks()
         }
+        sharedPreferences.edit()
+            .putLong(Constants.PREFERENCE_LAST_ACCESS, System.currentTimeMillis())
+            .apply()
     }
 
     private fun resetDailyWork() {
         sharedPreferences.edit().run {
-            putBoolean(Constants.PREFERENCE_DAILY_WORK_1, false)
-            putBoolean(Constants.PREFERENCE_DAILY_WORK_2, false)
-            putBoolean(Constants.PREFERENCE_DAILY_WORK_3, false)
-            putBoolean(Constants.PREFERENCE_DAILY_WORK_4, false)
-            putBoolean(Constants.PREFERENCE_DAILY_WORK_5, false)
-            putBoolean(Constants.PREFERENCE_DAILY_WORK_6, false)
-            putLong(Constants.PREFERENCE_LAST_ACCESS, System.currentTimeMillis())
+            putInt(Constants.PREFERENCE_PRACTICE_MODE, PracticeMode.HIGH)
+        }.apply()
+        initDailyWorks()
+    }
+
+    private fun initDailyWorks() {
+        val practiceMode =
+            sharedPreferences.getInt(Constants.PREFERENCE_PRACTICE_MODE, PracticeMode.HIGH)
+        val dailyWorkParts = (1..7).toList().shuffled().take(practiceMode).joinToString()
+        val dailyWorkTopics = (1..50).toList().shuffled().take(practiceMode).joinToString()
+
+        sharedPreferences.edit().run {
+            putString(Constants.PREFERENCE_DAILY_WORK_PART, dailyWorkParts)
+            putString(Constants.PREFERENCE_DAILY_WORK_TOPIC, dailyWorkTopics)
         }.apply()
     }
 }

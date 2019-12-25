@@ -1,5 +1,6 @@
 package com.example.toeictraining.utils
 
+import android.text.format.DateUtils
 import android.util.Log
 import com.example.toeictraining.ui.fragments.test.score.ScoreTestFragment.Companion.TAG
 import java.text.SimpleDateFormat
@@ -77,6 +78,9 @@ object DateUtil {
         return TimeUnit.MILLISECONDS.toDays(endMillis - startMillis)
     }
 
+    fun isToday(today: String) = dateFormater.parse(today)?.let {
+        DateUtils.isToday(it.time)
+    } ?: false
 }
 
 

@@ -40,8 +40,8 @@ abstract class AppDatabase : RoomDatabase() {
             INSTANCE ?: getDatabase(context).also { INSTANCE = it }
 
         private fun getDatabase(context: Context): AppDatabase =
-            Room.databaseBuilder(context, AppDatabase::class.java, "toeic_600.db")
-                .createFromAsset("databases/toeic_600.db")
+            Room.databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME)
+                .createFromAsset("databases/$DATABASE_NAME")
                 .fallbackToDestructiveMigration()
                 .build()
     }

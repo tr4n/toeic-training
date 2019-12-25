@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseFragment
 import com.example.toeictraining.data.model.DailyWork
+import com.example.toeictraining.ui.fragments.test.start_test.StartTestFragment
 import com.example.toeictraining.utils.DateUtil
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -21,9 +22,16 @@ class HomeFragment private constructor() : BaseFragment<HomeViewModel>() {
     override val viewModel: HomeViewModel by viewModel()
 
     private val dailyWorkAdapter = DailyWorkAdapter(DailyWorkAdapter.DailyWorkDiffUtilCallback())
+    private val recentResultAdapter =
+        RecentResultAdapter(RecentResultAdapter.RecentResultDiffUtilCallback())
 
     override fun initComponents() {
         recyclerDailyWorks.adapter = dailyWorkAdapter
+        recyclerRecentResults.adapter = recentResultAdapter.apply {
+            onItemClick = {
+                addFragment(fragment = StartTestFragment(it), addToBackStack = false)
+            }
+        }
         showDaysLeft()
     }
 
@@ -54,10 +62,15 @@ class HomeFragment private constructor() : BaseFragment<HomeViewModel>() {
     override fun observeData() = with(viewModel) {
         super.observeData()
         dailyWorks.observe(viewLifecycleOwner, Observer(::showDailyWorks))
+        recentResults.observe(viewLifecycleOwner, Observer(::showRecentResults))
     }
 
     private fun showDailyWorks(dailyWorks: List<DailyWork>) {
         dailyWorkAdapter.submitList(dailyWorks)
+    }
+
+    private fun showRecentResults(progresses: List<Int>) {
+        recentResultAdapter.submitList(progresses)
     }
 
     companion object {

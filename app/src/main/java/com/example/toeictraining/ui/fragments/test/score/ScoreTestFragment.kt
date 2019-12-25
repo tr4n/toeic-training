@@ -2,7 +2,6 @@ package com.example.toeictraining.ui.fragments.test.score
 
 import android.app.Application
 import android.os.Bundle
-import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -20,7 +19,9 @@ import com.example.toeictraining.ui.fragments.test.home.HomeTestFragment
 import com.example.toeictraining.ui.fragments.test.result.ResultTestFragment
 import com.example.toeictraining.ui.fragments.test.start_test.StartTestFragment
 import com.example.toeictraining.ui.main.MainActivity
+import com.example.toeictraining.utils.Constants
 import com.example.toeictraining.utils.DateUtil
+import com.huma.room_for_asset.defaultSharedPreferences
 import kotlinx.android.synthetic.main.score_test_fragment.*
 import kotlin.math.roundToInt
 
@@ -123,6 +124,7 @@ class ScoreTestFragment(
                     //part 7
                     setDetailPart(147, 200, progressbar_part_7, text_evaluate_7)
 
+                    saveRecentResults()
                     //set tag
                     it.tag = true
                 } else {
@@ -266,6 +268,24 @@ class ScoreTestFragment(
                     false
                 )
             }
+        }
+    }
+
+    private fun saveRecentResults() {
+        val partRanges =
+            listOf(0 to 5, 6 to 30, 31 to 69, 70 to 99, 100 to 129, 130 to 145, 146 to 199)
+
+        val recentResultProgresses = partRanges.map { partRange ->
+            val numberCorrects = questionsStatus.subList(partRange.first, partRange.second + 1)
+                .filter { it.answer == it.data.correctAnswer }
+                .size
+            val total = partRange.second - partRange.first + 1
+            (numberCorrects * 100f / total).roundToInt()
+        }.joinToString()
+        context?.run {
+            defaultSharedPreferences.edit()
+                .putString(Constants.PREFERENCE_RECENT_RESULTS_PROGRESS, recentResultProgresses)
+                .apply()
         }
     }
 }
