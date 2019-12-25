@@ -1,74 +1,102 @@
 package com.example.toeictraining.ui.fragments.test.score
 
+import android.app.Application
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProviders
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.example.toeictraining.R
+import com.example.toeictraining.base.database.AppDatabase
+import com.example.toeictraining.base.entity.Exam
 import com.example.toeictraining.ui.fragments.test.do_test.QuestionStatus
 import com.example.toeictraining.ui.fragments.test.home.HomeTestFragment
+import com.example.toeictraining.ui.fragments.test.result.ResultTestFragment
+import com.example.toeictraining.ui.fragments.test.start_test.StartTestFragment
 import com.example.toeictraining.ui.main.MainActivity
 import com.example.toeictraining.utils.DateUtils
 import kotlinx.android.synthetic.main.score_test_fragment.*
 import kotlin.math.roundToInt
 
-class ScoreTestFragment(val questions: List<QuestionStatus>, private val totalTime: Long) : Fragment() {
+class ScoreTestFragment(
+    private val questionsStatus: List<QuestionStatus>,
+    private val totalTime: Int,
+    private val timestamp: String,
+    private val part: Int
+) :
+    Fragment(), View.OnClickListener {
 
     companion object {
         val TAG = ScoreTestFragment::class.java.name
     }
 
-    val level = arrayOf("Yếu", "Trung Bình", "Giỏi")
-
+    private val level = arrayOf("Yếu", "Trung Bình", "Tốt", "Rất Tốt")
     private lateinit var viewModel: ScoreTestViewModel
-    var totalScore = 0
+    private var totalScore = 0
+    private var idExam: Long? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val application: Application = requireNotNull(this.activity).application
+        val examDao = AppDatabase.getInstance(application).examDao()
+        val viewModelFactory = ScoreTestViewModelFactory(examDao, application)
+        viewModel =
+            ViewModelProviders.of(this, viewModelFactory).get(ScoreTestViewModel::class.java)
         return inflater.inflate(R.layout.score_test_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(ScoreTestViewModel::class.java)
-
         initViews()
-
-        button_submit.setOnClickListener {
-            (activity as MainActivity).openFragment(R.id.content, HomeTestFragment(), false)
-        }
-
-        //caculate score
-        for (question in questions) {
-            if (question.answer == question.data.correctAnswer) {
-                totalScore += 5
-            }
-        }
-        total_score.text = totalScore.toString()
-        text_total_time.text =
+        handleObservable()
+        text_result.text =
             getString(R.string.test_time_total).plus(DateUtils.secondsToStringTime(totalTime))
         var listenScore = 0
         var readScore = 0
 
-        for (question in questions) {
-            if (question.data.correctAnswer == question.answer) {
-                if (question.data.soundLink != null) {
+        val listAnswer = mutableListOf<String>()
+        val listQuestionId = mutableListOf<Int>()
+
+        for (questionStatus in questionsStatus) {
+            //create exam
+            listAnswer.add(questionStatus.answer)
+            listQuestionId.add(questionStatus.data.id)
+            if (questionStatus.data.correctAnswer == questionStatus.answer) {
+                if (questionStatus.data.soundLink != null) {
                     listenScore += 5
                     continue
                 }
                 readScore += 5
             }
         }
-        text_listen_score.text = getString(R.string.listen_score).plus("$listenScore")
-        text_read_score.text = getString(R.string.read_score).plus("$readScore")
-        if (questions.size == 200) {
+        //save exam
+        val exam = Exam(
+            questionIdList = listQuestionId,
+            answerList = listAnswer,
+            time = totalTime,
+            part = part,
+            timestamp = timestamp,
+            score = readScore + listenScore
+        )
+        viewModel.insert(exam)
+        //chỉ bài full mới show điểm đọc, điểm nghe
+        if (part == 8) {
+            text_listen_score?.visibility = View.VISIBLE
+            text_listen_score?.text = getString(R.string.listen_score).plus("$listenScore")
+            text_read_score?.visibility = View.VISIBLE
+            text_read_score?.text = getString(R.string.read_score).plus("$readScore")
+        }
+        totalScore = readScore + listenScore
+        total_score.text = totalScore.toString()
+        if (questionsStatus.size == 200) {
             text_expand?.visibility = View.VISIBLE
             text_expand?.setOnClickListener {
                 if (it.tag == null) {
@@ -108,29 +136,22 @@ class ScoreTestFragment(val questions: List<QuestionStatus>, private val totalTi
                     it.tag = null
                 }
             }
-            button_learn_more_1?.setOnClickListener {
-                Toast.makeText(context, "button 1", Toast.LENGTH_SHORT).show()
-            }
-            button_learn_more_2?.setOnClickListener {
-                Toast.makeText(context, "button 2", Toast.LENGTH_SHORT).show()
-            }
-            button_learn_more_3?.setOnClickListener {
-                Toast.makeText(context, "button 3", Toast.LENGTH_SHORT).show()
-            }
-            button_learn_more_4?.setOnClickListener {
-                Toast.makeText(context, "button 4", Toast.LENGTH_SHORT).show()
-            }
-            button_learn_more_5?.setOnClickListener {
-                Toast.makeText(context, "button 5", Toast.LENGTH_SHORT).show()
-            }
-            button_learn_more_6?.setOnClickListener {
-                Toast.makeText(context, "button 6", Toast.LENGTH_SHORT).show()
-            }
-            button_learn_more_7?.setOnClickListener {
-                Toast.makeText(context, "button 7", Toast.LENGTH_SHORT).show()
-            }
+            button_learn_more_1?.setOnClickListener(this)
+            button_learn_more_2?.setOnClickListener(this)
+            button_learn_more_3?.setOnClickListener(this)
+            button_learn_more_4?.setOnClickListener(this)
+            button_learn_more_5?.setOnClickListener(this)
+            button_learn_more_6?.setOnClickListener(this)
+            button_learn_more_7?.setOnClickListener(this)
         }
         configNavigationIcon()
+    }
+
+    private fun handleObservable() {
+        viewModel.getInsertResultLiveData().observe(viewLifecycleOwner, Observer {
+            Log.d(TAG, "idExam = $it")
+            idExam = it
+        })
     }
 
     private fun setDetailPart(
@@ -142,7 +163,7 @@ class ScoreTestFragment(val questions: List<QuestionStatus>, private val totalTi
         // tính số câu đúng part 1
         var countCorrectAnswerPart = 0
         for (i in startQuestion.minus(1)..endQuestion.minus(1)) {
-            if (questions[i].answer.equals(questions[i].data.correctAnswer)) {
+            if (questionsStatus[i].answer == questionsStatus[i].data.correctAnswer) {
                 countCorrectAnswerPart++
             }
         }
@@ -150,14 +171,17 @@ class ScoreTestFragment(val questions: List<QuestionStatus>, private val totalTi
         val progress = (countCorrectAnswerPart * 100.0 / (endQuestion - startQuestion)).roundToInt()
         progressBar.progress = progress
         //set level of part
-        if (progress < 40) {
-            textView.text = level[0]
-        }
-        if (progress in 41..79) {
+        textView.text = level[0]
+        if (progress >= 50) {
             textView.text = level[1]
         }
-        if (80 < progress) {
+        if (progress >= 80) {
             textView.text = level[2]
+            button_learn_more_1.visibility = View.INVISIBLE
+            button_learn_more_1.isEnabled = false
+        }
+        if (progress >= 95) {
+            textView.text = level[3]
             button_learn_more_1.visibility = View.INVISIBLE
             button_learn_more_1.isEnabled = false
         }
@@ -166,6 +190,9 @@ class ScoreTestFragment(val questions: List<QuestionStatus>, private val totalTi
     private fun initViews() {
         (activity as MainActivity).setRightButtonText("")
         (activity as MainActivity).setTitle("")
+
+        button_continue_do.setOnClickListener(this)
+        button_result.setOnClickListener(this)
     }
 
     private fun configNavigationIcon() {
@@ -174,7 +201,71 @@ class ScoreTestFragment(val questions: List<QuestionStatus>, private val totalTi
         actionBarDrawerToggle.isDrawerIndicatorEnabled = false
         actionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
         actionBarDrawerToggle.setToolbarNavigationClickListener {
-            (activity as MainActivity).openFragment(R.id.content, HomeTestFragment(), false)
+            (activity as MainActivity).openFragment(
+                HomeTestFragment(),
+                false
+            )
+        }
+    }
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.button_continue_do -> {
+                (activity as MainActivity).openFragment(
+                    HomeTestFragment(),
+                    false
+                )
+            }
+            R.id.button_result -> {
+                idExam?.let {
+                    (activity as MainActivity).openFragment(
+                        ResultTestFragment(it),
+                        true
+                    )
+                }
+            }
+            R.id.button_learn_more_1 -> {
+                (activity as MainActivity).openFragment(
+                    StartTestFragment(1),
+                    false
+                )
+            }
+            R.id.button_learn_more_2 -> {
+                (activity as MainActivity).openFragment(
+                    StartTestFragment(2),
+                    false
+                )
+            }
+            R.id.button_learn_more_3 -> {
+                (activity as MainActivity).openFragment(
+                    StartTestFragment(3),
+                    false
+                )
+            }
+            R.id.button_learn_more_4 -> {
+                (activity as MainActivity).openFragment(
+                    StartTestFragment(4),
+                    false
+                )
+            }
+            R.id.button_learn_more_5 -> {
+                (activity as MainActivity).openFragment(
+                    StartTestFragment(5),
+                    false
+                )
+            }
+            R.id.button_learn_more_6 -> {
+                (activity as MainActivity).openFragment(
+                    StartTestFragment(6),
+                    false
+                )
+            }
+            R.id.button_learn_more_7 -> {
+                (activity as MainActivity).openFragment(
+                    StartTestFragment(7),
+                    false
+                )
+            }
         }
     }
 }

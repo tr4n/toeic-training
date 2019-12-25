@@ -1,3 +1,3 @@
 package com.example.toeictraining.base.enums
 
-enum class QuestionLevel { EASY, MEDIUM, DIFFICULT }
+enum class QuestionLevel { EASY, MEDIUM, HARD }

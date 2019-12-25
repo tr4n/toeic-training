@@ -1,22 +1,17 @@
-package com.example.toeictraining.ui.fragments.test.score
+package com.example.toeictraining.ui.fragments.test.history
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.toeictraining.base.database.dao.ExamDao
 import com.example.toeictraining.base.entity.Exam
 import kotlinx.coroutines.*
 
-class ScoreTestViewModel(
+class HistoryTestViewModel(
     private val examDao: ExamDao,
     application: Application
 ) : AndroidViewModel(application) {
     private var viewModelJob = Job()
-
-    companion object {
-        val TAG: String = ScoreTestViewModel::class.java.name
-    }
 
     override fun onCleared() {
         super.onCleared()
@@ -24,21 +19,17 @@ class ScoreTestViewModel(
     }
 
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
-    val insertResultLiveData = MutableLiveData<Long>()
+    private var exams = MutableLiveData<List<Exam>>()
 
-    fun getInsertResultLiveData(): LiveData<Long> {
-        return insertResultLiveData
+    fun getQuestionsLiveData(): MutableLiveData<List<Exam>> {
+        return exams
     }
 
-    fun insert(exam: Exam) {
+    init {
         uiScope.launch {
-            insertResultLiveData.value = insertToDatabase(exam)
-        }
-    }
-
-    private suspend fun insertToDatabase(exam: Exam): Long {
-        return withContext(Dispatchers.IO) {
-            examDao.insert(exam)
+            exams.value = withContext(Dispatchers.IO) {
+                examDao.getAll()
+            }
         }
     }
 }

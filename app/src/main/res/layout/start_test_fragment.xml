@@ -7,10 +7,10 @@
     tools:context=".ui.fragments.test.start_test.StartTestFragment">
 
     <TextView
-        android:id="@+id/text_part"
+        android:id="@+id/text_correct_answer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="170dp"
+        android:layout_marginTop="@dimen/space_100"
         android:gravity="center_horizontal"
         android:text="@string/part_6"
         android:textColor="@android:color/black"
@@ -28,7 +28,49 @@
         android:textColor="@android:color/black"
         android:textSize="@dimen/text_32"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_part" />
+        app:layout_constraintTop_toBottomOf="@+id/text_correct_answer" />
+
+    <RadioGroup
+        android:id="@+id/radio_level"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_10"
+        android:paddingStart="@dimen/space_10"
+        android:paddingEnd="@dimen/space_10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_time">
+
+        <RadioButton
+            android:id="@+id/radio_easy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:buttonTint="@android:color/black"
+            android:checked="true"
+            android:paddingBottom="@dimen/space_10"
+            android:text="@string/easy"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
+
+        <RadioButton
+            android:id="@+id/radio_medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:buttonTint="@android:color/black"
+            android:paddingBottom="@dimen/space_10"
+            android:text="@string/medium"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
+
+        <RadioButton
+            android:id="@+id/radio_hard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:buttonTint="@android:color/black"
+            android:text="@string/hard"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
+    </RadioGroup>
 
     <Button
         android:id="@+id/button_start"
@@ -43,5 +85,5 @@
         android:textColor="@android:color/white"
         android:textSize="@dimen/text_32"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_time" />
+        app:layout_constraintTop_toBottomOf="@+id/radio_level" />
 </androidx.constraintlayout.widget.ConstraintLayout>

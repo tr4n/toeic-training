@@ -53,4 +53,5 @@
     <dimen name="space_50">50dp</dimen>
     <dimen name="text_10">10sp</dimen>
     <dimen name="space_32">32dp</dimen>
+    <dimen name="space_48">48dp</dimen>
 </resources>

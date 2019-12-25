@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/text_question"
+        android:id="@+id/text_index_question"
         android:layout_width="@dimen/space_60"
         android:layout_height="@dimen/space_60"
         android:layout_marginTop="@dimen/space_10"

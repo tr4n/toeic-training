@@ -7,19 +7,19 @@ import com.example.toeictraining.base.enums.QuestionLevel
 
 @Entity(tableName = Question.TABLE_NAME)
 data class Question(
-    @PrimaryKey @ColumnInfo(name = FIELD_ID) var id: Int,
-    @ColumnInfo(name = FIELD_ID_PART) var idPart: Int,
-    @ColumnInfo(name = FIELD_GROUP_QUESTION_ID) var groupQuestionId: Int?,
-    @ColumnInfo(name = FIELD_SCRIPT) var script: String?,
-    @ColumnInfo(name = FIELD_CONTENT) var content: String?,
-    @ColumnInfo(name = FIELD_A) var a: String,
-    @ColumnInfo(name = FIELD_B) var b: String,
-    @ColumnInfo(name = FIELD_C) var c: String,
-    @ColumnInfo(name = FIELD_D) var d: String?,
-    @ColumnInfo(name = FIELD_SOUND_LINK) var soundLink: String?,
-    @ColumnInfo(name = FIELD_IMAGE_LINK) var imageLink: String?,
-    @ColumnInfo(name = FIELD_TYPE) var type: QuestionLevel,
-    @ColumnInfo(name = FIELD_CORRECT_ANSWER) var correctAnswer: String
+    @PrimaryKey @ColumnInfo(name = FIELD_ID) var id: Int = 0,
+    @ColumnInfo(name = FIELD_ID_PART) var idPart: Int = 0,
+    @ColumnInfo(name = FIELD_GROUP_QUESTION_ID) var groupQuestionId: Int? = null,
+    @ColumnInfo(name = FIELD_SCRIPT) var script: String? = null,
+    @ColumnInfo(name = FIELD_CONTENT) var content: String? = null,
+    @ColumnInfo(name = FIELD_A) var a: String = "",
+    @ColumnInfo(name = FIELD_B) var b: String = "",
+    @ColumnInfo(name = FIELD_C) var c: String = "",
+    @ColumnInfo(name = FIELD_D) var d: String? = null,
+    @ColumnInfo(name = FIELD_SOUND_LINK) var soundLink: String? = null,
+    @ColumnInfo(name = FIELD_IMAGE_LINK) var imageLink: String? = null,
+    @ColumnInfo(name = FIELD_TYPE) var type: QuestionLevel = QuestionLevel.EASY,
+    @ColumnInfo(name = FIELD_CORRECT_ANSWER) var correctAnswer: String = ""
 
 ) {
     companion object {

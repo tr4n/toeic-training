@@ -30,6 +30,11 @@ class RemindFragment private constructor() : BaseFragment<RemindViewModel>(),
     View.OnClickListener,
     CompoundButton.OnCheckedChangeListener {
 
+    companion object {
+        val TAG: String = RemindFragment::class.java.name
+        fun newInstance() = RemindFragment()
+    }
+
     override val layoutResource: Int get() = R.layout.fragment_reminder
     override val viewModel: RemindViewModel by viewModel()
 
@@ -160,9 +165,5 @@ class RemindFragment private constructor() : BaseFragment<RemindViewModel>(),
     override fun onStop() {
         super.onStop()
         (activity as AppCompatActivity).supportActionBar?.show()
-    }
-
-    companion object {
-        fun newInstance() = RemindFragment()
     }
 }

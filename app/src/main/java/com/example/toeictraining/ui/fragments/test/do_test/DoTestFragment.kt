@@ -1,12 +1,16 @@
 package com.example.toeictraining.ui.fragments.test.do_test
 
 import android.app.AlertDialog
+import android.app.Application
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,47 +23,60 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.toeictraining.R
+import com.example.toeictraining.base.database.AppDatabase
 import com.example.toeictraining.base.entity.Question
-import com.example.toeictraining.base.enums.QuestionLevel
+import com.example.toeictraining.base.enums.ExamLevel
+import com.example.toeictraining.ui.fragments.test.Constant
 import com.example.toeictraining.ui.fragments.test.score.ScoreTestFragment
 import com.example.toeictraining.ui.main.MainActivity
 import com.example.toeictraining.utils.DateUtils
+import kotlinx.android.synthetic.main.dialog_do_test.*
 import kotlinx.android.synthetic.main.do_test_fragment.*
-import kotlinx.android.synthetic.main.score_test_fragment.*
 import kotlinx.android.synthetic.main.toolbar.*
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.math.abs
-import kotlin.math.roundToLong
+import kotlin.math.roundToInt
 
-
-class DoTestFragment(val secondTotalTime: Long) : Fragment() {
+class DoTestFragment(
+    private val part: Int,
+    private val examLevel: ExamLevel
+) : Fragment(), View.OnClickListener {
 
     companion object {
         val TAG = DoTestFragment::class.java.name
         const val THRESHOLD_SPEED = 60
     }
 
+    private var secondTotalTime: Int = 0
     private lateinit var viewModel: DoTestViewModel
-    lateinit var mediaPlayer: MediaPlayer
-    val questions = mutableListOf<QuestionStatus>()
-    var totalTime = 0L
-
-    private var countDownTimer = object : CountDownTimer(secondTotalTime * 1000, 1000L) {
-        override fun onFinish() {
-            (activity as MainActivity).openFragment(
-                R.id.content,
-                ScoreTestFragment(questions, secondTotalTime),
-                false
-            )
-        }
-
-        override fun onTick(millisUntilFinished: Long) {
-            totalTime = (millisUntilFinished / 1000.0).roundToLong()
-            (activity as MainActivity).setTitle(
-                DateUtils.secondsToStringTime(
-                    (millisUntilFinished / 1000.0).roundToLong()
+    private var mediaPlayer: MediaPlayer? = null
+    private val questionsStatus = mutableListOf<QuestionStatus>()
+    private var totalTime = 0
+    private var timestamp: String = ""
+    private var level: ExamLevel = examLevel
+    private val listQuestionId = mutableListOf<Int>()
+    private val questions = mutableListOf<Question>()
+    private var countDownTimer: CountDownTimer? = null
+    private fun setCountDownTimer(time: Int) {
+        countDownTimer = object : CountDownTimer(time * 1000L, 1000L) {
+            override fun onFinish() {
+                (activity as MainActivity).openFragment(
+                    ScoreTestFragment(questionsStatus, secondTotalTime, timestamp, part),
+                    false
                 )
-            )
+            }
+
+            override fun onTick(millisUntilFinished: Long) {
+                totalTime = (millisUntilFinished / 1000.0).roundToInt()
+                (activity as MainActivity).setTitle(
+                    DateUtils.secondsToStringTime(
+                        (millisUntilFinished / 1000.0).roundToInt()
+                    )
+                )
+            }
         }
     }
 
@@ -67,6 +84,12 @@ class DoTestFragment(val secondTotalTime: Long) : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        timestamp = SimpleDateFormat(getString(R.string.date_time_format), Locale.getDefault())
+            .format(Calendar.getInstance().time)
+        val application: Application = requireNotNull(activity).application
+        val dataSource = AppDatabase.getInstance(application).questionDao()
+        val viewModelFactory = DoTestViewModelFactory(dataSource, application, part)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(DoTestViewModel::class.java)
         return inflater.inflate(
             R.layout.do_test_fragment,
             container,
@@ -76,132 +99,12 @@ class DoTestFragment(val secondTotalTime: Long) : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(DoTestViewModel::class.java)
-
+        (activity as MainActivity).showLoadingDialog()
         initViews()
-        countDownTimer.start()
         handleObservable()
-        listener()
-
-
-//        button_play_sound.setOnClickListener {
-//            mediaPlayer = MediaPlayer.create(context, R.raw.q1_p1).apply {
-//                start()
-//            }
-//            it.background =
-//                resources.getDrawable(R.drawable.pause_24, null)
-//
-//            mediaPlayer.setOnCompletionListener { mp ->
-//                observer?.stop()
-//                progressBar_sound.progress = mp.currentPosition
-//                mediaPlayer.stop()
-//                mediaPlayer.reset()
-//            }
-//            mediaPlayer.setOnBufferingUpdateListener { _, _ ->
-//                Log.d(" UpdateListener", " vào")
-//                progressBar_sound.progress =
-//                    (mediaPlayer.currentPosition.toDouble() / mediaPlayer.duration.toDouble() * 100).toInt()
-//            }
-////        mediaPlayer.setOnPreparedListener { btn_play_stop.setEnabled(true) }
-//            observer = MediaObserver()
-//            Thread(observer).start()
-//        }
     }
 
-    private fun listener() {
-        (activity as MainActivity).toolbar_button_right.setOnClickListener {
-            val alertDialog = AlertDialog.Builder(context)
-                .setView(R.layout.dialog_do_test)
-                .setCancelable(false)
-                .create()
-            alertDialog?.let {
-                it.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                it.show()
-                it.button_submit.setOnClickListener {
-
-                    (activity as MainActivity).openFragment(
-                        R.id.content,
-                        ScoreTestFragment(questions, secondTotalTime - totalTime),
-                        false
-                    )
-                    alertDialog.cancel()
-                }
-                it.button_not_submit.setOnClickListener {
-                    alertDialog.cancel()
-                }
-            }
-        }
-
-        text_a.setOnClickListener {
-            recyclerViewQuestion.adapter?.let { adapter ->
-                (adapter as ListQuestionAdapter).indexMain.value?.let {
-                    if (text_a.tag == null || text_a.tag == false) {
-                        if (questions[it].answer == "b") removeAnswer(text_b)
-                        if (questions[it].answer == "c") removeAnswer(text_c)
-                        if (questions[it].answer == "d") removeAnswer(text_d)
-                        questions[it].answer = "a"
-                        setAnswer(text_a)
-                    } else {
-                        questions[it].answer = ""
-                        removeAnswer(text_a)
-                    }
-                }
-            }
-        }
-
-        text_b.setOnClickListener {
-            recyclerViewQuestion.adapter?.let { adapter ->
-                (adapter as ListQuestionAdapter).indexMain.value?.let {
-                    if (text_b.tag == null || text_b.tag == false) {
-                        if (questions[it].answer == "a") removeAnswer(text_a)
-                        if (questions[it].answer == "c") removeAnswer(text_c)
-                        if (questions[it].answer == "d") removeAnswer(text_d)
-                        questions[it].answer = "b"
-                        setAnswer(text_b)
-                    } else {
-                        questions[it].answer = ""
-                        removeAnswer(text_b)
-                    }
-                }
-            }
-        }
-
-        text_c.setOnClickListener {
-            recyclerViewQuestion.adapter?.let { adapter ->
-                (adapter as ListQuestionAdapter).indexMain.value?.let {
-                    if (text_c.tag == null || text_c.tag == false) {
-                        if (questions[it].answer == "a") removeAnswer(text_a)
-                        if (questions[it].answer == "b") removeAnswer(text_b)
-                        if (questions[it].answer == "d") removeAnswer(text_d)
-                        questions[it].answer = "c"
-                        setAnswer(text_c)
-                    } else {
-                        questions[it].answer = ""
-                        removeAnswer(text_c)
-                    }
-                }
-            }
-        }
-
-        text_d.setOnClickListener {
-            recyclerViewQuestion.adapter?.let { adapter ->
-                (adapter as ListQuestionAdapter).indexMain.value?.let {
-                    if (text_d.tag == null || text_d.tag == false) {
-                        if (questions[it].answer == "a") removeAnswer(text_a)
-                        if (questions[it].answer == "b") removeAnswer(text_b)
-                        if (questions[it].answer == "c") removeAnswer(text_c)
-                        questions[it].answer = "d"
-                        setAnswer(text_d)
-                    } else {
-                        questions[it].answer = ""
-                        removeAnswer(text_d)
-                    }
-                }
-            }
-        }
-    }
-
-    private fun setAnswer(answerView: TextView) {
+    private fun drawAnswer(answerView: TextView) {
         answerView.tag = true
         answerView.setBackgroundColor(
             ResourcesCompat.getColor(
@@ -210,129 +113,161 @@ class DoTestFragment(val secondTotalTime: Long) : Fragment() {
                 null
             )
         )
-        answerView.setTextColor(
-            ResourcesCompat.getColor(
-                resources,
-                android.R.color.white,
-                null
-            )
-        )
+        answerView.setTextColor(Color.WHITE)
     }
 
     private fun removeAnswer(answerView: TextView) {
-        answerView.tag = false
-        answerView.setBackgroundColor(
-            ResourcesCompat.getColor(
-                resources,
-                android.R.color.white,
-                null
-            )
-        )
-        answerView.setTextColor(
-            ResourcesCompat.getColor(
-                resources,
-                android.R.color.black,
-                null
-            )
-        )
+        answerView.tag = null
+        answerView.setBackgroundColor(Color.WHITE)
+        answerView.setTextColor(Color.BLACK)
     }
 
     private fun handleObservable() {
-        (recyclerViewQuestion.adapter as ListQuestionAdapter).indexMain.observe(
+        viewModel.indexMain.observe(
             viewLifecycleOwner,
             Observer {
                 scrollView2.scrollTo(0, 0)
-                val question = questions[it]
-                text_question_content.visibility = View.VISIBLE
-                text_question_content.text = question.data.content
-                text_a.text = question.data.a
-                text_b.text = question.data.b
-                text_c.text = question.data.c
-                text_d.text = question.data.d
-                removeAnswer(text_a)
-                removeAnswer(text_b)
-                removeAnswer(text_c)
-                removeAnswer(text_d)
-                if (question.answer == "a") setAnswer(text_a)
-                if (question.answer == "b") setAnswer(text_b)
-                if (question.answer == "c") setAnswer(text_c)
-                if (question.answer == "d") setAnswer(text_d)
+                val question = questionsStatus[it]
+                (activity as MainActivity).showLoadingDialog()
+                //script
+                text_script.visibility = View.GONE
+                question.data.script?.let { script ->
+                    text_script.visibility = View.VISIBLE
+                    text_script.text = script
+                }
+                //content
+                text_question_content.visibility = View.GONE
+                question.data.content?.let { content ->
+                    text_question_content.visibility = View.VISIBLE
+                    text_question_content.text = content
+                }
+                //audio
+                question.data.soundLink?.let {
+                    mediaPlayer?.stop()
+                    mediaPlayer = MediaPlayer()
+                    mediaPlayer?.setAudioAttributes(
+                        AudioAttributes.Builder().setContentType(
+                            AudioAttributes.CONTENT_TYPE_MUSIC
+                        ).build()
+                    )
+                    mediaPlayer?.setDataSource(context!!, Uri.parse(question.data.soundLink))
+                    mediaPlayer?.prepare()
+                    mediaPlayer?.setOnPreparedListener {
+                        (activity as MainActivity).cancelLoadingDialog()
+                        mediaPlayer?.start()
+                    }
+                }
+                //image
+                image_question.visibility = View.GONE
+                question.data.imageLink?.let { link ->
+                    image_question.visibility = View.VISIBLE
+                    Glide.with(context!!)
+                        .load(link)
+                        .fitCenter()
+                        .into(image_question)
+                }
+                //answer
+                text_a.text = getString(R.string.a).plus(". ").plus(question.data.a)
+                text_b.text = getString(R.string.b).plus(". ").plus(question.data.b)
+                text_c.text = getString(R.string.c).plus(". ").plus(question.data.c)
+                text_d.visibility = View.GONE
+                question.data.d?.let { d ->
+                    text_d.visibility = View.VISIBLE
+                    text_d.text = getString(R.string.d).plus(". ").plus(d)
+                }
+                removeDrawAnswers()
+                when (question.answer) {
+                    getString(R.string.a) -> drawAnswer(text_a)
+                    getString(R.string.b) -> drawAnswer(text_b)
+                    getString(R.string.c) -> drawAnswer(text_c)
+                    getString(R.string.d) -> drawAnswer(text_d)
+                }
+                /*khi có link sound, không cancelloadingdialog, đợi loading xong sound,
+                cancelloadingdialog bên mediaPlayer*/
+                if (question.data.soundLink == null) {
+                    (activity as MainActivity).cancelLoadingDialog()
+                }
             })
-    }
 
-//    private var observer: MediaObserver? = null
-//
-//    private inner class MediaObserver : Runnable {
-//        private val stop = AtomicBoolean(false)
-//        fun stop() {
-//            stop.set(true)
-//        }
-//
-//        override fun run() {
-//            while (!stop.get()) {
-//                progressBar_sound.progress =
-//                    (mediaPlayer.currentPosition.toDouble() / mediaPlayer.duration.toDouble() * 100).toInt()
-//                try {
-//                    Thread.sleep(200)
-//                } catch (ex: Exception) {
-//                    Log.e(TAG, ex.toString())
-//                }
-//            }
-//        }
-//    }
+        viewModel.getQuestionsLiveData().observe(viewLifecycleOwner, Observer {
+            questions.addAll(it)
+            while (questions.size > Constant.COUNT_QUESTIONS_OF_PART[part]) {
+                questions.removeAt(questions.size - 1)
+            }
+            Log.d(TAG, "questions.size = ${questions.size}")
+            if (questions.size == Constant.COUNT_QUESTIONS_OF_PART[part]) {
+                prepareData(questions)
+                setRecyclerQuestion()
+                if (countDownTimer == null) {
+                    setCountDownTimer(secondTotalTime)
+                }
+                countDownTimer?.start()
+            } else {
+//                o	Khi chọn EASY thì chỉ query tất cả các câu EASY. NEW: Nếu hết câu EASY, thì query tiếp MEDIUM, rồi đến EASY cho các câu còn lại.
+//                o	Khi chọn MEDIUM, query tất cả các câu MEDIUM. NEW: Nếu hết câu MEDIUM, thì query tiếp EASY, rồi đến HARD cho các câu còn lại.
+//                o	Khi chọn đề HARD, query tất cả các câu HARD. Nếu hết câu HARD thì query tiếp MEDIUM, rồi đến EASY cho các câu còn lại.
+                when (level) {
+                    ExamLevel.EASY -> {
+                        if (examLevel == ExamLevel.EASY) {
+                            level = ExamLevel.MEDIUM
+                        }
+                        if (examLevel == ExamLevel.MEDIUM) {
+                            level = ExamLevel.HARD
+                        }
+                    }
+                    ExamLevel.MEDIUM -> {
+                        if (examLevel == ExamLevel.EASY) {
+                            level = ExamLevel.HARD
+                        }
+                        if (examLevel == ExamLevel.MEDIUM) {
+                            level = ExamLevel.EASY
+                        }
+                        if (examLevel == ExamLevel.HARD) {
+                            level = ExamLevel.EASY
+                        }
+                    }
+                    ExamLevel.HARD -> {
+                        if (examLevel == ExamLevel.HARD) {
+                            level = ExamLevel.MEDIUM
+                        }
+                    }
+                }
+                viewModel.getQuestions(
+                    part,
+                    level,
+                    Constant.COUNT_QUESTIONS_OF_PART[part] - questions.size
+                )
+            }
+        })
+    }
 
     private fun initViews() {
         (activity as MainActivity).setRightButtonText(getString(R.string.submit_test))
         configNavigationIcon()
+        (activity as MainActivity).toolbar_button_right.setOnClickListener(this)
+        text_a.setOnClickListener(this)
+        text_b.setOnClickListener(this)
+        text_c.setOnClickListener(this)
+        text_d.setOnClickListener(this)
 
-        //fake data
-        for (i in 1..200) {
-            questions.add(
+        secondTotalTime = Constant.TIMES_PART[part]
+        //load data
+        viewModel.getQuestions(part, level, Constant.COUNT_QUESTIONS_OF_PART[part])
+    }
+
+    private fun prepareData(questionsFromDB: List<Question>) {
+        for (i in questionsFromDB.indices) {
+            questionsStatus.add(
                 QuestionStatus(
-                    i, QuestionStatus.Status.NOT_DONE, Question(
-                        id = i,
-                        idPart = 1,
-                        groupQuestionId = null,
-                        script = null,
-                        content = "Halls will come to Life with Music\n" +
-                                " \n" +
-                                "Albert Hall and Royal Hall have disclosed their schedules for the upcoming season, with everything (1)........ classical music to stand up comedy acts and lots in between.\n" +
-                                "\n" +
-                                "The Smiths are set to make their debut at 100-year-old Albert hall on Jan 25, 2007. The venerable venue (2)........ will host Bruce\n" +
-                                " \n" +
-                                "Thornton on January 17, Ron Ghanem on January 3, Terry Lightfoot on January 9, and folk superstar Judith Bachman on February 12, 13 and 14.\n" +
-                                "\n" +
-                                "At Royal Hall, in its classical (3)........, American soprano Rosemary Voigt, Canadian soprano Jonathon Pierre,\n" +
-                                "Canadian baritone Mel Finley, and Polish contralto George Plodles (4)........  on the bill.",
-                        a = "A. Series",
-                        b = "B. Steps",
-                        c = "C. Occasions",
-                        d = "D. Separation",
-                        soundLink = null,
-                        imageLink = null,
-                        type = QuestionLevel.MEDIUM,
-                        correctAnswer = "a"
-                    ),
+                    i + 1,
+                    QuestionStatus.Status.NOT_DONE,
+                    questionsFromDB[i],
                     ""
                 )
             )
+            listQuestionId.add(questionsFromDB[i].id)
         }
-
-        questions[6].data.content = "Dreamaker\n" +
-                "The professionals that make your nights comfortable\n" +
-                "\n" +
-                "The Dreamaker Plus (9)........ the exclusive coil system everyone’s been talking about.\n" +
-                "\n" +
-                "For the past 5- years, the experts at Dreamaker (10)........ their time and effort to bring the Americans a good night’s rest by using our reliable and proven technology.\n" +
-                "\n" +
-                "Compared to any conventional spring systems available in the industry, the Dreamaker Plus has nearly twice the coils of any others. Quality comfort layers and fabrics (11)........ to ensure a comfortable and durable sleeping surface.\n" +
-                "\n" +
-                "By increasing the wire thickness in the outer two rows, Dreamaker Plus (12)........ a firmer seating edge, increases the usable sleeping space, and helps to prevent that “roll out of bed” feeling."
-
-        questions[5].status = QuestionStatus.Status.MAIN
-        questions[1].data.soundLink = "123123133"
-
-        setRecyclerQuestion()
+        questionsStatus[0].status = QuestionStatus.Status.MAIN
     }
 
     private fun setRecyclerQuestion() {
@@ -344,7 +279,7 @@ class DoTestFragment(val secondTotalTime: Long) : Fragment() {
                         (Resources.getSystem().displayMetrics.widthPixels - (Resources.getSystem().displayMetrics.density * 60).toInt()) / 2
                     )
                 }
-            adapter = ListQuestionAdapter(context, questions)
+            adapter = ListQuestionAdapter(activity as MainActivity, questionsStatus, viewModel)
             addItemDecoration(
                 DividerItemDecoration(
                     context,
@@ -371,8 +306,8 @@ class DoTestFragment(val secondTotalTime: Long) : Fragment() {
                                 val speed = abs((lastTimePoint - firstTimePoint) / (fp2 - fp1))
                                 if (speed < THRESHOLD_SPEED && fp2 == 0) {
                                     setMainPosition(0)
-                                } else if (speed < THRESHOLD_SPEED && lp2 == (questions.size - 1)) {
-                                    setMainPosition(questions.size - 1)
+                                } else if (speed < THRESHOLD_SPEED && lp2 == (questionsStatus.size - 1)) {
+                                    setMainPosition(questionsStatus.size - 1)
                                 } else {
                                     val item =
                                         (layoutManager as LinearLayoutManager).findViewByPosition(
@@ -395,16 +330,22 @@ class DoTestFragment(val secondTotalTime: Long) : Fragment() {
                         }
                     }
                 }
-
-                private fun setMainPosition(pos: Int) {
-                    (adapter as ListQuestionAdapter).indexMain.value?.let {
-                        questions[it].status =
-                            QuestionStatus.Status.NOT_DONE // load lại status
-                    }
-                    questions[pos].status = QuestionStatus.Status.MAIN
-                }
             })
         }
+    }
+
+    private fun setMainPosition(pos: Int) {
+        (activity as MainActivity).showLoadingDialog()
+        viewModel.indexMain.value?.let {
+            if (questionsStatus[it].answer.isNotBlank()) {
+                questionsStatus[it].status =
+                    QuestionStatus.Status.DONE // load lại status
+            } else {
+                questionsStatus[it].status =
+                    QuestionStatus.Status.NOT_DONE // load lại status
+            }
+        }
+        questionsStatus[pos].status = QuestionStatus.Status.MAIN
     }
 
     private fun configNavigationIcon() {
@@ -413,35 +354,118 @@ class DoTestFragment(val secondTotalTime: Long) : Fragment() {
         actionBarDrawerToggle.isDrawerIndicatorEnabled = false
         actionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white_24dp)
         actionBarDrawerToggle.setToolbarNavigationClickListener {
-            val alertDialog = AlertDialog.Builder(context)
-                .setView(R.layout.dialog_do_test)
-                .setCancelable(false)
-                .create()
-            alertDialog?.let {
-                it.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                it.show()
-                it.button_submit.text = "Không"
-                it.button_not_submit.text = "Thoát"
-                it.button_submit.setOnClickListener {
-                    alertDialog.cancel()
-                }
-                it.button_not_submit.setOnClickListener {
-                    (activity as MainActivity).onBackPressed()
-                    countDownTimer.cancel()
-                    alertDialog.cancel()
-                }
-            }
-
+            (activity as MainActivity).onBackPressed()
         }
     }
 
     override fun onDestroyView() {
+        countDownTimer?.cancel()
+        mediaPlayer?.stop()
         super.onDestroyView()
-        countDownTimer.cancel()
     }
 
     override fun onDestroy() {
+        countDownTimer?.cancel()
+        mediaPlayer?.stop()
         super.onDestroy()
-        countDownTimer.cancel()
+    }
+
+    override fun onPause() {
+        countDownTimer?.cancel()
+        mediaPlayer?.pause()
+        super.onPause()
+    }
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.toolbar_button_right -> {
+                val alertDialog = AlertDialog.Builder(context)
+                    .setView(R.layout.dialog_do_test)
+                    .setCancelable(false)
+                    .create()
+                alertDialog?.let {
+                    it.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                    it.show()
+                    it.button_submit.setOnClickListener {
+                        (activity as MainActivity).openFragment(
+                            ScoreTestFragment(
+                                questionsStatus,
+                                secondTotalTime - totalTime,
+                                timestamp,
+                                part
+                            ),
+                            false
+                        )
+                        alertDialog.cancel()
+                    }
+                    it.button_not_submit.setOnClickListener {
+                        alertDialog.cancel()
+                    }
+                }
+            }
+            R.id.text_a -> {
+                recyclerViewQuestion.adapter?.let {
+                    viewModel.indexMain.value?.let {
+                        if (text_a.tag == null) {
+                            removeDrawAnswers()
+                            questionsStatus[it].answer = getString(R.string.a)
+                            drawAnswer(text_a)
+                        } else {
+                            questionsStatus[it].answer = ""
+                            removeAnswer(text_a)
+                        }
+                    }
+                }
+            }
+            R.id.text_b -> {
+                recyclerViewQuestion.adapter?.let {
+                    viewModel.indexMain.value?.let {
+                        if (text_b.tag == null) {
+                            removeDrawAnswers()
+                            questionsStatus[it].answer = getString(R.string.b)
+                            drawAnswer(text_b)
+                        } else {
+                            questionsStatus[it].answer = ""
+                            removeAnswer(text_b)
+                        }
+                    }
+                }
+            }
+            R.id.text_c -> {
+                recyclerViewQuestion.adapter?.let {
+                    viewModel.indexMain.value?.let {
+                        if (text_c.tag == null) {
+                            removeDrawAnswers()
+                            questionsStatus[it].answer = getString(R.string.c)
+                            drawAnswer(text_c)
+                        } else {
+                            questionsStatus[it].answer = ""
+                            removeAnswer(text_c)
+                        }
+                    }
+                }
+            }
+            R.id.text_d -> {
+                recyclerViewQuestion.adapter?.let {
+                    viewModel.indexMain.value?.let {
+                        if (text_d.tag == null) {
+                            removeDrawAnswers()
+                            questionsStatus[it].answer = getString(R.string.d)
+                            drawAnswer(text_d)
+                        } else {
+                            questionsStatus[it].answer = ""
+                            removeAnswer(text_d)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun removeDrawAnswers() {
+        removeAnswer(text_a)
+        removeAnswer(text_b)
+        removeAnswer(text_c)
+        removeAnswer(text_d)
     }
 }

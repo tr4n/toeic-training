@@ -1,4 +1,4 @@
-package com.example.toeictraining.base.database.dao
+package com.example.toeictraining.base.database.converter
 
 import androidx.room.TypeConverter
 import com.example.toeictraining.base.enums.QuestionLevel

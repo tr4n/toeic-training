@@ -4,25 +4,26 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.example.toeictraining.R
-
+import com.example.toeictraining.base.enums.ExamLevel
+import com.example.toeictraining.ui.fragments.test.Constant
 import com.example.toeictraining.ui.fragments.test.do_test.DoTestFragment
-
-import com.example.toeictraining.ui.fragments.test.home.HomeTestFragment
+import com.example.toeictraining.ui.fragments.test.history.HistoryTestFragment
 import com.example.toeictraining.ui.main.MainActivity
+import com.example.toeictraining.utils.DateUtils
 import kotlinx.android.synthetic.main.start_test_fragment.*
 
-class StartTestFragment : Fragment() {
+class StartTestFragment(
+    private val part: Int
+) : Fragment() {
 
     companion object {
         val TAG = StartTestFragment::class.java.name
     }
 
     private lateinit var viewModel: StartTestViewModel
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,6 +36,7 @@ class StartTestFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(StartTestViewModel::class.java)
 
         initViews()
+        configNavigationIcon()
     }
 
     private fun initViews() {
@@ -42,30 +44,32 @@ class StartTestFragment : Fragment() {
             setTitle("")
             setRightButtonText(getString(R.string.history))
             setOnClickToolbarRightButton(View.OnClickListener {
-                Toast.makeText(
-                    context,
-                    "Vào",
-                    Toast.LENGTH_SHORT
-                ).show()
+                (activity as MainActivity).openFragment(
+                    HistoryTestFragment(),
+                    true
+                )
             })
         }
         setTextContent()
-        configNavigationIcon()
         button_start.setOnClickListener {
-            (activity as MainActivity).openFragment(R.id.content, DoTestFragment(1*60), false)
+            var examLevel: ExamLevel = ExamLevel.EASY
+            if (radio_medium.isChecked) examLevel = ExamLevel.MEDIUM
+            if (radio_hard.isChecked) examLevel = ExamLevel.HARD
+            (activity as MainActivity).openFragment(
+                DoTestFragment(part, examLevel),
+                false
+            )
         }
     }
 
     private fun setTextContent() {
-        val partID = arguments?.getInt(HomeTestFragment.PART_ID)
-        if (partID == 8) {
-            text_part.text = getString(R.string.test_full)
-        } else {
-            text_part.text =
-                getString(R.string.part).plus(" ").plus(partID)
+        text_correct_answer.text =
+            getString(R.string.part).plus(" ").plus(part)
+        if (part == 8) {
+            text_correct_answer.text = getString(R.string.test_full)
         }
         text_time.text =
-            getString(R.string.time).plus(" ").plus(arguments?.getString(HomeTestFragment.TIME))
+            getString(R.string.time).plus(DateUtils.secondsToStringTime(Constant.TIMES_PART[part]))
     }
 
     private fun configNavigationIcon() {
