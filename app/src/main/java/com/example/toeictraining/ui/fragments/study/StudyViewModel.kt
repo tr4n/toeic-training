@@ -9,7 +9,7 @@ import com.example.toeictraining.base.entity.Word
 import com.example.toeictraining.data.repository.TopicRepository
 import com.example.toeictraining.data.repository.WordRepository
 import com.example.toeictraining.di.ScopeNames
-import com.example.toeictraining.utils.DateUtils
+import com.example.toeictraining.utils.DateUtil
 import com.example.toeictraining.utils.WordHelper
 import com.example.toeictraining.utils.getPriorityWord
 import com.example.toeictraining.utils.getProgressProperties
@@ -56,7 +56,7 @@ class StudyViewModel(
 
         val progressProperties = words.getProgressProperties()
         mainTopic.apply {
-            lastTime = DateUtils.getCurrentTime()
+            lastTime = DateUtil.getCurrentTime()
             total = progressProperties.first
             master = progressProperties.second
             newWord = progressProperties.third

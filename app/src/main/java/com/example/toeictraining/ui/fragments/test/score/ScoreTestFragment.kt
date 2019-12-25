@@ -2,6 +2,7 @@ package com.example.toeictraining.ui.fragments.test.score
 
 import android.app.Application
 import android.os.Bundle
+import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +20,7 @@ import com.example.toeictraining.ui.fragments.test.home.HomeTestFragment
 import com.example.toeictraining.ui.fragments.test.result.ResultTestFragment
 import com.example.toeictraining.ui.fragments.test.start_test.StartTestFragment
 import com.example.toeictraining.ui.main.MainActivity
-import com.example.toeictraining.utils.DateUtils
+import com.example.toeictraining.utils.DateUtil
 import kotlinx.android.synthetic.main.score_test_fragment.*
 import kotlin.math.roundToInt
 
@@ -55,10 +56,9 @@ class ScoreTestFragment(
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(ScoreTestViewModel::class.java)
-        initViews()
         handleObservable()
         text_result.text =
-            getString(R.string.test_time_total).plus(DateUtils.secondsToStringTime(totalTime))
+            getString(R.string.test_time_total).plus(DateUtil.secondsToStringTime(totalTime))
         var listenScore = 0
         var readScore = 0
 

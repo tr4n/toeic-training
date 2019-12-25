@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.dialog_do_test.*
 import kotlinx.android.synthetic.main.navigation_view_menu.*
 import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.android.synthetic.main.toolbar.view.*
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity(), View.OnClickListener {
 
@@ -30,6 +31,8 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
     private var loadingDialog: Dialog? = null
+
+    private val mainViewModel: MainViewModel by viewModel()
 
     override fun initComponent() {
         setToolbar()
@@ -43,7 +46,9 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         val TAG: String = MainActivity::class.java.name
     }
 
-    override fun initData() {}
+    override fun initData() {
+        mainViewModel.onCreate()
+    }
 
     private fun setToolbar() {
         setSupportActionBar(toolbar)
