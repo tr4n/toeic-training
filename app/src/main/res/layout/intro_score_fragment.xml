@@ -2,43 +2,51 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frgmtIntroScore"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragments.intro.IntroScoreFragment" >
+    android:background="@drawable/intro_background"
+    tools:context=".ui.fragments.intro.IntroScoreFragment">
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/lblAimedScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="296dp"
+        android:layout_marginTop="200dp"
         android:text="@string/text_desired_score"
+        android:textAllCaps="true"
+        android:textColor="#F7EFEF"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/colorOffice"
+        android:id="@+id/btnScoreNext"
+        android:layout_width="147dp"
+        android:layout_height="52dp"
+        android:layout_marginBottom="93dp"
+        android:backgroundTint="#F7DDCC"
         android:text="@string/button_next"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner2"
-        app:layout_constraintVertical_bias="0.581" />
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Spinner
-        android:id="@+id/spinner2"
-        android:layout_width="@dimen/space_150"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:spinnerMode="dropdown"
+        android:id="@+id/spnIntensity"
+        android:layout_width="254dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="44dp"
+        android:background="@drawable/textview_background"
+        android:dropDownWidth="50dp"
+        android:gravity="center"
+        android:spinnerMode="dialog"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/lblAimedScore" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
