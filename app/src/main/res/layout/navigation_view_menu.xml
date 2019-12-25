@@ -92,4 +92,27 @@
         android:layout_height="wrap_content"
         android:drawableStart="@drawable/ic_reminder"
         android:text="@string/title_remind" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_1"
+        android:layout_marginTop="@dimen/space_8"
+        android:background="@color/colorGray" />
+
+    <TextView
+        android:id="@+id/textTitleSetting"
+        style="@style/TextAppearance.AppCompat.DrawerNavigationTab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/title_settings"
+        android:textColor="@color/colorStrongGray"
+        android:textSize="@dimen/text_14" />
+
+    <TextView
+        android:id="@+id/textSetting"
+        style="@style/TextAppearance.AppCompat.DrawerNavigationTab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_settings"
+        android:text="@string/title_settings" />
 </LinearLayout>

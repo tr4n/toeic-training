@@ -122,5 +122,6 @@
     <string name="title_daily_works">Công việc hôm nay</string>
     <string name="title_recently_result">Kết quả thi thử gần nhất</string>
     <string name="title_part_1">Part 1</string>
-
+    <string name="title_settings">Cài đặt</string>
+    <string name="title_part">Part %d</string>
 </resources>

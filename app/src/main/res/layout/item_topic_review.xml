@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:checkMark="?android:attr/listChoiceIndicatorMultiple"
     android:orientation="vertical"
+    android:visibility="visible"
     android:paddingStart="@dimen/space_10"
     android:paddingTop="@dimen/space_5"
     android:paddingEnd="@dimen/space_10"
