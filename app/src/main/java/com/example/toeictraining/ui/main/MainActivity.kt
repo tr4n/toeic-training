@@ -22,7 +22,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     private lateinit var drawerToggle: ActionBarDrawerToggle
 
     override fun initComponent() {
-        setToolbar()
+        //setToolbar()
         //setNavigationView()
         setRightButtonText("")
 

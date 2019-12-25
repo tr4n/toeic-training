@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.example.toeictraining.R
+import com.example.toeictraining.ui.main.MainActivity
 import com.example.toeictraining.utils.DateUtils
 import kotlinx.android.synthetic.main.intro_date_fragment.*
 import java.text.SimpleDateFormat
@@ -30,14 +31,9 @@ class IntroDateFragment : Fragment(){
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(IntroDateViewModel::class.java)
 
-        //initViews()
         pickDate()
+        nextButtonTapped()
     }
-
-    private fun initViews() {
-
-    }
-
 
     private fun pickDate() {
         val calendar = Calendar.getInstance()
@@ -57,6 +53,13 @@ class IntroDateFragment : Fragment(){
                 currentYear
             )
             dlg.show()
+        }
+    }
+
+    private fun nextButtonTapped() {
+        btnDateNext.setOnClickListener{
+            val fragment = IntroScoreFragment()
+            (activity as MainActivity).openFragment(R.id.content, fragment, true)
         }
     }
 }

@@ -3,7 +3,7 @@
     <color name="colorPrimary">#966474</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="colorBusiness">#966474</color>
+    <color name="colorBusiness">#090909</color>
     <color name="colorOffice">#A77275</color>
     <color name="colorPersonal">#B3877F</color>
     <color name="colorPurchasing">#CD9973</color>
@@ -13,7 +13,7 @@
     <color name="colorTravel">#82A395</color>
     <color name="colorEntertainment">#82A395</color>
     <color name="colorHealth">#7D6A93</color>
-    <color name="colorBlurWhite">#a2ffffff</color>
+    <color name="colorBlurWhite">#A5FFFFFF</color>
     <color name="colorProgressBarNew">#05966474</color>
     <color name="colorProgressBarReview">#5e966474</color>
     <color name="colorProgressBarMaster">#966474</color>

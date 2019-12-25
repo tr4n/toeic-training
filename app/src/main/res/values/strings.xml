@@ -10,6 +10,24 @@
     <string name="button_ok">OK</string>
     <string name="button_change_date">Change Date</string>
 
+    <!--    Score Choices-->
+    <string-array name="Scores">
+        <item>400</item>
+        <item>500</item>
+        <item>600</item>
+        <item>600</item>
+        <item>700</item>
+        <item>800</item>
+        <item>900</item>
+    </string-array>
+
+    <!--    Intensity Choices-->
+    <string-array name="Intensity">
+        <item>1 phần đề/1 ngày</item>
+        <item>1 đề / 1 ngày</item>
+        <item>2 đề / 1 ngày</item>
+    </string-array>
+
     <!--    Test-Fix-->
     <string name="test_fixed_date">26/12/2019</string>
 
@@ -80,4 +98,5 @@
     <string name="msg_save_setting">The setting has been saved</string>
     <string name="content_title_daily_reminder_notification">Time to study</string>
     <string name="content_text_daily_reminder_notification">Tap to start</string>
+
 </resources>
