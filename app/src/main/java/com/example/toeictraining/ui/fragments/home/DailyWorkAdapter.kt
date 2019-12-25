@@ -1,5 +1,6 @@
 package com.example.toeictraining.ui.fragments.home
 
+import android.text.Html
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -13,24 +14,31 @@ class DailyWorkAdapter(
     callback: DailyWorkDiffUtilCallback
 ) : BaseRecyclerAdapter<DailyWork, DailyWorkAdapter.DailyWorkViewHolder>(callback) {
 
+    var onItemClick: (DailyWork) -> Unit = {}
+
     override fun getItemLayoutResource(viewType: Int): Int = R.layout.item_topic_review
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DailyWorkViewHolder =
-        DailyWorkViewHolder(getItemView(parent, viewType))
+        DailyWorkViewHolder(getItemView(parent, viewType), onItemClick)
 
     override fun onBindViewHolder(holder: DailyWorkViewHolder, position: Int) {
         holder.onBindData(position, getItem(position))
     }
 
-    class DailyWorkViewHolder(itemView: View) : BaseViewHolder<DailyWork>(itemView) {
+    class DailyWorkViewHolder(
+        itemView: View,
+        private val onItemClick: (DailyWork) -> Unit
+    ) : BaseViewHolder<DailyWork>(itemView) {
 
         override fun onBindData(itemPosition: Int, itemData: DailyWork) {
             super.onBindData(itemPosition, itemData)
             itemView.checkedTextTopicReview.apply {
-                text = itemData.content
+                text = Html.fromHtml(itemData.content)
                 isChecked = itemData.isDone == true
             }
         }
+
+        override fun onItemClickListener(itemData: DailyWork) = onItemClick(itemData)
     }
 
     class DailyWorkDiffUtilCallback : DiffUtil.ItemCallback<DailyWork>() {

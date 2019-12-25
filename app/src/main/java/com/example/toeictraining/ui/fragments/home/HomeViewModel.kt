@@ -1,6 +1,7 @@
 package com.example.toeictraining.ui.fragments.home
 
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -44,16 +45,22 @@ class HomeViewModel(
         val partIds = partsData.split(Constants.ARRAY_SEPARATOR).map { it.toInt() }
         val topicIds = topicsData.split(Constants.ARRAY_SEPARATOR).map { it.toInt() }
 
+        Log.d("HomeViewModel", "homeViewModel: $partIds  $topicIds")
         _dailyWorks.value = mutableListOf<DailyWork>().apply {
             addAll(partIds.map {
-                DailyWork(content = "Làm bài thi thử Part $it", isDone = false)
+                DailyWork(
+                    content = "<![CDATA[Làm bài thi thử <i> Part $it </i>]]>",
+                    isDone = false,
+                    type = DailyWork.TEST_WORK
+                )
             })
             addAll(topicIds.map {
                 DailyWork(
-                    content = "Học từ vựng topic ${topics[it].name}",
+                    content = "<![CDATA[Học từ vựng topic <i> ${topics[it].name}</i>]]>",
                     isDone = topics[it].lastTime?.let { time ->
                         DateUtil.isToday(time)
-                    } ?: false
+                    } ?: false,
+                    type = DailyWork.VOCABULARY_WORK
                 )
             })
         }

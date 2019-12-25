@@ -7,7 +7,9 @@ import androidx.lifecycle.Observer
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseFragment
 import com.example.toeictraining.data.model.DailyWork
+import com.example.toeictraining.ui.fragments.test.home.HomeTestFragment
 import com.example.toeictraining.ui.fragments.test.start_test.StartTestFragment
+import com.example.toeictraining.ui.fragments.vocabulary.VocabularyFragment
 import com.example.toeictraining.utils.DateUtil
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -26,7 +28,13 @@ class HomeFragment private constructor() : BaseFragment<HomeViewModel>() {
         RecentResultAdapter(RecentResultAdapter.RecentResultDiffUtilCallback())
 
     override fun initComponents() {
-        recyclerDailyWorks.adapter = dailyWorkAdapter
+        recyclerDailyWorks.adapter = dailyWorkAdapter.apply {
+            onItemClick = {
+                val fragment =
+                    if (it.isTest()) HomeTestFragment() else VocabularyFragment.newInstance()
+                replaceFragment(fragment = fragment, addToBackStack = false)
+            }
+        }
         recyclerRecentResults.adapter = recentResultAdapter.apply {
             onItemClick = {
                 addFragment(fragment = StartTestFragment(it), addToBackStack = false)
