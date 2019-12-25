@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.example.toeictraining.R
@@ -35,6 +36,16 @@ class IntroDateFragment : Fragment(){
         nextButtonTapped()
     }
 
+    override fun onResume() {
+        super.onResume()
+        (activity as AppCompatActivity).supportActionBar?.hide()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (activity as AppCompatActivity).supportActionBar?.show()
+    }
+
     private fun pickDate() {
         val calendar = Calendar.getInstance()
         val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
@@ -45,7 +56,7 @@ class IntroDateFragment : Fragment(){
             val dlg = DatePickerDialog(
                 context!!,
                 DatePickerDialog.OnDateSetListener { _, dayOfMonth, month, year ->
-                    val formatter = SimpleDateFormat(DateUtils.DATE_FORMAT)
+                    val formatter = SimpleDateFormat(DateUtils.DATE_FORMAT, Locale.getDefault())
                     textDate.text = formatter.format(Date(dayOfMonth, month, year))
                 },
                 currentDay,
