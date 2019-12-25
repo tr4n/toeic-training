@@ -115,4 +115,12 @@
     <string name="learn_more">Học Thêm</string>
     <string name="weak">Yếu</string>
     <string name="result_detail">Chi tiết kết quả</string>
+    <string name="title_today">Hôm nay : %s</string>
+    <string name="msg_days_left_after">ngày để bạn ôn luyện</string>
+    <string name="title_count_down">Đếm ngược trước ngày thi</string>
+    <string name="msg_days_left_before">Còn</string>
+    <string name="title_daily_works">Công việc hôm nay</string>
+    <string name="title_recently_result">Kết quả thi thử gần nhất</string>
+    <string name="title_part_1">Part 1</string>
+
 </resources>

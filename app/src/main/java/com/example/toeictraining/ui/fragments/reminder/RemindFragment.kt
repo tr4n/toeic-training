@@ -15,7 +15,7 @@ import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseFragment
 import com.example.toeictraining.base.entity.Topic
 import com.example.toeictraining.utils.Constants
-import com.example.toeictraining.utils.DateUtils
+import com.example.toeictraining.utils.DateUtil
 import com.example.toeictraining.works.RemindWorker
 import kotlinx.android.synthetic.main.fragment_reminder.*
 import org.koin.android.ext.android.get
@@ -129,7 +129,7 @@ class RemindFragment private constructor() : BaseFragment<RemindViewModel>(),
 
         val saveRequest = PeriodicWorkRequestBuilder<RemindWorker>(1, TimeUnit.DAYS)
             .addTag(Constants.TAG_DAILY_REMINDER)
-            .setInitialDelay(DateUtils.getDelayMinutes(time), TimeUnit.MINUTES)
+            .setInitialDelay(DateUtil.getDelayMinutes(time), TimeUnit.MINUTES)
             .setConstraints(constraints)
             .build()
 
@@ -153,7 +153,7 @@ class RemindFragment private constructor() : BaseFragment<RemindViewModel>(),
         TimePickerDialog(
             context,
             TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                textPickerTime.text = String.format(DateUtils.TIME_FORMAT, hourOfDay, minute).also {
+                textPickerTime.text = String.format(DateUtil.TIME_FORMAT, hourOfDay, minute).also {
                     viewModel.saveRemindTime(it)
                     enableDailyReminder(it)
                 }

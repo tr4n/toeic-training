@@ -31,7 +31,7 @@ import com.example.toeictraining.base.enums.ExamLevel
 import com.example.toeictraining.ui.fragments.test.Constant
 import com.example.toeictraining.ui.fragments.test.score.ScoreTestFragment
 import com.example.toeictraining.ui.main.MainActivity
-import com.example.toeictraining.utils.DateUtils
+import com.example.toeictraining.utils.DateUtil
 import kotlinx.android.synthetic.main.dialog_do_test.*
 import kotlinx.android.synthetic.main.do_test_fragment.*
 import kotlinx.android.synthetic.main.toolbar.*
@@ -72,7 +72,7 @@ class DoTestFragment(
             override fun onTick(millisUntilFinished: Long) {
                 totalTime = (millisUntilFinished / 1000.0).roundToInt()
                 (activity as MainActivity).setTitle(
-                    DateUtils.secondsToStringTime(
+                    DateUtil.secondsToStringTime(
                         (millisUntilFinished / 1000.0).roundToInt()
                     )
                 )

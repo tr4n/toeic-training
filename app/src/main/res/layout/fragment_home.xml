@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragments.home.HomeFragment">
 
-
     <com.example.toeictraining.widget.flipdigit.Flipmeter
         android:id="@+id/flipmeter"
         android:layout_width="wrap_content"
@@ -21,33 +20,11 @@
         android:id="@+id/line"
         android:layout_width="@dimen/space_300"
         android:layout_height="@dimen/space_1"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/space_8"
         android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/flipmeter"
-        tools:text="@string/title_remind_days_left" />
-
-    <TextView
-        android:id="@+id/textMsgDaysLeft"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar"
-        tools:text="@string/msg_remind_days_left" />
-
-    <TextView
-        android:id="@+id/textMsgRemindDeadline"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textMsgDaysLeft"
-        tools:text="@string/msg_remind_deadline" />
+        app:layout_constraintTop_toBottomOf="@+id/flipmeter" />
 
     <com.example.toeictraining.widget.seekbar.Slidr
         android:id="@+id/seekBar"
@@ -88,20 +65,20 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
-        android:text="Đếm ngược trước ngày thi"
+        android:layout_marginTop="16dp"
+        android:text="@string/title_count_down"
         android:textAllCaps="true"
         android:textColor="@color/colorAccent"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/line"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textToday" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="ngày để bạn ôn luyện"
+        android:text="@string/msg_days_left_after"
         android:textAllCaps="true"
         android:textColor="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="@+id/flipmeter"
@@ -112,13 +89,102 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Còn"
-        android:textColor="@color/colorAccent"
+        android:text="@string/msg_days_left_before"
         android:textAllCaps="true"
-
+        android:textColor="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="@+id/flipmeter"
         app:layout_constraintStart_toStartOf="@+id/textView"
         app:layout_constraintTop_toTopOf="@+id/flipmeter" />
+
+    <TextView
+        android:id="@+id/textToday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:textAllCaps="true"
+        android:textColor="@color/colorAccent"
+        app:layout_constraintStart_toStartOf="@+id/line"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Hôm nay : 24/02/2019" />
+
+    <View
+        android:id="@+id/line2"
+        android:layout_width="@dimen/space_300"
+        android:layout_height="@dimen/space_1"
+        android:layout_marginTop="@dimen/space_8"
+        android:background="@color/colorPrimary"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seekBar" />
+
+    <TextView
+        android:id="@+id/title_daily_mission"
+        style="@style/TextAppearance.AppCompat.SearchResult.Subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/title_daily_works"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/line2" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerDailyWorks"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_daily_mission"
+        tools:itemCount="3"
+        tools:listitem="@layout/item_topic_review" />
+
+    <View
+        android:id="@+id/line3"
+        android:layout_width="@dimen/space_300"
+        android:layout_height="@dimen/space_1"
+        android:layout_marginTop="@dimen/space_8"
+        android:background="@color/colorPrimary"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerDailyWorks" />
+
+    <TextView
+        android:id="@+id/textView6"
+        style="@style/TextAppearance.AppCompat.SearchResult.Subtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_16"
+        android:layout_marginTop="@dimen/space_24"
+        android:layout_marginEnd="16dp"
+        android:text="@string/title_recently_result"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/line3" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:nestedScrollingEnabled="false"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView6"
+        tools:itemCount="7"
+        tools:listitem="@layout/item_analysis_result_part" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,7 @@
 package com.example.toeictraining.ui.fragments.test.history
 
 import android.app.Activity
+import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,7 @@ import com.example.toeictraining.R
 import com.example.toeictraining.base.entity.Exam
 import com.example.toeictraining.ui.fragments.test.result.ResultTestFragment
 import com.example.toeictraining.ui.main.MainActivity
-import com.example.toeictraining.utils.DateUtils
+import com.example.toeictraining.utils.DateUtil
 import kotlinx.android.synthetic.main.item_history.view.*
 
 class HistoryAdapter(
@@ -41,7 +42,7 @@ class HistoryAdapter(
         holder.textPart.text = activity.getString(R.string.part).plus(exam.part)
         holder.textTotalTime.text =
             activity.getString(R.string.test_time_total)
-                .plus(DateUtils.secondsToStringTime(exam.time))
+                .plus(DateUtil.secondsToStringTime(exam.time))
         holder.textTotalScore.text =
             activity.getString(R.string.total_score).plus(": ").plus(exam.score)
         holder.itemView.setOnClickListener {

@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-object DateUtils {
+object DateUtil {
 
     private const val DATE_FORMAT = "dd/MM/yyyy"
     private const val HOUR_MINUTE_FORMAT = "mm:ss"

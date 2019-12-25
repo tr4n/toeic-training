@@ -12,7 +12,7 @@ import com.example.toeictraining.ui.fragments.test.Constant
 import com.example.toeictraining.ui.fragments.test.do_test.DoTestFragment
 import com.example.toeictraining.ui.fragments.test.history.HistoryTestFragment
 import com.example.toeictraining.ui.main.MainActivity
-import com.example.toeictraining.utils.DateUtils
+import com.example.toeictraining.utils.DateUtil
 import kotlinx.android.synthetic.main.start_test_fragment.*
 
 class StartTestFragment(
@@ -69,7 +69,7 @@ class StartTestFragment(
             text_correct_answer.text = getString(R.string.test_full)
         }
         text_time.text =
-            getString(R.string.time).plus(DateUtils.secondsToStringTime(Constant.TIMES_PART[part]))
+            getString(R.string.time).plus(DateUtil.secondsToStringTime(Constant.TIMES_PART[part]))
     }
 
     private fun configNavigationIcon() {
