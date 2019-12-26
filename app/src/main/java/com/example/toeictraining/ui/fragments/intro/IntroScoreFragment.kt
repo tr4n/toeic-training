@@ -33,6 +33,7 @@ class IntroScoreFragment : Fragment() {
 
         spinnerSelect()
         nextButtonTapped()
+        backButtonTapped()
     }
 
     override fun onResume() {
@@ -62,7 +63,15 @@ class IntroScoreFragment : Fragment() {
     private fun nextButtonTapped() {
         btnScoreNext.setOnClickListener{
             val fragment = IntroIntensityFragment()
-            (activity as MainActivity).openFragment(R.id.content, fragment, true)
+            (activity as MainActivity).goNext(fragment)
         }
     }
+
+    private fun backButtonTapped() {
+        btnScoreBack.setOnClickListener{
+            val fragment = IntroDateFragment()
+            (activity as MainActivity).goBack(fragment)
+        }
+    }
+
 }

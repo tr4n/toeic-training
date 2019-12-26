@@ -5,6 +5,9 @@ import android.content.Intent
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseActivity
 import com.example.toeictraining.ui.fragments.intro.IntroDateFragment
@@ -111,6 +114,28 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     private fun openReminderScreen() {
         openFragment(R.id.content, RemindFragment(), true)
         drawer_layout.closeDrawer(GravityCompat.START)
+    }
+
+    fun goNext(fragment: Fragment) {
+        val fm: FragmentManager = getSupportFragmentManager()
+        val ft: FragmentTransaction = fm.beginTransaction()
+        ft.setCustomAnimations(
+            R.animator.slide_in_right, R.animator.slide_out_left
+        )
+        ft.replace(R.id.content, fragment, fragment.javaClass.simpleName)
+        ft.addToBackStack(null)
+        ft.commit()
+    }
+
+    fun goBack(fragment: Fragment) {
+        val fm: FragmentManager = getSupportFragmentManager()
+        val ft: FragmentTransaction = fm.beginTransaction()
+        ft.setCustomAnimations(
+            R.animator.slide_out_right, R.animator.slide_in_left
+        )
+        ft.replace(R.id.content, fragment, fragment.javaClass.simpleName)
+        ft.addToBackStack(null)
+        ft.commit()
     }
 
     companion object {

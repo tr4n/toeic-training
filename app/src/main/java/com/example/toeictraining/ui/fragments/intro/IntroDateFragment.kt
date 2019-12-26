@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProviders
 import com.example.toeictraining.R
 import com.example.toeictraining.ui.main.MainActivity
@@ -56,13 +58,15 @@ class IntroDateFragment : Fragment(){
             val dlg = DatePickerDialog(
                 context!!,
                 DatePickerDialog.OnDateSetListener { _, dayOfMonth, month, year ->
-                    val formatter = SimpleDateFormat(DateUtils.DATE_FORMAT, Locale.getDefault())
-                    textDate.text = formatter.format(Date(dayOfMonth, month, year))
+                    //val formatter = SimpleDateFormat(DateUtils.DATE_FORMAT, Locale.getDefault())
+                    //textDate.text = formatter.format(Date(dayOfMonth, month, year))
+                    textDate.setText(dayOfMonth.toString() + "/" + (month+1).toString() + "/" + year.toString())
                 },
                 currentDay,
                 currentMonth,
                 currentYear
             )
+            dlg.updateDate(currentYear, currentMonth, currentDay)
             dlg.show()
         }
     }
@@ -70,7 +74,8 @@ class IntroDateFragment : Fragment(){
     private fun nextButtonTapped() {
         btnDateNext.setOnClickListener{
             val fragment = IntroScoreFragment()
-            (activity as MainActivity).openFragment(R.id.content, fragment, true)
+            (activity as MainActivity).goNext(fragment)
         }
     }
+
 }
