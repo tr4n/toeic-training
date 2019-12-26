@@ -56,7 +56,7 @@ class StudyViewModel(
 
         val progressProperties = words.getProgressProperties()
         mainTopic.apply {
-            lastTime = DateUtil.getCurrentTime()
+            lastTime = DateUtil.getCurrentDate()
             total = progressProperties.first
             master = progressProperties.second
             newWord = progressProperties.third

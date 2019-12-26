@@ -1,6 +1,7 @@
 package com.example.toeictraining.ui.fragments.reminder
 
 
+import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.view.View
 import android.widget.CompoundButton
@@ -16,8 +17,11 @@ import com.example.toeictraining.base.BaseFragment
 import com.example.toeictraining.base.entity.Topic
 import com.example.toeictraining.utils.Constants
 import com.example.toeictraining.utils.DateUtil
+import com.example.toeictraining.utils.PracticeMode
+import com.example.toeictraining.utils.showDatePickerDialog
 import com.example.toeictraining.works.RemindWorker
-import kotlinx.android.synthetic.main.fragment_reminder.*
+import com.jaredrummler.materialspinner.MaterialSpinner
+import kotlinx.android.synthetic.main.fragment_setting.*
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
@@ -28,14 +32,10 @@ import java.util.concurrent.TimeUnit
  */
 class RemindFragment private constructor() : BaseFragment<RemindViewModel>(),
     View.OnClickListener,
-    CompoundButton.OnCheckedChangeListener {
+    CompoundButton.OnCheckedChangeListener,
+    MaterialSpinner.OnItemSelectedListener<String> {
 
-    companion object {
-        val TAG: String = RemindFragment::class.java.name
-        fun newInstance() = RemindFragment()
-    }
-
-    override val layoutResource: Int get() = R.layout.fragment_reminder
+    override val layoutResource: Int get() = R.layout.fragment_setting
     override val viewModel: RemindViewModel by viewModel()
 
     private val remindTopicAdapter: RemindTopicAdapter = get()
@@ -53,15 +53,40 @@ class RemindFragment private constructor() : BaseFragment<RemindViewModel>(),
                 viewModel.updateTopicReviews(topic)
             }
         }
+
+        context?.run {
+            spinnerPracticeMode?.setItems(
+                getString(R.string.title_practice_low),
+                getString(R.string.title_practice_normal),
+                getString(R.string.title_practice_high)
+            )
+        }
+
+        registerEvents()
+    }
+
+    private fun registerEvents() {
         switchReminder.setOnCheckedChangeListener(this)
         switchReviewWords.setOnCheckedChangeListener(this)
-        imageBackRemind.setOnClickListener(this)
+        imageBackSetting.setOnClickListener(this)
         imageSaveReminder.setOnClickListener(this)
-        textPickerTime.setOnClickListener(this)
+        textDoWorkExam.setOnClickListener(this)
+        textDoWorkVocabulary.setOnClickListener(this)
+        textDoWorkVocabularyTime.setOnClickListener(this)
+        textDoWorkExamTime.setOnClickListener(this)
+        textSettingStartDay.setOnClickListener(this)
+        textOfficialDeadline.setOnClickListener(this)
+        spinnerPracticeMode.setOnItemSelectedListener(this)
+        textSettingStartDay.setOnClickListener(this)
     }
 
     override fun observeData() = with(viewModel) {
         super.observeData()
+
+        startPracticeDay.observe(viewLifecycleOwner, Observer(::showStartDay))
+        endPracticeDay.observe(viewLifecycleOwner, Observer(::showEndDay))
+        practiceMode.observe(viewLifecycleOwner, Observer(::showPracticeMode))
+
         remindTime.observe(viewLifecycleOwner, Observer(::onObserverRemindTime))
         topics.observe(viewLifecycleOwner, Observer(::onObserverReviewTopics))
         reviewMode.observe(viewLifecycleOwner, Observer(::onObserverReviewMode))
@@ -72,12 +97,24 @@ class RemindFragment private constructor() : BaseFragment<RemindViewModel>(),
         })
     }
 
+    private fun showStartDay(time: String) {
+        textSettingStartDay?.text = time
+    }
+
+    private fun showEndDay(time: String) {
+        textOfficialDeadline?.text = time
+    }
+
+    private fun showPracticeMode(practiceMode: Int) {
+        context?.run {
+            spinnerPracticeMode.selectedIndex = practiceMode - 1
+        }
+    }
+
     private fun onObserverRemindTime(time: String?) {
         time?.let {
-            textPickerTime?.run {
-                text = time
-                isVisible = true
-            }
+            groupConstraintDailyReminder?.isVisible = true
+            textDoWorkExamTime?.text = time
             switchReminder.isChecked = true
         }
     }
@@ -91,10 +128,28 @@ class RemindFragment private constructor() : BaseFragment<RemindViewModel>(),
 
     override fun onClick(v: View?) {
         when (v?.id) {
+
+            R.id.textSettingStartDay -> context?.showDatePickerDialog(DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                viewModel.saveStartDay(DateUtil.getDate(dayOfMonth, month, year))
+            })
+            R.id.textOfficialDeadline -> context?.showDatePickerDialog(DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                viewModel.saveEndDay(DateUtil.getDate(dayOfMonth, month, year))
+            })
             R.id.imageSaveReminder -> toast(getString(R.string.msg_save_setting))
-            R.id.imageBackRemind -> activity?.onBackPressed()
-            R.id.textPickerTime -> showTimePickerDialog()
+            R.id.imageBackSetting -> activity?.onBackPressed()
+            R.id.textDoWorkExamTime -> showTimePickerDialog()
         }
+    }
+
+    override fun onItemSelected(view: MaterialSpinner?, position: Int, id: Long, item: String?) {
+        viewModel.savePracticeMode(
+            when (item) {
+                getString(R.string.title_practice_low) -> PracticeMode.LOW
+                getString(R.string.title_practice_normal) -> PracticeMode.NORMAL
+                getString(R.string.title_practice_high) -> PracticeMode.HIGH
+                else -> PracticeMode.EMPTY
+            }
+        )
     }
 
     override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
@@ -105,7 +160,7 @@ class RemindFragment private constructor() : BaseFragment<RemindViewModel>(),
     }
 
     private fun handleTimeRemindSwitch(buttonView: CompoundButton, isChecked: Boolean) {
-        textPickerTime?.isVisible = isChecked == true
+        groupConstraintDailyReminder?.isVisible = isChecked == true
         if (!buttonView.isShown) return
 
         if (isChecked && !isFirstTimeBindData) {
@@ -153,10 +208,11 @@ class RemindFragment private constructor() : BaseFragment<RemindViewModel>(),
         TimePickerDialog(
             context,
             TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                textPickerTime.text = String.format(DateUtil.TIME_FORMAT, hourOfDay, minute).also {
-                    viewModel.saveRemindTime(it)
-                    enableDailyReminder(it)
-                }
+                textDoWorkExamTime.text =
+                    String.format(DateUtil.TIME_FORMAT, hourOfDay, minute).also {
+                        viewModel.saveRemindTime(it)
+                        enableDailyReminder(it)
+                    }
             },
             currentHour, currentMinute, true
         ).show()
@@ -165,5 +221,10 @@ class RemindFragment private constructor() : BaseFragment<RemindViewModel>(),
     override fun onStop() {
         super.onStop()
         (activity as AppCompatActivity).supportActionBar?.show()
+    }
+
+    companion object {
+        val TAG: String = RemindFragment::class.java.name
+        fun newInstance() = RemindFragment()
     }
 }

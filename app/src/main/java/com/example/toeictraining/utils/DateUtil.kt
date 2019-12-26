@@ -1,5 +1,8 @@
 package com.example.toeictraining.utils
 
+import android.app.DatePickerDialog
+import android.content.Context
+import android.os.Build
 import android.text.format.DateUtils
 import android.util.Log
 import com.example.toeictraining.ui.fragments.test.score.ScoreTestFragment.Companion.TAG
@@ -14,8 +17,15 @@ object DateUtil {
     const val TIME_FORMAT = "%02d:%02d"
     val dateFormater = SimpleDateFormat(DATE_FORMAT, Locale.getDefault())
 
-    fun getCurrentTime(): String =
+    fun getCurrentDate(): String =
         SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).format(Date(System.currentTimeMillis()))
+
+    fun getDate(day: Int, month: Int, year: Int): String {
+        val calendar = Calendar.getInstance().apply {
+            set(year, month, day)
+        }
+        return dateFormater.format(calendar.time)
+    }
 
     fun secondsToStringTime(seconds: Int): String {
         var temp = seconds
@@ -83,4 +93,13 @@ object DateUtil {
     } ?: false
 }
 
+fun Context.showDatePickerDialog(callback: DatePickerDialog.OnDateSetListener) {
+    val calendar = Calendar.getInstance()
+    val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
+    val currentMonth = calendar.get(Calendar.MONTH)
+    val currentYear = calendar.get(Calendar.YEAR)
 
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        DatePickerDialog(this, callback, currentYear, currentMonth, currentDay).show()
+    }
+}

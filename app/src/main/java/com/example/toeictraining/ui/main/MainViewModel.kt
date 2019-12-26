@@ -29,7 +29,7 @@ class MainViewModel(private val sharedPreferences: SharedPreferences) : BaseView
 
     private fun initDailyWorks() {
         val practiceMode =
-            sharedPreferences.getInt(Constants.PREFERENCE_PRACTICE_MODE, PracticeMode.HIGH)
+            sharedPreferences.getInt(Constants.PREFERENCE_PRACTICE_MODE, PracticeMode.LOW)
         val dailyWorkParts = (1..7).toList().shuffled().take(practiceMode).joinToString()
         val dailyWorkTopics = (1..50).toList().shuffled().take(practiceMode).joinToString()
 
