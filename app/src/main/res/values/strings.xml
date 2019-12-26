@@ -30,9 +30,9 @@
 
     <!--    Intensity Choices-->
     <string-array name="Intensity">
-        <item>1 phần đề / 1 ngày</item>
-        <item>1 đề / 1 ngày</item>
-        <item>2 đề / 1 ngày</item>
+        <item>Thấp</item>
+        <item>Trung bình</item>
+        <item>Cao</item>
     </string-array>
 
     <!--    Test-Fix-->
