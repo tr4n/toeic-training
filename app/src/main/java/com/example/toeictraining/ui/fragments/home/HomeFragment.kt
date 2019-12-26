@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseFragment
-import com.example.toeictraining.data.model.DailyWork
 import com.example.toeictraining.ui.fragments.intro.IntroDateFragment
 import com.example.toeictraining.ui.fragments.test.home.HomeTestFragment
 import com.example.toeictraining.ui.fragments.test.start_test.StartTestFragment
@@ -45,8 +44,8 @@ class HomeFragment private constructor() : BaseFragment<HomeViewModel>() {
 
     override fun observeData() = with(viewModel) {
         super.observeData()
-        dailyWorks.observe(viewLifecycleOwner, Observer(::showDailyWorks))
-        recentResults.observe(viewLifecycleOwner, Observer(::showRecentResults))
+        dailyWorks.observe(viewLifecycleOwner, Observer(dailyWorkAdapter::submitList))
+        recentResults.observe(viewLifecycleOwner, Observer(recentResultAdapter::submitList))
         practiceTime.observe(viewLifecycleOwner, Observer {
             showDaysLeft(it.first, it.second)
         })
@@ -78,15 +77,6 @@ class HomeFragment private constructor() : BaseFragment<HomeViewModel>() {
             setTextMax(deadline)
             setRegionColorLeft(Color.parseColor(color))
         }
-    }
-
-
-    private fun showDailyWorks(dailyWorks: List<DailyWork>) {
-        dailyWorkAdapter.submitList(dailyWorks)
-    }
-
-    private fun showRecentResults(progresses: List<Int>) {
-        recentResultAdapter.submitList(progresses)
     }
 
     companion object {

@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseActivity
 import com.example.toeictraining.base.BaseFragment
+import com.example.toeictraining.utils.PracticeMode
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.intro_intensity_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -25,6 +27,8 @@ class IntroIntensityFragment : BaseFragment<IntroViewModel>(),
     override fun onResume() {
         super.onResume()
         (activity as AppCompatActivity).supportActionBar?.hide()
+        navigation_view?.visibility = View.GONE
+
     }
 
     override fun initComponents() {
@@ -52,6 +56,7 @@ class IntroIntensityFragment : BaseFragment<IntroViewModel>(),
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
         spnIntensity?.setSelection(0)
+        viewModel.savePracticeMode(PracticeMode.LOW)
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -62,5 +67,6 @@ class IntroIntensityFragment : BaseFragment<IntroViewModel>(),
     override fun onStop() {
         super.onStop()
         (activity as AppCompatActivity).supportActionBar?.show()
+        navigation_view?.visibility = View.VISIBLE
     }
 }

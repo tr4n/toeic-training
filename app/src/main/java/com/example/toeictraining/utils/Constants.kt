@@ -1,6 +1,7 @@
 package com.example.toeictraining.utils
 
 object Constants {
+    const val KEY_MESSAGE = "message"
     val partResultEvaluations = listOf("Yếu", "Trung bình", "Tốt", "Rất tốt")
 
     const val ARRAY_SEPARATOR = ", "
@@ -10,6 +11,8 @@ object Constants {
     const val ARGUMENT_TOPIC = "com.example.toeictraining.utils.ARGUMENT_TOPIC"
     const val MAX_WORD_LEVEL = 4
     const val PREFERENCE_TIME_REMINDER = "com.example.toeictraining.utils.PREFERENCE_TIME_REMINDER"
+    const val PREFERENCE_TEST_TIME_REMINDER = "com.example.toeictraining.utils.PREFERENCE_TEST_TIME_REMINDER"
+    const val PREFERENCE_VOCABULARY_TIME_REMINDER = "com.example.toeictraining.utils.PREFERENCE_VOCABULARY_TIME_REMINDER"
     const val PREFERENCE_TOPIC_REMINDER = "com.example.toeictraining.utils.PREFERENCE_TOPIC_REMINDER"
     const val TAG_DAILY_REMINDER = "com.example.toeictraining.utils.TAG_DAILY_REMINDER"
     const val PREFERENCE_PRACTICE_MODE = "com.example.toeictraining.utils.PREFERENCE_PRACTICE_MODE"

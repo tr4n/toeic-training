@@ -1,6 +1,7 @@
 package com.example.toeictraining.utils
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Build
 import android.text.format.DateUtils
@@ -11,7 +12,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 object DateUtil {
-
+    val DEFAULT_TIME = "09:00"
     const val DATE_FORMAT = "dd/MM/yyyy"
     private const val HOUR_MINUTE_FORMAT = "mm:ss"
     const val TIME_FORMAT = "%02d:%02d"
@@ -60,6 +61,7 @@ object DateUtil {
     }
 
     fun getDelayMinutes(time: String): Long {
+        if (time.isEmpty()) return getDelayMinutes(DEFAULT_TIME)
         val calendar = Calendar.getInstance()
         val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
         val currentMinute = calendar.get(Calendar.MINUTE)
@@ -102,4 +104,12 @@ fun Context.showDatePickerDialog(callback: DatePickerDialog.OnDateSetListener) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         DatePickerDialog(this, callback, currentYear, currentMonth, currentDay).show()
     }
+}
+
+fun Context.showTimePickerDialog(callback: TimePickerDialog.OnTimeSetListener) {
+    val calendar = Calendar.getInstance()
+    val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
+    val currentMinute = calendar.get(Calendar.MINUTE)
+
+    TimePickerDialog(this, callback, currentHour, currentMinute, true).show()
 }

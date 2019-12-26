@@ -10,21 +10,17 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.work.Constraints
+import androidx.work.Data
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseFragment
-import com.example.toeictraining.base.entity.Topic
-import com.example.toeictraining.utils.Constants
-import com.example.toeictraining.utils.DateUtil
-import com.example.toeictraining.utils.PracticeMode
-import com.example.toeictraining.utils.showDatePickerDialog
+import com.example.toeictraining.utils.*
 import com.example.toeictraining.works.RemindWorker
 import com.jaredrummler.materialspinner.MaterialSpinner
 import kotlinx.android.synthetic.main.fragment_setting.*
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -39,8 +35,6 @@ class RemindFragment private constructor() : BaseFragment<RemindViewModel>(),
     override val viewModel: RemindViewModel by viewModel()
 
     private val remindTopicAdapter: RemindTopicAdapter = get()
-
-    private var isFirstTimeBindData = true
 
     override fun onResume() {
         super.onResume()
@@ -61,48 +55,41 @@ class RemindFragment private constructor() : BaseFragment<RemindViewModel>(),
                 getString(R.string.title_practice_high)
             )
         }
-
+        nestedScrollView.scrollTo(0, 0)
         registerEvents()
     }
 
-    private fun registerEvents() {
-        switchReminder.setOnCheckedChangeListener(this)
-        switchReviewWords.setOnCheckedChangeListener(this)
-        imageBackSetting.setOnClickListener(this)
-        imageSaveReminder.setOnClickListener(this)
-        textDoWorkExam.setOnClickListener(this)
-        textDoWorkVocabulary.setOnClickListener(this)
-        textDoWorkVocabularyTime.setOnClickListener(this)
-        textDoWorkExamTime.setOnClickListener(this)
-        textSettingStartDay.setOnClickListener(this)
-        textOfficialDeadline.setOnClickListener(this)
-        spinnerPracticeMode.setOnItemSelectedListener(this)
-        textSettingStartDay.setOnClickListener(this)
+    override fun initData() {
+        super.initData()
+        switchReminder.isChecked = viewModel.isOnReviewMode()
     }
 
     override fun observeData() = with(viewModel) {
         super.observeData()
 
-        startPracticeDay.observe(viewLifecycleOwner, Observer(::showStartDay))
-        endPracticeDay.observe(viewLifecycleOwner, Observer(::showEndDay))
+        startPracticeDay.observe(viewLifecycleOwner, Observer(textSettingStartDay::setText))
+        endPracticeDay.observe(viewLifecycleOwner, Observer(textOfficialDeadline::setText))
         practiceMode.observe(viewLifecycleOwner, Observer(::showPracticeMode))
 
-        remindTime.observe(viewLifecycleOwner, Observer(::onObserverRemindTime))
-        topics.observe(viewLifecycleOwner, Observer(::onObserverReviewTopics))
+        topics.observe(viewLifecycleOwner, Observer(remindTopicAdapter::submitList))
         reviewMode.observe(viewLifecycleOwner, Observer(::onObserverReviewMode))
+        targetScore.observe(viewLifecycleOwner, Observer {
+            textTargetScore.text = it.toString()
+        })
         reviewTopic.observe(viewLifecycleOwner, Observer {
             context?.run {
                 toast(getString(R.string.msg_remind_topics) + " " + it)
             }
         })
-    }
 
-    private fun showStartDay(time: String) {
-        textSettingStartDay?.text = time
-    }
-
-    private fun showEndDay(time: String) {
-        textOfficialDeadline?.text = time
+        testRemindTime.observe(viewLifecycleOwner, Observer {
+            textDoWorkExamTime?.text = it
+            startRemindDaily()
+        })
+        vocabularyRemindTime.observe(viewLifecycleOwner, Observer {
+            textDoWorkVocabularyTime?.text = it
+            startRemindDaily()
+        })
     }
 
     private fun showPracticeMode(practiceMode: Int) {
@@ -111,20 +98,10 @@ class RemindFragment private constructor() : BaseFragment<RemindViewModel>(),
         }
     }
 
-    private fun onObserverRemindTime(time: String?) {
-        time?.let {
-            groupConstraintDailyReminder?.isVisible = true
-            textDoWorkExamTime?.text = time
-            switchReminder.isChecked = true
-        }
-    }
-
     private fun onObserverReviewMode(isEnable: Boolean) {
         recyclerReviews.isVisible = isEnable == true
         switchReviewWords.isChecked = isEnable == true
     }
-
-    private fun onObserverReviewTopics(topics: List<Topic>) = remindTopicAdapter.submitList(topics)
 
     override fun onClick(v: View?) {
         when (v?.id) {
@@ -137,7 +114,18 @@ class RemindFragment private constructor() : BaseFragment<RemindViewModel>(),
             })
             R.id.imageSaveReminder -> toast(getString(R.string.msg_save_setting))
             R.id.imageBackSetting -> activity?.onBackPressed()
-            R.id.textDoWorkExamTime -> showTimePickerDialog()
+            R.id.textDoWorkExamTime -> context?.showTimePickerDialog(TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                textDoWorkExamTime.text =
+                    String.format(DateUtil.TIME_FORMAT, hourOfDay, minute).also {
+                        viewModel.saveTestRemindTime(it)
+                    }
+            })
+            R.id.textDoWorkVocabularyTime -> context?.showTimePickerDialog(TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                textDoWorkVocabularyTime.text =
+                    String.format(DateUtil.TIME_FORMAT, hourOfDay, minute).also {
+                        viewModel.saveVocabularyRemindTime(it)
+                    }
+            })
         }
     }
 
@@ -160,16 +148,14 @@ class RemindFragment private constructor() : BaseFragment<RemindViewModel>(),
     }
 
     private fun handleTimeRemindSwitch(buttonView: CompoundButton, isChecked: Boolean) {
-        groupConstraintDailyReminder?.isVisible = isChecked == true
-        if (!buttonView.isShown) return
-
-        if (isChecked && !isFirstTimeBindData) {
-            showTimePickerDialog()
-            enableDailyReminder("00:00")
-        } else if (!isFirstTimeBindData) {
-            disableDailyReminder()
+        groupConstraintDailyReminder?.isVisible = isChecked
+        viewModel.saveEnableRemindMode(isChecked)
+        if (isChecked) {
+            viewModel.getRemindTime()
+        } else {
+            stopRemindDaily()
+            viewModel.clearRemindTime()
         }
-        isFirstTimeBindData = false
     }
 
     private fun handleReviewModeEnable(buttonView: CompoundButton, isChecked: Boolean) {
@@ -177,50 +163,64 @@ class RemindFragment private constructor() : BaseFragment<RemindViewModel>(),
         viewModel.saveEnableReviewMode(isChecked)
     }
 
-    private fun enableDailyReminder(time: String) {
-
-        disableDailyReminder()
+    private fun startRemindDaily() {
+        val testTime = viewModel.testRemindTime.value ?: DateUtil.DEFAULT_TIME
+        val vocabularyTime = viewModel.vocabularyRemindTime.value ?: DateUtil.DEFAULT_TIME
+        stopRemindDaily()
         val constraints = Constraints.Builder().setRequiresCharging(true).build()
 
-        val saveRequest = PeriodicWorkRequestBuilder<RemindWorker>(1, TimeUnit.DAYS)
+        val testRemindMessageData = Data.Builder()
+            .putString(Constants.KEY_MESSAGE, getString(R.string.msg_remind_do_test))
+            .build()
+        val vocabularyRemindMessageData = Data.Builder()
+            .putString(Constants.KEY_MESSAGE, getString(R.string.msg_remind_learn_vocabulary))
+            .build()
+
+        val testRequest = PeriodicWorkRequestBuilder<RemindWorker>(1, TimeUnit.DAYS)
             .addTag(Constants.TAG_DAILY_REMINDER)
-            .setInitialDelay(DateUtil.getDelayMinutes(time), TimeUnit.MINUTES)
+            .setInitialDelay(DateUtil.getDelayMinutes(testTime), TimeUnit.MINUTES)
+            .setInputData(testRemindMessageData)
+            .setConstraints(constraints)
+            .build()
+        val vocabularyRequest = PeriodicWorkRequestBuilder<RemindWorker>(1, TimeUnit.DAYS)
+            .addTag(Constants.TAG_DAILY_REMINDER)
+            .setInitialDelay(DateUtil.getDelayMinutes(vocabularyTime), TimeUnit.MINUTES)
+            .setInputData(vocabularyRemindMessageData)
             .setConstraints(constraints)
             .build()
 
         context?.let {
-            WorkManager.getInstance(it).enqueue(saveRequest)
+            WorkManager.getInstance(it).apply {
+                enqueue(testRequest)
+                enqueue(vocabularyRequest)
+            }
         }
     }
 
-    private fun disableDailyReminder() {
-        viewModel.removeRemindTime()
+    private fun stopRemindDaily() {
         context?.let {
             WorkManager.getInstance(it).cancelAllWorkByTag(Constants.TAG_DAILY_REMINDER)
         }
     }
 
-    private fun showTimePickerDialog() {
-        val calendar = Calendar.getInstance()
-        val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
-        val currentMinute = calendar.get(Calendar.MINUTE)
-
-        TimePickerDialog(
-            context,
-            TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                textDoWorkExamTime.text =
-                    String.format(DateUtil.TIME_FORMAT, hourOfDay, minute).also {
-                        viewModel.saveRemindTime(it)
-                        enableDailyReminder(it)
-                    }
-            },
-            currentHour, currentMinute, true
-        ).show()
-    }
-
     override fun onStop() {
         super.onStop()
         (activity as AppCompatActivity).supportActionBar?.show()
+    }
+
+    private fun registerEvents() {
+        switchReminder.setOnCheckedChangeListener(this)
+        switchReviewWords.setOnCheckedChangeListener(this)
+        imageBackSetting.setOnClickListener(this)
+        imageSaveReminder.setOnClickListener(this)
+        textDoWorkExam.setOnClickListener(this)
+        textDoWorkVocabulary.setOnClickListener(this)
+        textDoWorkVocabularyTime.setOnClickListener(this)
+        textDoWorkExamTime.setOnClickListener(this)
+        textSettingStartDay.setOnClickListener(this)
+        textOfficialDeadline.setOnClickListener(this)
+        spinnerPracticeMode.setOnItemSelectedListener(this)
+        textSettingStartDay.setOnClickListener(this)
     }
 
     companion object {
