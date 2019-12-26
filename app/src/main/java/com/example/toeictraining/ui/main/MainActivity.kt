@@ -149,6 +149,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun openMiniTest() {
+        toolbar?.toolbar_title?.text = getString(R.string.title_mini_test)
         openFragment(StartTestFragment(8), true)
         drawer_layout.closeDrawer(GravityCompat.START)
     }
@@ -160,9 +161,8 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun openTestScreen() {
-        openFragment(
-            HomeTestFragment(), true
-        )
+        toolbar?.toolbar_title?.text = getString(R.string.title_test_practice)
+        openFragment(HomeTestFragment(), true)
         drawer_layout.closeDrawer(GravityCompat.START)
     }
 
@@ -193,4 +193,5 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         if (loadingDialog == null) return
         loadingDialog?.cancel()
     }
+
 }

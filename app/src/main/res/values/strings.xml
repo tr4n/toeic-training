@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ToeicTraining</string>
+    <string name="app_name">Luyện thi TOEIC</string>
 
     <!--    Navigation view-->
     <string name="navigation_drawer_open">Open</string>
