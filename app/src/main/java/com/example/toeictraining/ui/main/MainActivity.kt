@@ -78,6 +78,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         }
 
         textHome.setOnClickListener(this)
+        textMiniTest.setOnClickListener(this)
         textTest.setOnClickListener(this)
         textVocabulary.setOnClickListener(this)
         textReminder.setOnClickListener(this)
@@ -140,15 +141,21 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.textHome -> openHomeScreen()
+            R.id.textMiniTest -> openMiniTest()
             R.id.textTest -> openTestScreen()
             R.id.textVocabulary -> openVocabularyScreen()
             R.id.textReminder -> openReminderScreen()
         }
     }
 
+    private fun openMiniTest() {
+        openFragment(StartTestFragment(8), true)
+        drawer_layout.closeDrawer(GravityCompat.START)
+    }
+
     private fun openHomeScreen() {
         toolbar?.toolbar_title?.text = getString(R.string.title_home)
-        openFragment(HomeFragment.newInstance(),  true)
+        openFragment(HomeFragment.newInstance(), true)
         drawer_layout.closeDrawer(GravityCompat.START)
     }
 
