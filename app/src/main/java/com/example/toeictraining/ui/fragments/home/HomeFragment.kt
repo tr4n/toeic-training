@@ -37,7 +37,7 @@ class HomeFragment private constructor() : BaseFragment<HomeViewModel>() {
         }
         recyclerRecentResults.adapter = recentResultAdapter.apply {
             onItemClick = {
-                addFragment(fragment = StartTestFragment(it), addToBackStack = false)
+                addFragment(fragment = StartTestFragment(part = it + 1), addToBackStack = false)
             }
         }
         showDaysLeft()

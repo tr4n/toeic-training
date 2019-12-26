@@ -47,7 +47,7 @@ class RecentResultAdapter(
             }
         }
 
-        override fun onItemClickListener(itemData: Int) = onItemClick(itemData)
+        override fun onItemClickListener(itemData: Int) = onItemClick(itemPosition)
     }
 
     class RecentResultDiffUtilCallback : DiffUtil.ItemCallback<Int>() {

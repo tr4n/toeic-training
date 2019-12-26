@@ -49,14 +49,14 @@ class HomeViewModel(
         _dailyWorks.value = mutableListOf<DailyWork>().apply {
             addAll(partIds.map {
                 DailyWork(
-                    content = "<![CDATA[Làm bài thi thử <i> Part $it </i>]]>",
+                    content = "Làm bài thi thử <i>Part $it</i>",
                     isDone = false,
                     type = DailyWork.TEST_WORK
                 )
             })
             addAll(topicIds.map {
                 DailyWork(
-                    content = "<![CDATA[Học từ vựng topic <i> ${topics[it].name}</i>]]>",
+                    content = "Học từ vựng topic <i>${topics[it].name}</i>",
                     isDone = topics[it].lastTime?.let { time ->
                         DateUtil.isToday(time)
                     } ?: false,
