@@ -34,7 +34,7 @@ class TopicAdapter(
             progressTopic.apply {
                 max = topic.total
                 progress = topic.master
-                secondaryProgress = topic.total - topic.master - topic.newWord
+                secondaryProgress = topic.total - topic.newWord
             }
 
             textNameTopic?.text = topic.name

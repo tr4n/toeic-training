@@ -31,7 +31,7 @@ class MainViewModel(private val sharedPreferences: SharedPreferences) : BaseView
         val practiceMode =
             sharedPreferences.getInt(Constants.PREFERENCE_PRACTICE_MODE, PracticeMode.LOW)
         val dailyWorkParts = (1..7).toList().shuffled().take(practiceMode).joinToString()
-        val dailyWorkTopics = (1..50).toList().shuffled().take(practiceMode).joinToString()
+        val dailyWorkTopics = (0..49).toList().shuffled().take(practiceMode).joinToString()
 
         sharedPreferences.edit().run {
             putString(Constants.PREFERENCE_DAILY_WORK_PART, dailyWorkParts)

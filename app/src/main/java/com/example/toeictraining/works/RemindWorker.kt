@@ -11,6 +11,7 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.toeictraining.R
 import com.example.toeictraining.ui.main.MainActivity
+import com.example.toeictraining.utils.Constants
 
 class RemindWorker(
     private val context: Context,
@@ -19,6 +20,11 @@ class RemindWorker(
 
     private val notificationManager: NotificationManager by lazy {
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    }
+
+    private val message: String by lazy {
+        inputData.getString(Constants.KEY_MESSAGE)
+            ?: context.getString(R.string.content_text_daily_reminder_notification)
     }
 
     override fun doWork(): Result {
@@ -44,7 +50,7 @@ class RemindWorker(
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.mipmap.ic_launcher_round)
             .setContentTitle(context.getString(R.string.content_title_daily_reminder_notification))
-            .setContentText(context.getString(R.string.content_text_daily_reminder_notification))
+            .setContentText(message)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .setChannelId(CHANNEL_ID)
