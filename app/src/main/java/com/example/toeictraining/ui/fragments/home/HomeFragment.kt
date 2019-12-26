@@ -7,7 +7,7 @@ import androidx.lifecycle.Observer
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseFragment
 import com.example.toeictraining.data.model.DailyWork
-import com.example.toeictraining.ui.fragments.reminder.RemindFragment
+import com.example.toeictraining.ui.fragments.intro.IntroDateFragment
 import com.example.toeictraining.ui.fragments.test.home.HomeTestFragment
 import com.example.toeictraining.ui.fragments.test.start_test.StartTestFragment
 import com.example.toeictraining.ui.fragments.vocabulary.VocabularyFragment
@@ -52,7 +52,8 @@ class HomeFragment private constructor() : BaseFragment<HomeViewModel>() {
         })
         requireSetting.observe(viewLifecycleOwner, Observer {
             if (it == true) {
-                replaceFragment(fragment = RemindFragment.newInstance(), addToBackStack = false)
+                makeSettingDone()
+                replaceFragment(fragment = IntroDateFragment.newInstance(), addToBackStack = true)
             }
         })
     }
@@ -66,8 +67,8 @@ class HomeFragment private constructor() : BaseFragment<HomeViewModel>() {
         flipmeter.setValue(daysLeft.toInt(), false)
         textToday.text = context?.getString(R.string.title_today, today)
         val color = when {
-            currentProgress <= 0.5f -> COLOR_GREEN
-            currentProgress <= 0.8f -> COLOR_YELLOW
+            currentProgress < 0.5f -> COLOR_GREEN
+            currentProgress < 0.8f -> COLOR_YELLOW
             else -> COLOR_RED
         }
         seekBar.apply {

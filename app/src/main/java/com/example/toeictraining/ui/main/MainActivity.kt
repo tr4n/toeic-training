@@ -10,9 +10,13 @@ import android.view.View
 import android.view.Window
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseActivity
 import com.example.toeictraining.ui.fragments.home.HomeFragment
+import com.example.toeictraining.ui.fragments.intro.IntroDateFragment
 import com.example.toeictraining.ui.fragments.reminder.RemindFragment
 import com.example.toeictraining.ui.fragments.test.do_test.DoTestFragment
 import com.example.toeictraining.ui.fragments.test.home.HomeTestFragment
@@ -39,11 +43,6 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         setNavigationView()
         setRightButtonText("")
         openFragment(HomeFragment.newInstance(), false)
-    }
-
-    companion object {
-        fun getIntent(context: Context): Intent = Intent(context, MainActivity::class.java)
-        val TAG: String = MainActivity::class.java.name
     }
 
     override fun initData() {
@@ -90,6 +89,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     }
 
     fun getDrawerToggle(): ActionBarDrawerToggle = drawerToggle
+
     override fun onBackPressed() {
         when (supportFragmentManager.findFragmentById(R.id.content)) {
             is DoTestFragment -> {
@@ -194,4 +194,8 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         loadingDialog?.cancel()
     }
 
+    companion object {
+        fun getIntent(context: Context): Intent = Intent(context, MainActivity::class.java)
+        val TAG: String = MainActivity::class.java.name
+    }
 }

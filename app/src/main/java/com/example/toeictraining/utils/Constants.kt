@@ -19,4 +19,5 @@ object Constants {
     const val PREFERENCE_DAILY_WORK_TOPIC = "com.example.toeictraining.utils.PERFERENCE_DAILY_WORK_TOPIC"
     const val PREFERENCE_START_DAY = "com.example.toeictraining.utils.PREFERENCE_START_DAY"
     const val PREFERENCE_END_DAY = "com.example.toeictraining.utils.PREFERENCE_END_DAY"
+    const val PREFERENCE_TARGET_SCORE = "com.example.toeictraining.utils.PREFERENCE_TARGET_SCORE"
 }
