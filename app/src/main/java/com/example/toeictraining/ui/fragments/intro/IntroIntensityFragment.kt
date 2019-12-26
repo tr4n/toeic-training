@@ -11,12 +11,15 @@ import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 
 import com.example.toeictraining.R
+import com.example.toeictraining.ui.fragments.test.home.HomeTestFragment
 import com.example.toeictraining.ui.main.MainActivity
+import kotlinx.android.synthetic.main.intro_intensity_fragment.*
 import kotlinx.android.synthetic.main.intro_score_fragment.*
 
-class IntroScoreFragment : Fragment() {
+class IntroIntensityFragment : Fragment() {
 
-    private lateinit var viewModel: IntroScoreViewModel
+
+    private lateinit var viewModel: IntroIntensityViewModel
 
     var spinner: Spinner? = null
 
@@ -24,15 +27,15 @@ class IntroScoreFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.intro_score_fragment, container, false)
+        return inflater.inflate(R.layout.intro_intensity_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(IntroScoreViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(IntroIntensityViewModel::class.java)
 
         spinnerSelect()
-        nextButtonTapped()
+        finishButtonTapped()
     }
 
     override fun onResume() {
@@ -45,24 +48,24 @@ class IntroScoreFragment : Fragment() {
         (activity as AppCompatActivity).supportActionBar?.show()
     }
 
-
     private fun spinnerSelect() {
-        val scores = resources.getStringArray(R.array.Scores)
-        spinner = spnScore
+        val intensity = resources.getStringArray(R.array.Intensity)
+        spinner = spnIntensity
         if (spinner != null) {
             val adapter = ArrayAdapter(
                 context!!,
-                R.layout.intensity_spinner_item, scores
+                R.layout.intensity_spinner_item, intensity
             )
             adapter.setDropDownViewResource(R.layout.intensity_spinner_dropdown_item)
             spinner!!.adapter = adapter
         }
     }
 
-    private fun nextButtonTapped() {
-        btnScoreNext.setOnClickListener{
-            val fragment = IntroIntensityFragment()
+    private fun finishButtonTapped() {
+        btnIntensityFinish.setOnClickListener{
+            val fragment = HomeTestFragment()
             (activity as MainActivity).openFragment(R.id.content, fragment, true)
         }
     }
+
 }
