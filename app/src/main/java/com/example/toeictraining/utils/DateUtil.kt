@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit
 
 object DateUtil {
 
-    private const val DATE_FORMAT = "dd/MM/yyyy"
+    const val DATE_FORMAT = "dd/MM/yyyy"
     private const val HOUR_MINUTE_FORMAT = "mm:ss"
     const val TIME_FORMAT = "%02d:%02d"
     val dateFormater = SimpleDateFormat(DATE_FORMAT, Locale.getDefault())

@@ -113,4 +113,8 @@ class HomeViewModel(
         recentResultsData ?: return
         _recentResults.value = recentResultsData.split(Constants.ARRAY_SEPARATOR).map { it.toInt() }
     }
+
+    fun makeSettingDone(){
+        _requireSetting.value = false
+    }
 }

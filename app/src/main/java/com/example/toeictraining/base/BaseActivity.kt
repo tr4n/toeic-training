@@ -21,9 +21,29 @@ abstract class BaseActivity : AppCompatActivity() {
 
     protected abstract fun initData()
 
-    fun openFragment(fragment: Fragment, addToBackStack: Boolean) {
+    fun openFragment(fragment: Fragment, addToBackStack: Boolean = false) {
         supportFragmentManager.beginTransaction().replace(R.id.content, fragment).apply {
             if (addToBackStack) addToBackStack(null)
         }.commit()
+    }
+
+    fun goNext(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .setCustomAnimations(R.animator.slide_in_right, R.animator.slide_out_left)
+            .replace(R.id.content, fragment, fragment.javaClass.simpleName)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    fun goBack(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .setCustomAnimations(R.animator.slide_out_right, R.animator.slide_in_left)
+            .replace(R.id.content, fragment, fragment.javaClass.simpleName)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    fun backIntroScreen() = with(supportFragmentManager) {
+        for (count in 1..backStackEntryCount) popBackStack()
     }
 }
