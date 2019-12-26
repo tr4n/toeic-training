@@ -123,4 +123,11 @@
     <string name="des_part_5">Điền chỗ trống</string>
     <string name="des_part_6">Điền đoạn văn</string>
     <string name="des_part_7">Đọc hiểu</string>
+    <string name="title_official_deadline">Ngày thi</string>
+    <string name="title_practice_mode">Chế độ ôn luyện</string>
+    <string name="title_do_work_exam_reminder">Giờ làm bài thi thử</string>
+    <string name="title_do_work_vocabulary_reminder">Giờ học từ vựng</string>
+    <string name="title_practice_low">Thấp</string>
+    <string name="title_practice_normal">Trung bình</string>
+    <string name="title_practice_high">Cao</string>
 </resources>

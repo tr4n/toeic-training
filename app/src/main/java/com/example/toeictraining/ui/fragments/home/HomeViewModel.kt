@@ -1,7 +1,6 @@
 package com.example.toeictraining.ui.fragments.home
 
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -11,6 +10,7 @@ import com.example.toeictraining.data.model.DailyWork
 import com.example.toeictraining.data.repository.TopicRepository
 import com.example.toeictraining.utils.Constants
 import com.example.toeictraining.utils.DateUtil
+import com.example.toeictraining.utils.PracticeMode
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -20,14 +20,56 @@ class HomeViewModel(
 
     private val _dailyWorks = MutableLiveData<List<DailyWork>>()
     private val _recentResults = MutableLiveData<List<Int>>()
+    private val _requireSetting = MutableLiveData<Boolean>()
+    private val _practiceTime = MutableLiveData<Pair<String, String>>()
 
     val dailyWorks: LiveData<List<DailyWork>> get() = _dailyWorks
     val recentResults: LiveData<List<Int>> get() = _recentResults
+    val requireSetting: LiveData<Boolean> get() = _requireSetting
+    val practiceTime: LiveData<Pair<String, String>> get() = _practiceTime
 
     override fun onCreate() {
         super.onCreate()
+        createDailyWorks()
+        getDeadline()
         getTopics()
         getRecentResults()
+    }
+
+    private fun createDailyWorks() {
+        if (isPracticeModeChanged()) {
+            initDailyWorks()
+        }
+    }
+
+    private fun isPracticeModeChanged(): Boolean {
+        val practiceMode =
+            sharedPreferences.getInt(Constants.PREFERENCE_PRACTICE_MODE, PracticeMode.EMPTY)
+        val works = dailyWorks.value
+        return practiceMode == PracticeMode.EMPTY
+                || (!works.isNullOrEmpty() && works.size != practiceMode * 2)
+    }
+
+    private fun initDailyWorks() {
+        val practiceMode =
+            sharedPreferences.getInt(Constants.PREFERENCE_PRACTICE_MODE, PracticeMode.LOW)
+        val dailyWorkParts = (1..7).toList().shuffled().take(practiceMode).joinToString()
+        val dailyWorkTopics = (1..50).toList().shuffled().take(practiceMode).joinToString()
+
+        sharedPreferences.edit().run {
+            putString(Constants.PREFERENCE_DAILY_WORK_PART, dailyWorkParts)
+            putString(Constants.PREFERENCE_DAILY_WORK_TOPIC, dailyWorkTopics)
+        }.apply()
+    }
+
+    private fun getDeadline() {
+        val startDay = sharedPreferences.getString(Constants.PREFERENCE_START_DAY, null)
+        val endDay = sharedPreferences.getString(Constants.PREFERENCE_END_DAY, null)
+        if (startDay == null || endDay == null) {
+            _requireSetting.value = true
+            return
+        }
+        _practiceTime.value = startDay to endDay
     }
 
     private fun getTopics() {
@@ -45,18 +87,17 @@ class HomeViewModel(
         val partIds = partsData.split(Constants.ARRAY_SEPARATOR).map { it.toInt() }
         val topicIds = topicsData.split(Constants.ARRAY_SEPARATOR).map { it.toInt() }
 
-        Log.d("HomeViewModel", "homeViewModel: $partIds  $topicIds")
         _dailyWorks.value = mutableListOf<DailyWork>().apply {
             addAll(partIds.map {
                 DailyWork(
-                    content = "<![CDATA[Làm bài thi thử <i> Part $it </i>]]>",
+                    content = "Làm bài thi thử <i>Part $it</i>",
                     isDone = false,
                     type = DailyWork.TEST_WORK
                 )
             })
             addAll(topicIds.map {
                 DailyWork(
-                    content = "<![CDATA[Học từ vựng topic <i> ${topics[it].name}</i>]]>",
+                    content = "Học từ vựng topic <i>${topics[it].name}</i>",
                     isDone = topics[it].lastTime?.let { time ->
                         DateUtil.isToday(time)
                     } ?: false,

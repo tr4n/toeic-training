@@ -155,7 +155,7 @@
                 android:id="@+id/textDidntKnow"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_8"
+                android:layout_marginBottom="@dimen/space_8"
                 android:background="@color/colorPink"
                 android:padding="@dimen/space_16"
                 android:text="@string/title_didnt_know_word"

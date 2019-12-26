@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseFragment
 import com.example.toeictraining.data.model.DailyWork
+import com.example.toeictraining.ui.fragments.reminder.RemindFragment
 import com.example.toeictraining.ui.fragments.test.home.HomeTestFragment
 import com.example.toeictraining.ui.fragments.test.start_test.StartTestFragment
 import com.example.toeictraining.ui.fragments.vocabulary.VocabularyFragment
@@ -37,16 +38,27 @@ class HomeFragment private constructor() : BaseFragment<HomeViewModel>() {
         }
         recyclerRecentResults.adapter = recentResultAdapter.apply {
             onItemClick = {
-                addFragment(fragment = StartTestFragment(it), addToBackStack = false)
+                addFragment(fragment = StartTestFragment(part = it + 1), addToBackStack = false)
             }
         }
-        showDaysLeft()
     }
 
-    private fun showDaysLeft() {
-        val startDay = "12/12/2019"
-        val deadline = "02/02/2020"
-        val today = DateUtil.getCurrentTime()
+    override fun observeData() = with(viewModel) {
+        super.observeData()
+        dailyWorks.observe(viewLifecycleOwner, Observer(::showDailyWorks))
+        recentResults.observe(viewLifecycleOwner, Observer(::showRecentResults))
+        practiceTime.observe(viewLifecycleOwner, Observer {
+            showDaysLeft(it.first, it.second)
+        })
+        requireSetting.observe(viewLifecycleOwner, Observer {
+            if (it == true) {
+                replaceFragment(fragment = RemindFragment.newInstance(), addToBackStack = false)
+            }
+        })
+    }
+
+    private fun showDaysLeft(startDay: String, deadline: String) {
+        val today = DateUtil.getCurrentDate()
         val daysLeft = DateUtil.getDaysBetween(today, deadline)
         val totalDays = DateUtil.getDaysBetween(startDay, deadline)
         val currentProgress = 1 - daysLeft.toFloat() / totalDays
@@ -67,11 +79,6 @@ class HomeFragment private constructor() : BaseFragment<HomeViewModel>() {
         }
     }
 
-    override fun observeData() = with(viewModel) {
-        super.observeData()
-        dailyWorks.observe(viewLifecycleOwner, Observer(::showDailyWorks))
-        recentResults.observe(viewLifecycleOwner, Observer(::showRecentResults))
-    }
 
     private fun showDailyWorks(dailyWorks: List<DailyWork>) {
         dailyWorkAdapter.submitList(dailyWorks)
