@@ -57,6 +57,7 @@ class ScoreTestFragment(
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(ScoreTestViewModel::class.java)
+        initViews()
         handleObservable()
         text_result.text =
             getString(R.string.test_time_total).plus(DateUtil.secondsToStringTime(totalTime))
@@ -219,6 +220,7 @@ class ScoreTestFragment(
                 )
             }
             R.id.button_result -> {
+                Log.d(TAG, "idExam = $idExam")
                 idExam?.let {
                     (activity as MainActivity).openFragment(
                         ResultTestFragment(it),

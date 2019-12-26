@@ -42,29 +42,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:id="@+id/text_script"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/space_15"
-                    android:paddingBottom="@dimen/space_5"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/text_18"
-                    android:visibility="gone"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/text_question_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/space_15"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/text_18"
-                    android:visibility="gone"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/text_script" />
-
                 <ImageView
                     android:id="@+id/image_question"
                     android:layout_width="wrap_content"
@@ -75,6 +52,31 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/text_script"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/space_15"
+                    android:paddingBottom="@dimen/space_5"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/text_18"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/image_question" />
+
+                <TextView
+                    android:id="@+id/text_question_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/space_15"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/text_18"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/text_script" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

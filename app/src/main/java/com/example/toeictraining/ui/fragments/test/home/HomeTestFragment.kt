@@ -62,8 +62,7 @@ class HomeTestFragment : Fragment() {
             R.drawable.part_4,
             R.drawable.part_5,
             R.drawable.part_6,
-            R.drawable.part_7,
-            R.drawable.full_7_part
+            R.drawable.part_7
         )
         recyclerViewPart.layoutManager = GridLayoutManager(context, 2, RecyclerView.VERTICAL, false)
         with(recyclerViewPart) {
@@ -81,18 +80,12 @@ class HomeTestFragment : Fragment() {
                 ).apply {
                     setDrawable(context?.getDrawable(R.drawable.divider_recyclerview_horizontal_10)!!)
                 })
-            adapter = ListPartAdapter(
-                context!!,
-                resourcesImage,
-                object : ItemClickListener {
-                    override fun onClick(view: View, position: Int, isLongClick: Boolean) {
-                        (activity as MainActivity).openFragment(
-                            StartTestFragment(position + 1),
-                            true
-                        )
-                    }
-                }
-            )
+            adapter = activity?.let {
+                ListPartAdapter(
+                    it,
+                    resourcesImage
+                )
+            }
         }
     }
 }

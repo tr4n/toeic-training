@@ -10,7 +10,6 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,6 +49,7 @@ class DoTestFragment(
         const val THRESHOLD_SPEED = 60
     }
 
+    private var tempPart = part
     private var secondTotalTime: Int = 0
     private lateinit var viewModel: DoTestViewModel
     private var mediaPlayer: MediaPlayer? = null
@@ -59,12 +59,13 @@ class DoTestFragment(
     private var level: ExamLevel = examLevel
     private val listQuestionId = mutableListOf<Int>()
     private val questions = mutableListOf<Question>()
+    private val tempQuestions = mutableListOf<Question>()
     private var countDownTimer: CountDownTimer? = null
     private fun setCountDownTimer(time: Int) {
         countDownTimer = object : CountDownTimer(time * 1000L, 1000L) {
             override fun onFinish() {
                 (activity as MainActivity).openFragment(
-                    ScoreTestFragment(questionsStatus, secondTotalTime, timestamp, part),
+                    ScoreTestFragment(questionsStatus, secondTotalTime, timestamp, tempPart),
                     false
                 )
             }
@@ -88,7 +89,7 @@ class DoTestFragment(
             .format(Calendar.getInstance().time)
         val application: Application = requireNotNull(activity).application
         val dataSource = AppDatabase.getInstance(application).questionDao()
-        val viewModelFactory = DoTestViewModelFactory(dataSource, application, part)
+        val viewModelFactory = DoTestViewModelFactory(dataSource, application, tempPart)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(DoTestViewModel::class.java)
         return inflater.inflate(
             R.layout.do_test_fragment,
@@ -191,17 +192,31 @@ class DoTestFragment(
 
         viewModel.getQuestionsLiveData().observe(viewLifecycleOwner, Observer {
             questions.addAll(it)
-            while (questions.size > Constant.COUNT_QUESTIONS_OF_PART[part]) {
+            while (questions.size > Constant.COUNT_QUESTIONS_OF_PART[tempPart]) {
                 questions.removeAt(questions.size - 1)
             }
-            Log.d(TAG, "questions.size = ${questions.size}")
-            if (questions.size == Constant.COUNT_QUESTIONS_OF_PART[part]) {
-                prepareData(questions)
-                setRecyclerQuestion()
-                if (countDownTimer == null) {
-                    setCountDownTimer(secondTotalTime)
+            //check size của questions hiện tại với size thực tế mối part
+            // đề phòng trường hợp thiếu câu hỏi
+            if (questions.size == Constant.COUNT_QUESTIONS_OF_PART[tempPart]) {
+                // đối với part = 8 (test full),
+                // tạo một vòng lặp random cho 7 part
+                if (part == 8) {
+                    tempPart++
+                    tempQuestions.addAll(questions)
+                    questions.clear()
+                    if (tempPart < 8) {
+                        viewModel.getQuestions(
+                            tempPart,
+                            level,
+                            Constant.COUNT_QUESTIONS_OF_PART[tempPart]
+                        )
+                    } else {
+                        questions.addAll(tempQuestions)
+                        startPrepareQuestions()
+                    }
+                } else {
+                    startPrepareQuestions()
                 }
-                countDownTimer?.start()
             } else {
 //                o	Khi chọn EASY thì chỉ query tất cả các câu EASY. NEW: Nếu hết câu EASY, thì query tiếp MEDIUM, rồi đến EASY cho các câu còn lại.
 //                o	Khi chọn MEDIUM, query tất cả các câu MEDIUM. NEW: Nếu hết câu MEDIUM, thì query tiếp EASY, rồi đến HARD cho các câu còn lại.
@@ -233,12 +248,21 @@ class DoTestFragment(
                     }
                 }
                 viewModel.getQuestions(
-                    part,
+                    tempPart,
                     level,
-                    Constant.COUNT_QUESTIONS_OF_PART[part] - questions.size
+                    Constant.COUNT_QUESTIONS_OF_PART[tempPart] - questions.size
                 )
             }
         })
+    }
+
+    private fun startPrepareQuestions() {
+        prepareData(questions)
+        recyclerViewQuestion.adapter?.notifyDataSetChanged()
+        if (countDownTimer == null) {
+            setCountDownTimer(secondTotalTime)
+        }
+        countDownTimer?.start()
     }
 
     private fun initViews() {
@@ -249,10 +273,14 @@ class DoTestFragment(
         text_b.setOnClickListener(this)
         text_c.setOnClickListener(this)
         text_d.setOnClickListener(this)
+        setRecyclerQuestion()
 
-        secondTotalTime = Constant.TIMES_PART[part]
+        secondTotalTime = Constant.TIMES_PART[tempPart]
         //load data
-        viewModel.getQuestions(part, level, Constant.COUNT_QUESTIONS_OF_PART[part])
+        if (part == 8) {
+            tempPart = 1
+        }
+        viewModel.getQuestions(tempPart, level, Constant.COUNT_QUESTIONS_OF_PART[tempPart])
     }
 
     private fun prepareData(questionsFromDB: List<Question>) {
@@ -392,7 +420,7 @@ class DoTestFragment(
                                 questionsStatus,
                                 secondTotalTime - totalTime,
                                 timestamp,
-                                part
+                                tempPart
                             ),
                             false
                         )

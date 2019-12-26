@@ -42,15 +42,6 @@
     <string name="title_vocabulary">Từ vựng</string>
     <string name="submit_test">Nộp bài</string>
 
-    <string name="test">sjdh khskdfhk hkshf khskdhfkhks dhkjfh khskdjfh hskdh skjdhfkj hksdjhfk jhskjfhk
-        sdkfhk kshdfkh jskdh sjdh khskdfhk hkshf khskdhfkhks dhkjfh khskdjfh hskdh skjdhfkj hksdjhfk jhskjfhk
-        sdkfhk kshdfkh jskdhfk hsdkfjh khsdfkjh s
-         ksjhdfh ksjdhfkj hsdfkjskdfjk jsdkjf kjsdfkj skdjfk jsdkjf ksdjfksjdfkj ksd sjdh khskdfhk hkshf khskdhfkhks dhkjfh khskdjfh hskdh skjdhfkj hksdjhfk jhskjfhk
-        sdkfhk kshdfkh jskdhfk hsdkfjh khsdfkjh s
-         ksjhdfh ksjdhfkj hsdfkjskdfjk jsdkjf kjsdfkj skdjfk jsdkjf ksdjfksjdfkj ksd sjdh khskdfhk hkshf khskdhfkhks dhkjfh khskdjfh hskdh skjdhfkj hksdjhfk jhskjfhk
-        sdkfhk kshdfkh jskdhfk hsdkfjh khsdfkjh s
-         ksjhdfh ksjdhfkj hsdfkjskdfjk jsdkjf kjsdfkj skdjfk jsdkjf ksdjfksjdfkj ksdfk hsdkfjh khsdfkjh s
-         ksjhdfh ksjdhfkj hsdfkjskdfjk jsdkjf kjsdfkj skdjfk jsdkjf ksdjfksjdfkj ksd</string>
     <string name="submit_test_ask">Nộp bài?</string>
     <string name="submit">Nộp</string>
     <string name="not_submit">Chưa</string>
@@ -124,4 +115,12 @@
     <string name="title_part_1">Part 1</string>
     <string name="title_settings">Cài đặt</string>
     <string name="title_part">Part %d</string>
+    <string name="sound">sound</string>
+    <string name="des_part_1">Mô tả tranh</string>
+    <string name="des_part_2">Hỏi đáp</string>
+    <string name="des_part_3">Đoạn hội thoại</string>
+    <string name="des_part_4">Bài nói ngắn</string>
+    <string name="des_part_5">Điền chỗ trống</string>
+    <string name="des_part_6">Điền đoạn văn</string>
+    <string name="des_part_7">Đọc hiểu</string>
 </resources>
