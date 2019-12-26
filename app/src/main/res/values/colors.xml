@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#966474</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimaryDark">#663344</color>
     <color name="colorAccent">#D81B60</color>
     <color name="colorBusiness">#966474</color>
     <color name="colorOffice">#A77275</color>
@@ -14,8 +14,8 @@
     <color name="colorEntertainment">#82A395</color>
     <color name="colorHealth">#7D6A93</color>
     <color name="colorBlurWhite">#a2ffffff</color>
-    <color name="colorProgressBarNew">#05966474</color>
-    <color name="colorProgressBarReview">#5e966474</color>
+    <color name="colorProgressBarNew">#6e999999</color>
+    <color name="colorProgressBarReview">#47966474</color>
     <color name="colorProgressBarMaster">#966474</color>
     <color name="colorGreen">#FFBCFFC7</color>
     <color name="colorPink">#FFFFAAAC</color>
