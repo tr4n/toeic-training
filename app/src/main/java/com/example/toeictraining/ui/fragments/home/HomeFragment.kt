@@ -1,13 +1,13 @@
 package com.example.toeictraining.ui.fragments.home
 
-
 import android.graphics.Color
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseFragment
+import com.example.toeictraining.data.model.DailyWork
 import com.example.toeictraining.ui.fragments.intro.IntroDateFragment
-import com.example.toeictraining.ui.fragments.test.home.HomeTestFragment
+import com.example.toeictraining.ui.fragments.study.StudyFragment
 import com.example.toeictraining.ui.fragments.test.start_test.StartTestFragment
 import com.example.toeictraining.ui.fragments.vocabulary.VocabularyFragment
 import com.example.toeictraining.utils.DateUtil
@@ -27,14 +27,24 @@ class HomeFragment private constructor() : BaseFragment<HomeViewModel>() {
     private val recentResultAdapter =
         RecentResultAdapter(RecentResultAdapter.RecentResultDiffUtilCallback())
 
+    private val onDailyWorkClick = { dailyWork: DailyWork ->
+        val fragment = if (dailyWork.isTest()) {
+            StartTestFragment(dailyWork.id)
+        } else {
+            dailyWork.topic?.let {
+                StudyFragment.newInstance(it)
+            } ?: VocabularyFragment.newInstance()
+        }.also {
+            replaceFragment(fragment = it, addToBackStack = false)
+        }
+    }
+
     override fun initComponents() {
         recyclerDailyWorks.adapter = dailyWorkAdapter.apply {
-            onItemClick = {
-                val fragment =
-                    if (it.isTest()) HomeTestFragment() else VocabularyFragment.newInstance()
-                replaceFragment(fragment = fragment, addToBackStack = false)
-            }
+            onItemClick = onDailyWorkClick
+
         }
+
         recyclerRecentResults.adapter = recentResultAdapter.apply {
             onItemClick = {
                 addFragment(fragment = StartTestFragment(part = it + 1), addToBackStack = false)
@@ -52,7 +62,10 @@ class HomeFragment private constructor() : BaseFragment<HomeViewModel>() {
         requireSetting.observe(viewLifecycleOwner, Observer {
             if (it == true) {
                 makeSettingDone()
-                replaceFragment(fragment = IntroDateFragment.newInstance(), addToBackStack = true)
+                replaceFragment(
+                    fragment = IntroDateFragment.newInstance(),
+                    addToBackStack = true
+                )
             }
         })
     }

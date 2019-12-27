@@ -3,7 +3,6 @@ package com.example.toeictraining.ui.fragments.intro
 import android.app.DatePickerDialog
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseFragment
@@ -40,9 +39,7 @@ class IntroDateFragment private constructor() : BaseFragment<IntroViewModel>(),
 
     override fun observeData() {
         super.observeData()
-        viewModel.endPracticeDay.observe(viewLifecycleOwner, Observer {
-            textDate?.text = it
-        })
+        viewModel.endPracticeDay.observe(viewLifecycleOwner, Observer(textDate::setText))
     }
 
     override fun onClick(v: View?) {

@@ -1,12 +1,12 @@
 package com.example.toeictraining.ui.fragments.home
 
+import android.text.Html
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseRecyclerAdapter
 import com.example.toeictraining.base.BaseViewHolder
-import com.example.toeictraining.utils.Constants
 import kotlinx.android.synthetic.main.item_analysis_result_part.view.*
 
 class RecentResultAdapter(
@@ -38,13 +38,20 @@ class RecentResultAdapter(
                     max = 100
                     progress = itemData
                 }
-                textPartEvaluationResult.text = when (itemData) {
-                    in 0..49 -> Constants.partResultEvaluations[0]
-                    in 50..79 -> Constants.partResultEvaluations[1]
-                    in 80..94 -> Constants.partResultEvaluations[2]
-                    else -> Constants.partResultEvaluations[3]
-                }.toString()
             }
+            onBindTextPartLevel(itemData)
+        }
+
+        private fun onBindTextPartLevel(itemData: Int) {
+            val resultLevels = itemView.resources.getStringArray(R.array.resultLevels)
+            itemView.textPartEvaluationResult?.text = Html.fromHtml(
+                when (itemData) {
+                    in 0..49 -> resultLevels[0]
+                    in 50..79 -> resultLevels[1]
+                    in 80..94 -> resultLevels[2]
+                    else -> resultLevels[3]
+                }
+            )
         }
 
         override fun onItemClickListener(itemData: Int) = onItemClick(itemPosition)

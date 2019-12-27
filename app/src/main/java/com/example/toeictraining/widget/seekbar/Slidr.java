@@ -266,7 +266,7 @@ public class Slidr extends FrameLayout {
         update();
     }
 
-    public void setRegionColorLeft(int colorLeft){
+    public void setRegionColorLeft(int colorLeft) {
         settings.setRegionColorLeft(colorLeft);
     }
 
@@ -581,7 +581,7 @@ public class Slidr extends FrameLayout {
                         for (Step step : steps) {
                             drawIndicatorsTextAbove(canvas, formatValue(step.value), settings.paintTextTop, step.xStart + paddingLeft, textY, Layout.Alignment.ALIGN_CENTER);
                         }
-                        drawIndicatorsTextAbove(canvas, formatValue(max), settings.paintTextTop, canvas.getWidth(), textY, Layout.Alignment.ALIGN_CENTER);
+                        drawIndicatorsTextAbove(canvas, formatValue(max), settings.paintTextTop, getWidth() - paddingRight, textY, Layout.Alignment.ALIGN_CENTER);
                     }
                 }
             }
@@ -603,11 +603,11 @@ public class Slidr extends FrameLayout {
 
                 if (settings.drawTextOnBottom) {
                     if (!TextUtils.isEmpty(textMax)) {
-                        drawMultilineText(canvas, textMax, canvas.getWidth(), bottomTextY, settings.paintTextBottom, Layout.Alignment.ALIGN_CENTER);
+                        drawMultilineText(canvas, textMax, getWidth() - settings.paintTextBottom.measureText(textMax) / 2, bottomTextY, settings.paintTextBottom, Layout.Alignment.ALIGN_CENTER);
                     }
 
                     if (!TextUtils.isEmpty(textMin)) {
-                        drawMultilineText(canvas, textMin, 0, bottomTextY, settings.paintTextBottom, Layout.Alignment.ALIGN_CENTER);
+                        drawMultilineText(canvas, textMin, 0 + settings.paintTextBottom.measureText(textMin) / 2, bottomTextY, settings.paintTextBottom, Layout.Alignment.ALIGN_CENTER);
                     }
                 }
             }
@@ -630,8 +630,8 @@ public class Slidr extends FrameLayout {
                     bubble.x = bubbleCenterX - bubble.width / 2f;
                     bubble.y = 0;
 
-                    if (bubbleCenterX > canvas.getWidth() - bubble.width / 2f) {
-                        bubbleCenterX = canvas.getWidth() - bubble.width / 2f;
+                    if (bubbleCenterX > getWidth() - bubble.width / 2f) {
+                        bubbleCenterX = getWidth() - bubble.width / 2f;
                     } else if (bubbleCenterX - bubble.width / 2f < 0) {
                         bubbleCenterX = bubble.width / 2f;
                     }

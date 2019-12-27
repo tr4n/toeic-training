@@ -84,12 +84,11 @@
             app:layout_constraintTop_toBottomOf="@+id/viewSeparator0" />
 
 
-        <TextView
-            android:id="@+id/textTargetScore"
+        <com.jaredrummler.materialspinner.MaterialSpinner
+            android:id="@+id/spinnerTargetScore"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:drawableEnd="@drawable/ic_edit_24dp"
             android:padding="@dimen/space_8"
             android:paddingStart="@dimen/space_16"
             android:paddingEnd="0dp"

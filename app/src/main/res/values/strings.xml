@@ -12,7 +12,7 @@
     <string name="button_finish">Finish</string>
 
     <!--    Score Choices-->
-    <string-array name="Scores">
+    <string-array name="scores">
         <item>350</item>
         <item>400</item>
         <item>450</item>
@@ -26,6 +26,13 @@
         <item>850</item>
         <item>900</item>
         <item>950</item>
+    </string-array>
+
+    <string-array name="resultLevels">
+        <item><![CDATA[<font color="#ff0000">Yếu</font>]]></item>
+        <item><![CDATA[<font color="#ffff00">Trung bình</font>]]></item>
+        <item><![CDATA[<font color="#00ff00">Tốt</font>]]></item>
+        <item><![CDATA[<font color="#0099ff">Rất tốt</font>]]></item>
     </string-array>
 
     <!--    Intensity Choices-->
