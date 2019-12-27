@@ -61,6 +61,8 @@ class ScoreTestFragment(
         handleObservable()
         text_result.text =
             getString(R.string.test_time_total).plus(DateUtil.secondsToStringTime(totalTime))
+        var listenRightQues = 0
+        var readRightQues = 0
         var listenScore = 0
         var readScore = 0
 
@@ -73,12 +75,30 @@ class ScoreTestFragment(
             listQuestionId.add(questionStatus.data.id)
             if (questionStatus.data.correctAnswer == questionStatus.answer) {
                 if (questionStatus.data.soundLink != null) {
-                    listenScore += 5
+                    listenRightQues += 1
                     continue
                 }
-                readScore += 5
+                readRightQues += 1
             }
         }
+        if (part == 8) {
+            for (i in 1..listenRightQues) {
+                if (i <= 6) listenScore = 5
+                else listenScore += 5
+            }
+            for (i in 1..readRightQues) {
+                if (i <= 6) readScore = 5
+                else readScore += 5
+            }
+        } else {
+            listenScore = listenRightQues * 5
+            readScore = readRightQues * 5
+        }
+
+        Log.d(TAG, "listenRightQues = $listenRightQues, listenScore = $listenScore")
+        Log.d(TAG, "readRightQues = $readRightQues, readScore = $readScore")
+
+
         //save exam
         val exam = Exam(
             questionIdList = listQuestionId,
@@ -86,7 +106,7 @@ class ScoreTestFragment(
             time = totalTime,
             part = part,
             timestamp = timestamp,
-            score = readScore + listenScore
+            score = listenScore + readScore
         )
         if ((activity as MainActivity).isSave) {
             viewModel.insert(exam)
@@ -94,11 +114,11 @@ class ScoreTestFragment(
         //chỉ bài full mới show điểm đọc, điểm nghe
         if (part == 8) {
             text_listen_score?.visibility = View.VISIBLE
-            text_listen_score?.text = getString(R.string.listen_score).plus("$listenScore")
+            text_listen_score?.text = getString(R.string.listen_score).plus("$listenScore" + "/495")
             text_read_score?.visibility = View.VISIBLE
-            text_read_score?.text = getString(R.string.read_score).plus("$readScore")
+            text_read_score?.text = getString(R.string.read_score).plus("$readScore" + "/495")
         }
-        totalScore = readScore + listenScore
+        totalScore = listenScore + readScore
         total_score.text = totalScore.toString()
         if (questionsStatus.size == 200) {
             saveRecentResults()
@@ -118,7 +138,7 @@ class ScoreTestFragment(
                     //part 2
                     setDetailPart(7, 31, progressbar_part_2, text_evaluate_2)
                     //part 3
-                    setDetailPart(32, 70, progressbar_part_3, text_evaluate_4)
+                    setDetailPart(32, 70, progressbar_part_3, text_evaluate_3)
                     //part 4
                     setDetailPart(71, 100, progressbar_part_4, text_evaluate_4)
                     //part 5

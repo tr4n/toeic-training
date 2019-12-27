@@ -2,6 +2,7 @@ package com.example.toeictraining.ui.fragments.test.result
 
 import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.toeictraining.R
 import com.example.toeictraining.base.database.AppDatabase
 import com.example.toeictraining.base.entity.Exam
+import com.example.toeictraining.base.entity.Question
 import com.example.toeictraining.ui.main.MainActivity
 import kotlinx.android.synthetic.main.result_test_fragment.*
 
@@ -20,8 +22,10 @@ class ResultTestFragment(
 ) : Fragment() {
     private lateinit var viewModel: ResultTestViewModel
     private val list = mutableListOf<Result>()
+    private val questions = mutableListOf<Question>()
     private var exam: Exam? = null
     private var totalScore = 0
+    private var quesIndex = 0
 
     companion object {
         val TAG = ResultTestFragment::class.java.name
@@ -42,6 +46,7 @@ class ResultTestFragment(
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        Log.d(TAG, "id = $idExam")
         initViews()
         configNavigationIcon()
         handleObservable()
@@ -50,24 +55,58 @@ class ResultTestFragment(
     private fun handleObservable() {
         viewModel.getExamLiveData().observe(viewLifecycleOwner, Observer {
             exam = it
-            viewModel.getQuestionsByIds(it.questionIdList)
-        })
-
-        viewModel.getQuestionsByIdsLiveData().observe(viewLifecycleOwner, Observer { questions ->
-            exam?.answerList?.let { answerList ->
-                for (i in questions.indices) {
-                    list.add(Result(questions[i], answerList[i]))
-                    if (questions[i].correctAnswer == answerList[i]) {
-                        totalScore += 5
-                    }
-                }
-                rv_result.adapter?.notifyDataSetChanged()
-                exam?.time?.let { time ->
-                    total_time.text = getString(R.string.test_time_total).plus(time)
-                }
-                total_score.text = getString(R.string.total_score_2).plus(totalScore.toString())
+            Log.d(TAG, "exam = $exam")
+            exam?.let { exam ->
+                viewModel.getQuestionById(exam.questionIdList[quesIndex++])
             }
         })
+
+        viewModel.getQuestionLiveData().observe(viewLifecycleOwner, Observer { question ->
+            Log.d(TAG, "question = $question")
+            questions.add(question)
+            Log.d(TAG, "size = ${questions.size}")
+            exam?.let {
+                if (quesIndex < it.questionIdList.size) {
+                    viewModel.getQuestionById(it.questionIdList[quesIndex++])
+                } else {
+                    Log.d(TAG, "questions =$questions")
+                    exam?.answerList?.let { answerList ->
+                        for (i in questions.indices) {
+                            list.add(Result(questions[i], answerList[i]))
+                            if (questions[i].correctAnswer == answerList[i]) {
+                                totalScore += 5
+                            }
+                        }
+                        rv_result.adapter?.notifyDataSetChanged()
+                        exam?.time?.let { time ->
+                            total_time.text = getString(R.string.test_time_total).plus(time)
+                        }
+                        exam?.score?.let {
+                            total_score.text = getString(R.string.total_score_2).plus(it)
+                        }
+                    }
+                }
+            }
+        })
+
+//        viewModel.getQuestionsByIdsLiveData().observe(viewLifecycleOwner, Observer { questions ->
+//            Log.d(TAG, "questions =$questions")
+//            exam?.answerList?.let { answerList ->
+//                for (i in questions.indices) {
+//                    list.add(Result(questions[i], answerList[i]))
+//                    if (questions[i].correctAnswer == answerList[i]) {
+//                        totalScore += 5
+//                    }
+//                }
+//                rv_result.adapter?.notifyDataSetChanged()
+//                exam?.time?.let { time ->
+//                    total_time.text = getString(R.string.test_time_total).plus(time)
+//                }
+//                exam?.score?.let {
+//                    total_score.text = getString(R.string.total_score_2).plus(it)
+//                }
+//            }
+//        })
     }
 
     private fun initViews() {
