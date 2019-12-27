@@ -236,6 +236,7 @@ class ScoreTestFragment(
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.button_continue_do -> {
+                (activity as MainActivity).isSave = true
                 (activity as MainActivity).openFragment(
                     HomeTestFragment(),
                     false
