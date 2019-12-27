@@ -35,6 +35,9 @@ class RemindFragment private constructor() : BaseFragment<RemindViewModel>(),
     override val viewModel: RemindViewModel by viewModel()
 
     private val remindTopicAdapter: RemindTopicAdapter = get()
+    private val targetScores: List<String> by lazy {
+        resources.getStringArray(R.array.scores).toList()
+    }
 
     override fun onResume() {
         super.onResume()
@@ -42,6 +45,7 @@ class RemindFragment private constructor() : BaseFragment<RemindViewModel>(),
     }
 
     override fun initComponents() {
+        spinnerTargetScore?.setItems(targetScores)
         recyclerReviews?.adapter = remindTopicAdapter.apply {
             onTopicSelected = { topic ->
                 viewModel.updateTopicReviews(topic)
@@ -74,7 +78,7 @@ class RemindFragment private constructor() : BaseFragment<RemindViewModel>(),
         topics.observe(viewLifecycleOwner, Observer(remindTopicAdapter::submitList))
         reviewMode.observe(viewLifecycleOwner, Observer(::onObserverReviewMode))
         targetScore.observe(viewLifecycleOwner, Observer {
-            textTargetScore.text = it.toString()
+            spinnerTargetScore.text = it.toString()
         })
         reviewTopic.observe(viewLifecycleOwner, Observer {
             context?.run {
@@ -130,14 +134,21 @@ class RemindFragment private constructor() : BaseFragment<RemindViewModel>(),
     }
 
     override fun onItemSelected(view: MaterialSpinner?, position: Int, id: Long, item: String?) {
-        viewModel.savePracticeMode(
-            when (item) {
-                getString(R.string.title_practice_low) -> PracticeMode.LOW
-                getString(R.string.title_practice_normal) -> PracticeMode.NORMAL
-                getString(R.string.title_practice_high) -> PracticeMode.HIGH
-                else -> PracticeMode.EMPTY
+        if (view?.id == R.id.spinnerPracticeMode) {
+            viewModel.savePracticeMode(
+                when (item) {
+                    getString(R.string.title_practice_low) -> PracticeMode.LOW
+                    getString(R.string.title_practice_normal) -> PracticeMode.NORMAL
+                    getString(R.string.title_practice_high) -> PracticeMode.HIGH
+                    else -> PracticeMode.EMPTY
+                }
+            )
+        } else if (view?.id == R.id.spinnerTargetScore) {
+            item?.let {
+                viewModel.saveTargetScore(it.toInt())
             }
-        )
+        }
+
     }
 
     override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
@@ -220,6 +231,7 @@ class RemindFragment private constructor() : BaseFragment<RemindViewModel>(),
         textSettingStartDay.setOnClickListener(this)
         textOfficialDeadline.setOnClickListener(this)
         spinnerPracticeMode.setOnItemSelectedListener(this)
+        spinnerTargetScore.setOnItemSelectedListener(this)
         textSettingStartDay.setOnClickListener(this)
     }
 

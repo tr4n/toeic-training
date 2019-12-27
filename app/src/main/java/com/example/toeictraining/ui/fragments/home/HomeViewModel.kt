@@ -90,6 +90,7 @@ class HomeViewModel(
         _dailyWorks.value = mutableListOf<DailyWork>().apply {
             addAll(partIds.map {
                 DailyWork(
+                    id = it,
                     content = "Làm bài thi thử <i>Part $it</i>",
                     isDone = false,
                     type = DailyWork.TEST_WORK
@@ -97,12 +98,15 @@ class HomeViewModel(
             })
             addAll(topicIds.map {
                 DailyWork(
+                    id = it,
                     content = "Học từ vựng topic <i>${topics[it].name}</i>",
                     isDone = topics[it].lastTime?.let { time ->
                         DateUtil.isToday(time)
                     } ?: false,
                     type = DailyWork.VOCABULARY_WORK
-                )
+                ).apply {
+                    topic = topics[it]
+                }
             })
         }
     }
@@ -114,7 +118,7 @@ class HomeViewModel(
         _recentResults.value = recentResultsData.split(Constants.ARRAY_SEPARATOR).map { it.toInt() }
     }
 
-    fun makeSettingDone(){
+    fun makeSettingDone() {
         _requireSetting.value = false
     }
 }

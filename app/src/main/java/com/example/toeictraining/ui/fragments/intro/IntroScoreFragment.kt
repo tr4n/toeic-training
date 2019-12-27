@@ -4,7 +4,6 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
-import androidx.drawerlayout.widget.DrawerLayout
 import com.example.toeictraining.R
 import com.example.toeictraining.base.BaseFragment
 import com.example.toeictraining.ui.main.MainActivity
@@ -21,7 +20,7 @@ class IntroScoreFragment : BaseFragment<IntroViewModel>(),
     override val viewModel by viewModel<IntroViewModel>()
 
     private val scores by lazy<Array<String>> {
-        resources.getStringArray(R.array.Scores)
+        resources.getStringArray(R.array.scores)
     }
 
     override fun onResume() {

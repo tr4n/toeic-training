@@ -101,6 +101,7 @@ class ScoreTestFragment(
         totalScore = readScore + listenScore
         total_score.text = totalScore.toString()
         if (questionsStatus.size == 200) {
+            saveRecentResults()
             text_expand?.visibility = View.VISIBLE
             text_expand?.setOnClickListener {
                 if (it.tag == null) {
@@ -126,8 +127,6 @@ class ScoreTestFragment(
                     setDetailPart(131, 146, progressbar_part_6, text_evaluate_6)
                     //part 7
                     setDetailPart(147, 200, progressbar_part_7, text_evaluate_7)
-
-                    saveRecentResults()
                     //set tag
                     it.tag = true
                 } else {

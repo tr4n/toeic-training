@@ -1,6 +1,10 @@
 package com.example.toeictraining.data.model
 
-data class DailyWork(val content: String, var isDone: Boolean, private val type: Int) {
+import com.example.toeictraining.base.entity.Topic
+
+data class DailyWork(val id: Int, val content: String, var isDone: Boolean, private val type: Int) {
+
+    var topic: Topic? = null
 
     fun isTest() = type == TEST_WORK
 
