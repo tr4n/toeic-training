@@ -28,27 +28,44 @@ class ResultTestViewModel(
 
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
     private var examLiveData = MutableLiveData<Exam>()
-    private var questions = MutableLiveData<List<Question>>()
+    private var questionLiveData = MutableLiveData<Question>()
+//    private var questions = MutableLiveData<List<Question>>()
 
     fun getExamLiveData(): LiveData<Exam> {
         return examLiveData
     }
 
-    fun getQuestionsByIdsLiveData(): LiveData<List<Question>> {
-        return questions
+    fun getQuestionLiveData(): LiveData<Question> {
+        return questionLiveData
     }
 
-    fun getQuestionsByIds(ids: MutableList<Int>) {
+    fun getQuestionById(id:Int) {
         uiScope.launch {
-            questions.value = getQuestionsByIdsFromDatabase(ids)
+            questionLiveData.value = getQuestionFromDatabase(id)
         }
     }
 
-    private suspend fun getQuestionsByIdsFromDatabase(ids: MutableList<Int>): List<Question> {
+    private suspend fun getQuestionFromDatabase(id:Int): Question {
         return withContext(Dispatchers.IO) {
-            questionDao.loadAllByIds(ids.toIntArray())
+            questionDao.getQuestionsById(id)
         }
     }
+
+//    fun getQuestionsByIdsLiveData(): LiveData<List<Question>> {
+//        return questions
+//    }
+
+//    fun getQuestionsByIds(ids: MutableList<Int>) {
+//        uiScope.launch {
+//            questions.value = getQuestionsByIdsFromDatabase(ids)
+//        }
+//    }
+
+//    private suspend fun getQuestionsByIdsFromDatabase(ids: MutableList<Int>): List<Question> {
+//        return withContext(Dispatchers.IO) {
+//            questionDao.loadAllByIds(ids.toIntArray())
+//        }
+//    }
 
     fun getExam(id: Long) {
         uiScope.launch {
