@@ -88,7 +88,9 @@ class ScoreTestFragment(
             timestamp = timestamp,
             score = readScore + listenScore
         )
-        viewModel.insert(exam)
+        if ((activity as MainActivity).isSave) {
+            viewModel.insert(exam)
+        }
         //chỉ bài full mới show điểm đọc, điểm nghe
         if (part == 8) {
             text_listen_score?.visibility = View.VISIBLE
@@ -204,6 +206,7 @@ class ScoreTestFragment(
         actionBarDrawerToggle.isDrawerIndicatorEnabled = false
         actionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
         actionBarDrawerToggle.setToolbarNavigationClickListener {
+            (activity as MainActivity).isSave = true
             (activity as MainActivity).openFragment(
                 HomeTestFragment(),
                 false

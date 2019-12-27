@@ -37,6 +37,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     private var loadingDialog: Dialog? = null
 
     private val mainViewModel: MainViewModel by viewModel()
+    var isSave = true
 
     override fun initComponent() {
         setToolbar()
