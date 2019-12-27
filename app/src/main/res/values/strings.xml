@@ -30,9 +30,9 @@
 
     <string-array name="resultLevels">
         <item><![CDATA[<font color="#ff0000">Yếu</font>]]></item>
-        <item><![CDATA[<font color="#ffff00">Trung bình</font>]]></item>
-        <item><![CDATA[<font color="#00ff00">Tốt</font>]]></item>
-        <item><![CDATA[<font color="#0099ff">Rất tốt</font>]]></item>
+        <item><![CDATA[<font color="#993300">Trung bình</font>]]></item>
+        <item><![CDATA[<font color="#009933">Tốt</font>]]></item>
+        <item><![CDATA[<font color="#0000cc">Rất tốt</font>]]></item>
     </string-array>
 
     <!--    Intensity Choices-->

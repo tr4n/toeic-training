@@ -247,6 +247,7 @@
                 android:gravity="center"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_15"
+                android:text="Yếu"
                 app:layout_constraintBottom_toBottomOf="@id/progressbar_part_3"
                 app:layout_constraintEnd_toStartOf="@+id/button_learn_more_3"
                 app:layout_constraintStart_toEndOf="@id/progressbar_part_3"
