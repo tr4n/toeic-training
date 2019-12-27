@@ -20,6 +20,9 @@ interface QuestionDao {
     @Query("select * from question where idPart = :part")
     fun getQuestionsByPart(part: Int): List<Question>
 
+    @Query("select * from question where id = :id")
+    fun getQuestionsById(id: Int): Question
+
     @Query("select * from question where idPart = :part and type = :type order by RANDOM() limit :limit")
     fun getQuestionByPartAndTypeAndLimit(part: Int, type: String, limit: Int): List<Question>
 
