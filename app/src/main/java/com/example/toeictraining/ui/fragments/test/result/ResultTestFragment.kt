@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.toeictraining.R
 import com.example.toeictraining.base.database.AppDatabase
 import com.example.toeictraining.base.entity.Exam
+import com.example.toeictraining.ui.main.MainActivity
 import kotlinx.android.synthetic.main.result_test_fragment.*
 
 class ResultTestFragment(
@@ -42,6 +43,7 @@ class ResultTestFragment(
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         initViews()
+        configNavigationIcon()
         handleObservable()
     }
 
@@ -75,4 +77,13 @@ class ResultTestFragment(
         rv_result.adapter = activity?.let { activity -> ResultRecyclerViewAdapter(activity, list) }
     }
 
+    private fun configNavigationIcon() {
+        val actionBar = (activity as MainActivity).supportActionBar
+        val actionBarDrawerToggle = (activity as MainActivity).getDrawerToggle()
+        actionBarDrawerToggle.isDrawerIndicatorEnabled = false
+        actionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white_24dp)
+        actionBarDrawerToggle.setToolbarNavigationClickListener {
+            (activity as MainActivity).onBackPressed()
+        }
+    }
 }
